@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 9 — Inteligencia Emocional y Marca Personal</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --header-bg: #1a1a18;
+    --accent: #534AB7;
+    --accent-light: #EEEDFE;
+    --yellow: #FFD700;
+    --card-border: 0.5px solid #d3d1c7;
+    --radius: 12px;
+    --purple: #EEEDFE;
+    --teal: #E1F5EE;
+    --amber: #FAEEDA;
+    --coral: #FAECE7;
+    --text: #1a1a18;
+    --muted: #6b6860;
+    --correct: #22c55e;
+    --wrong: #FFD700;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+
+  /* HEADER */
+  header { background: var(--header-bg); color: #fff; padding: 28px 32px 22px; }
+  header .badge { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; margin-bottom: 10px; }
+  header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  header p { font-size: 13px; color: #aaa; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; background: #fff; border-bottom: 1px solid #e0ddd4; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+  .tab-btn { background: none; border: none; padding: 14px 18px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all .2s; white-space: nowrap; }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+
+  /* CONTENT */
+  .tab-content { display: none; padding: 28px 24px; max-width: 860px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* ESQUEMA */
+  .accordion { border: var(--card-border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; background: #fff; }
+  .acc-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; font-weight: 600; font-size: 15px; }
+  .acc-header:hover { background: #faf9f6; }
+  .acc-arrow { font-size: 12px; color: var(--muted); transition: transform .2s; }
+  .acc-body { display: none; padding: 0 18px 16px; border-top: var(--card-border); }
+  .acc-body.open { display: block; }
+  .acc-arrow.open { transform: rotate(180deg); }
+  .acc-body ul { padding-left: 18px; margin-top: 10px; }
+  .acc-body ul li { margin-bottom: 5px; }
+  .acc-body table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  .acc-body th { background: var(--header-bg); color: #fff; padding: 7px 10px; text-align: left; }
+  .acc-body td { padding: 7px 10px; border-bottom: 0.5px solid #e8e6e0; }
+  .acc-body tr:nth-child(even) td { background: #faf9f6; }
+  .sub-acc { border: var(--card-border); border-radius: 8px; margin-top: 10px; overflow: hidden; }
+  .sub-acc-header { padding: 10px 14px; cursor: pointer; font-weight: 600; font-size: 13.5px; background: #faf9f6; display: flex; justify-content: space-between; }
+  .sub-acc-body { display: none; padding: 10px 14px 12px; font-size: 13.5px; }
+  .sub-acc-body.open { display: block; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-right: 5px; }
+  .tag-purple { background: var(--purple); color: var(--accent); }
+  .tag-teal { background: var(--teal); color: #0f7a5a; }
+  .tag-amber { background: var(--amber); color: #a06a00; }
+  .tag-coral { background: var(--coral); color: #b03a2a; }
+
+  /* RESUMEN */
+  .key-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 600px) { .key-grid { grid-template-columns: 1fr; } }
+  .key-box { border-radius: var(--radius); padding: 16px 18px; border: var(--card-border); }
+  .key-box h3 { font-size: 13px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+  .key-box p, .key-box li { font-size: 13.5px; }
+  .key-box ul { padding-left: 16px; }
+  .key-box ul li { margin-bottom: 4px; }
+  .kp { background: var(--purple); }
+  .kt { background: var(--teal); }
+  .ka { background: var(--amber); }
+  .kc { background: var(--coral); }
+  .definition-card { background: #fff; border: var(--card-border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 10px; }
+  .definition-card .author { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .definition-card p { font-size: 13.5px; }
+  .habits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+  @media (max-width: 600px) { .habits-grid { grid-template-columns: 1fr 1fr; } }
+  .habit-card { background: #fff; border: var(--card-border); border-radius: 10px; padding: 12px; text-align: center; }
+  .habit-card .num { font-size: 22px; font-weight: 800; color: var(--accent); }
+  .habit-card .name { font-size: 12px; font-weight: 600; margin-top: 4px; }
+  .section-title { font-size: 16px; font-weight: 700; margin: 22px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); color: var(--accent); }
+  .canvas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  @media (max-width: 600px) { .canvas-grid { grid-template-columns: 1fr; } }
+  .canvas-card { background: #fff; border: var(--card-border); border-radius: 10px; padding: 12px 14px; }
+  .canvas-card .cnum { font-size: 11px; font-weight: 700; color: var(--accent); }
+  .canvas-card h4 { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .canvas-card p { font-size: 12.5px; color: var(--muted); }
+
+  /* SIGLAS */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip { background: #fff; border: var(--card-border); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .chip:hover, .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .term-panel { display: none; background: #fff; border: var(--card-border); border-radius: var(--radius); padding: 18px 20px; margin-top: 4px; }
+  .term-panel.active { display: block; }
+  .term-panel h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--accent); }
+  .term-panel p { font-size: 14px; line-height: 1.7; }
+  .term-panel .origin { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  /* TEST */
+  .test-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; align-items: center; }
+  .filter-btn { background: #fff; border: var(--card-border); border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .filter-btn.active { color: #fff; border-color: transparent; }
+  .filter-btn[data-cat="Inteligencia Emocional"].active { background: var(--accent); }
+  .filter-btn[data-cat="Hábitos"].active { background: #0f7a5a; }
+  .filter-btn[data-cat="Marca Personal"].active { background: #a06a00; }
+  .filter-btn[data-cat="Modelo Canvas"].active { background: #b03a2a; }
+  .filter-btn[data-cat="Todos"].active { background: var(--header-bg); }
+  .progress-bar-wrap { background: #e0ddd4; border-radius: 20px; height: 8px; margin-bottom: 20px; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--accent); border-radius: 20px; transition: width .3s; }
+  .progress-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .question-card { background: #fff; border: var(--card-border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px; }
+  .question-card .q-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .question-card .q-num { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .question-card .q-cat { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+  .cat-ie { background: var(--purple); color: var(--accent); }
+  .cat-ha { background: var(--teal); color: #0f7a5a; }
+  .cat-mp { background: var(--amber); color: #a06a00; }
+  .cat-mc { background: var(--coral); color: #b03a2a; }
+  .question-card .q-text { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border: var(--card-border); border-radius: 8px; cursor: pointer; font-size: 14px; transition: background .1s; }
+  .option-label:hover { background: #faf9f6; }
+  .option-label input[type=radio] { margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+  .option-label.correct { background: #f0fdf4; border-color: var(--correct); }
+  .option-label.wrong { background: #fffbeb; border-color: var(--wrong); }
+  .submit-btn { background: var(--yellow); color: var(--header-bg); font-weight: 700; font-size: 14px; border: none; border-radius: 24px; padding: 10px 28px; cursor: pointer; margin-top: 12px; transition: opacity .15s; }
+  .submit-btn:hover { opacity: .85; }
+  .feedback { display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13.5px; }
+  .feedback.show { display: flex; align-items: flex-start; gap: 10px; }
+  .feedback-icon { width: 22px; height: 22px; border-radius: 50%; background: var(--header-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .feedback-icon.ok { color: var(--correct); }
+  .feedback-icon.fail { color: var(--yellow); }
+  .next-btn { background: var(--header-bg); color: #fff; font-weight: 700; font-size: 13px; border: none; border-radius: 24px; padding: 8px 22px; cursor: pointer; margin-top: 10px; display: none; }
+  .next-btn.show { display: inline-block; }
+
+  /* RESULT PANEL */
+  #result-panel { display: none; background: var(--header-bg); color: #fff; border-radius: var(--radius); padding: 32px 28px; text-align: center; margin-top: 20px; }
+  #result-panel h2 { font-size: 24px; margin-bottom: 8px; }
+  #result-panel .score { font-size: 52px; font-weight: 800; color: var(--yellow); }
+  #result-panel p { font-size: 14px; color: #ccc; margin-top: 8px; }
+  #result-panel .restart-btn { background: var(--yellow); color: var(--header-bg); font-weight: 700; border: none; border-radius: 24px; padding: 10px 28px; cursor: pointer; margin-top: 18px; font-size: 14px; }
+  .no-questions { color: var(--muted); font-style: italic; padding: 20px 0; }
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <div class="badge">Five Stars IGS · Fitness Instructor</div>
+  <h1>Módulo 9 — Inteligencia Emocional y Marca Personal</h1>
+  <p>Esquema · Resumen · Términos · Test interactivo</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('esquema')">📋 Esquema</button>
+  <button class="tab-btn" onclick="showTab('resumen')">💡 Resumen clave</button>
+  <button class="tab-btn" onclick="showTab('siglas')">🔤 Siglas y términos</button>
+  <button class="tab-btn" onclick="showTab('test')">✏️ Test</button>
+</div>
+
+<!-- ============================================================ ESQUEMA -->
+<div id="tab-esquema" class="tab-content active">
+
+  <!-- TEMA 1 -->
+  <div class="accordion">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <span>🧠 Tema 1 — La Inteligencia Emocional</span>
+      <span class="acc-arrow">▼</span>
+    </div>
+    <div class="acc-body open">
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">1.1 Definiciones de Inteligencia Emocional <span>▼</span></div>
+        <div class="sub-acc-body open">
+          <table>
+            <tr><th>Autor</th><th>Definición clave</th></tr>
+            <tr><td><strong>Teruel et al. (2019)</strong></td><td>Conocimiento y/o competencias para abordar eficazmente las emociones y regular conductas sociales y emocionales. Fusión de razón y corazón.</td></tr>
+            <tr><td><strong>Goleman (1998)</strong></td><td>Capacidad de reconocer los propios sentimientos, los de los demás, motivarnos y manejar adecuadamente las relaciones con los demás y con nosotros mismos.</td></tr>
+            <tr><td><strong>Salguero (2011)</strong></td><td>Capacidad de sentir, entender, controlar y <em>modificar</em> estados emocionales de sí mismo y en los demás.</td></tr>
+            <tr><td><strong>García Fernández & Giménez-Mas (2010)</strong></td><td>Forma de interactuar con el mundo que tiene en cuenta los sentimientos y engloba habilidades como el control de impulsos, autoconciencia, motivación, entusiasmo, perseverancia y agilidad mental.</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">1.2 Habilidades de la IE según Goleman (1995) <span>▼</span></div>
+        <div class="sub-acc-body open">
+          <ul>
+            <li><strong>Autoconciencia</strong> — Valorar y conocer las propias emociones.</li>
+            <li><strong>Autocontrol</strong> — Capacidad para regular las propias emociones.</li>
+            <li><strong>Motivación</strong> — Capacidad para automotivarse y mantener el enfoque.</li>
+            <li><strong>Empatía</strong> — Reconocer y entender las emociones de los demás.</li>
+            <li><strong>Habilidades sociales</strong> — Valorar y gestionar las relaciones interpersonales.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">1.3 Clasificación de emociones básicas (Cantillo & Yáñez-Canal, 2020) <span>▼</span></div>
+        <div class="sub-acc-body open">
+          <table>
+            <tr><th>Autor</th><th>Emociones básicas</th></tr>
+            <tr><td>James</td><td>Miedo, tristeza, amor, ira</td></tr>
+            <tr><td>Arnold</td><td>Ira, aversión, coraje, pesimismo, miedo, odio, esperanza, amor, tristeza</td></tr>
+            <tr><td>Izard</td><td>Ira, desagrado, asco, miedo, alegría, interés, sorpresa</td></tr>
+            <tr><td>Ekman</td><td>Ira, asco, miedo, alegría, tristeza, sorpresa</td></tr>
+            <tr><td>Panksepp</td><td>Curiosidad, expectativa, miedo, ira, pánico</td></tr>
+            <tr><td>Plutchik</td><td>Aceptación, ira, anticipación, asco, alegría, miedo, tristeza, sorpresa</td></tr>
+            <tr><td>Power & Dalgleish</td><td>Ira, tristeza, miedo, asco, alegría</td></tr>
+            <tr><td>Oatley</td><td>Ira, tristeza, miedo, asco, felicidad</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">1.4 IE y Deporte — Importancia y beneficios <span>▼</span></div>
+        <div class="sub-acc-body">
+          <ul>
+            <li>Técnicas psicológicas (relajación, concentración, visualización) cada vez más usadas en deporte.</li>
+            <li>Las emociones en el éxito deportivo tienen zonas óptimas individuales, no de grupo.</li>
+            <li>Beneficios: menos lesiones, mayor rendimiento, menos abandonos por burnout.</li>
+            <li>El 95% de las decisiones no son racionales; se toman por instinto y emoción (Garza, 2020).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">1.5 Los 7 Hábitos — Covey (2015) <span>▼</span></div>
+        <div class="sub-acc-body">
+          <table>
+            <tr><th>#</th><th>Hábito</th><th>Concepto clave</th></tr>
+            <tr><td>1</td><td>Ser proactivo</td><td>Escoger la respuesta ante estímulos. Modelo proactivo ("Lo haré") vs reactivo ("Lo intentaré"). Círculo de influencia vs preocupación.</td></tr>
+            <tr><td>2</td><td>Comenzar con un fin en mente</td><td>Tener propósito. Círculo de influencia: seguridad, guía, sabiduría y poder (interdependientes).</td></tr>
+            <tr><td>3</td><td>Poner primero lo primero</td><td>Priorizar lo importante pero NO urgente (cuadrante II de la Matriz del Tiempo).</td></tr>
+            <tr><td>4</td><td>Pensar ganar/ganar</td><td>Buscar beneficio mutuo y cooperación. Seis modelos: Ganar/Ganar, Gano/Pierdes, Pierdo/Ganas, Pierdo/Pierdes, Gano, Ganar/Ganar o no hay trato.</td></tr>
+            <tr><td>5</td><td>Buscar primero entender, luego ser entendido</td><td>Escucha activa y empatía antes de exponer el propio punto de vista.</td></tr>
+            <tr><td>6</td><td>Crear sinergias</td><td>Valorar la diversidad; ideas divergentes producen ideas superiores. Trabajo en equipo e innovación.</td></tr>
+            <tr><td>7</td><td>Afilar la sierra</td><td>Renovarse física, mental y espiritualmente. Ejercicio, hábitos saludables, lectura, meditación.</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">1.6 Empatía en la IE (ACSM, 2015) <span>▼</span></div>
+        <div class="sub-acc-body">
+          <ul>
+            <li><strong>Empatía afectiva:</strong> Responder con una emoción análoga a la del cliente.</li>
+            <li><strong>Empatía cognitiva:</strong> Identificarse intelectualmente con lo que piensa el cliente.</li>
+            <li>Factores que influyen: género, edad, capacidades, creencias religiosas, educación, nivel de ingresos, cultura.</li>
+            <li>Condiciones para el cambio: honestidad, respeto mutuo, comunicación eficaz, respuesta cercana.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">1.7 Teoría del Cerebro Triuno (McLean, 1969/1973) <span>▼</span></div>
+        <div class="sub-acc-body">
+          <table>
+            <tr><th>Cerebro</th><th>Función</th><th>Rol en decisiones</th></tr>
+            <tr><td><strong>Neocórtex</strong></td><td>Razonamiento lógico, movimientos voluntarios, lenguaje, aprendizaje</td><td>NO estimular en ventas/decisiones de compra</td></tr>
+            <tr><td><strong>Límbico</strong></td><td>Emociones y estados de ánimo, experiencias vividas</td><td>Evoca emociones que activan al reptiliano</td></tr>
+            <tr><td><strong>Reptiliano</strong></td><td>Supervivencia e instinto. Área más primitiva</td><td>"Responsable" de la toma de decisiones. Se activa con 6 estímulos</td></tr>
+          </table>
+          <p style="margin-top:10px; font-size:13px;"><strong>6 estímulos para activar el reptiliano:</strong> anuncios centrados en el consumidor, contrastes visuales, producto tangible, inicio y final llamativos, publicidad visual, emociones.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TEMA 2 -->
+  <div class="accordion">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <span>🏷️ Tema 2 — Marca Personal: Concepto, Importancia y Beneficios</span>
+      <span class="acc-arrow">▼</span>
+    </div>
+    <div class="acc-body open">
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">2.1 Definición de Marca Personal (Roca, 2015) <span>▼</span></div>
+        <div class="sub-acc-body open">
+          <ul>
+            <li>Proceso de identificar y comunicar las características que nos hacen diferentes.</li>
+            <li>Es el <em>recuerdo</em> que dejamos en otras personas; lo emocional siempre supera a lo racional en la memoria.</li>
+            <li>Se construye sobre un buen producto (algo de valor que ofrecer).</li>
+            <li><strong>4 pasos:</strong> Objetivos claros → Posicionamiento y estrategia → Elemento diferencial → Ser auténtico y generar empatía.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">2.2 Beneficios de la Marca Personal <span>▼</span></div>
+        <div class="sub-acc-body open">
+          <ul>
+            <li>Control de lo que emites de ti mismo.</li>
+            <li>Ayuda a saber si las oportunidades laborales son compatibles contigo (evitar trabajos que no encajan).</li>
+            <li>Conseguir que otros te encuentren a ti (inbound profesional).</li>
+            <li>Generar necesidades en clientes potenciales.</li>
+            <li>Diferenciación de la competencia.</li>
+            <li>Encontrar socios para nuevos proyectos.</li>
+            <li>Conseguir clientes para tu negocio.</li>
+            <li>Ser conocido por quien quieres que te conozca.</li>
+            <li>Posicionarte como especialista y referente en tu sector.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">2.3 Marca Personal vs Marketing <span>▼</span></div>
+        <div class="sub-acc-body">
+          <table>
+            <tr><th>Marca Personal</th><th>Marketing</th></tr>
+            <tr><td>Lo que evocas a las personas; el recuerdo emocional que dejas.</td><td>Lo que tú dices de ti a los demás; estrategias de comercialización de un producto (RAE, 2023).</td></tr>
+            <tr><td>Percepción emocional generada.</td><td>Estimulación de la demanda de un producto/servicio.</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="sub-acc">
+        <div class="sub-acc-header" onclick="toggleSubAcc(this)">2.4 Modelo Canvas — 9 Bloques (Osterwalder, 2004) <span>▼</span></div>
+        <div class="sub-acc-body open">
+          <table>
+            <tr><th>#</th><th>Bloque</th><th>Pregunta clave</th></tr>
+            <tr><td>1</td><td>Segmento de mercado</td><td>¿Quién es mi cliente?</td></tr>
+            <tr><td>2</td><td>Propuesta de valor</td><td>¿Qué problema resolvemos? ¿Qué nos diferencia?</td></tr>
+            <tr><td>3</td><td>Canales</td><td>¿Por qué medio se comunica la empresa con el cliente?</td></tr>
+            <tr><td>4</td><td>Relaciones con clientes</td><td>¿Qué tipo de relación queremos con el cliente? (Personal, automatizada, mixta)</td></tr>
+            <tr><td>5</td><td>Fuentes de ingresos</td><td>¿Cómo genera dinero el negocio?</td></tr>
+            <tr><td>6</td><td>Recursos clave</td><td>¿Qué activos imprescindibles necesitamos?</td></tr>
+            <tr><td>7</td><td>Actividades clave</td><td>¿Qué actividades fundamentales crean valor?</td></tr>
+            <tr><td>8</td><td>Asociaciones clave</td><td>¿Qué socios/proveedores necesitamos?</td></tr>
+            <tr><td>9</td><td>Estructura de costes</td><td>¿Cuánto cuesta el negocio? (Costes fijos y variables)</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================ RESUMEN -->
+<div id="tab-resumen" class="tab-content">
+
+  <div class="section-title">Definiciones esenciales de IE</div>
+  <div class="definition-card">
+    <div class="author">Goleman (1998)</div>
+    <p>Capacidad de reconocer los propios sentimientos y los de los demás, motivarnos y manejar las relaciones con nosotros mismos y con los demás.</p>
+  </div>
+  <div class="definition-card">
+    <div class="author">Salguero (2011) — matiz diferenciador</div>
+    <p>Capacidad de <strong>sentir, entender, controlar y modificar</strong> estados emocionales de sí mismo <em>y en los demás</em>. El matiz clave: la capacidad de modificar estados en uno mismo Y en los demás.</p>
+  </div>
+  <div class="definition-card">
+    <div class="author">Teruel et al. (2019)</div>
+    <p>Conocimiento y/o competencias para abordar eficazmente las emociones y regular conductas sociales y emocionales. Supone la fusión de razón y corazón.</p>
+  </div>
+  <div class="definition-card">
+    <div class="author">García Fernández & Giménez-Mas (2010)</div>
+    <p>Forma de interactuar con el mundo que engloba: control de impulsos, autoconciencia, motivación, entusiasmo, perseverancia y agilidad mental.</p>
+  </div>
+
+  <div class="section-title">5 Habilidades de la IE (Goleman, 1995)</div>
+  <div class="key-grid">
+    <div class="key-box kp"><h3>Autoconciencia</h3><p>Valorar y conocer las propias emociones.</p></div>
+    <div class="key-box kt"><h3>Autocontrol</h3><p>Capacidad para regular las propias emociones.</p></div>
+    <div class="key-box ka"><h3>Motivación</h3><p>Capacidad para automotivarse y mantener el enfoque.</p></div>
+    <div class="key-box kc"><h3>Empatía</h3><p>Reconocer y entender las emociones ajenas.</p></div>
+    <div class="key-box kp" style="grid-column: span 2;"><h3>Habilidades sociales</h3><p>Valorar y gestionar las relaciones interpersonales.</p></div>
+  </div>
+
+  <div class="section-title">7 Hábitos de Covey (2015)</div>
+  <div class="habits-grid">
+    <div class="habit-card"><div class="num">1</div><div class="name">Ser proactivo</div></div>
+    <div class="habit-card"><div class="num">2</div><div class="name">Comenzar con un fin en mente</div></div>
+    <div class="habit-card"><div class="num">3</div><div class="name">Poner primero lo primero</div></div>
+    <div class="habit-card"><div class="num">4</div><div class="name">Pensar ganar/ganar</div></div>
+    <div class="habit-card"><div class="num">5</div><div class="name">Buscar primero entender</div></div>
+    <div class="habit-card"><div class="num">6</div><div class="name">Crear sinergias</div></div>
+    <div class="habit-card" style="grid-column: span 1;"><div class="num">7</div><div class="name">Afilar la sierra</div></div>
+  </div>
+
+  <div class="section-title">Modelos proactivo vs reactivo</div>
+  <div class="key-grid">
+    <div class="key-box kc">
+      <h3>🔴 Modelo Reactivo</h3>
+      <ul>
+        <li>Respuesta sin razonamiento previo</li>
+        <li>"Lo intentaré", "No puedo hacer nada"</li>
+        <li>"Debo hacerlo", "Soy así"</li>
+        <li>Círculo de preocupación grande</li>
+      </ul>
+    </div>
+    <div class="key-box kt">
+      <h3>🟢 Modelo Proactivo</h3>
+      <ul>
+        <li>Escoger la respuesta ante el estímulo</li>
+        <li>"Lo haré", "Puedo mejorar"</li>
+        <li>"Quiero hacerlo", "Prefiero hacerlo así"</li>
+        <li>Círculo de influencia creciente</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Cerebro Triuno</div>
+  <div class="key-grid">
+    <div class="key-box kp"><h3>Neocórtex</h3><p>Razonamiento lógico, reflexión. <em>NO estimular</em> en ventas.</p></div>
+    <div class="key-box kt"><h3>Cerebro Límbico</h3><p>Emociones y estados de ánimo. Activa al reptiliano.</p></div>
+    <div class="key-box kc" style="grid-column: span 2;"><h3>Cerebro Reptiliano</h3><p>Supervivencia e instinto. "Responsable" de la toma de decisiones. Se activa con 6 estímulos: anuncios centrados en el consumidor, contrastes visuales, tangibilidad, inicio/final llamativo, publicidad visual y emociones.</p></div>
+  </div>
+
+  <div class="section-title">Modelo Canvas — 9 Bloques</div>
+  <div class="canvas-grid">
+    <div class="canvas-card"><div class="cnum">Bloque 1</div><h4>Segmento de mercado</h4><p>¿Quién es mi cliente?</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 2</div><h4>Propuesta de valor</h4><p>¿Qué problema resolvemos?</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 3</div><h4>Canales</h4><p>Medios de comunicación con el cliente.</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 4</div><h4>Relaciones con clientes</h4><p>Personal, automatizada o mixta.</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 5</div><h4>Fuentes de ingresos</h4><p>¿Cómo gana dinero el negocio?</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 6</div><h4>Recursos clave</h4><p>Activos imprescindibles para crear valor.</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 7</div><h4>Actividades clave</h4><p>Actividades fundamentales del modelo.</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 8</div><h4>Asociaciones clave</h4><p>Socios y proveedores externos.</p></div>
+    <div class="canvas-card"><div class="cnum">Bloque 9</div><h4>Estructura de costes</h4><p>Costes fijos y variables del negocio.</p></div>
+  </div>
+
+</div>
+
+<!-- ============================================================ SIGLAS -->
+<div id="tab-siglas" class="tab-content">
+  <p style="color:var(--muted); font-size:13px; margin-bottom:16px;">Haz clic en un término para ver su definición completa.</p>
+  <div class="chips" id="chips-container"></div>
+  <div id="term-display"></div>
+</div>
+
+<!-- ============================================================ TEST -->
+<div id="tab-test" class="tab-content">
+  <div class="test-controls">
+    <button class="filter-btn active" data-cat="Todos" onclick="filterCat(this)">Todos</button>
+    <button class="filter-btn" data-cat="Inteligencia Emocional" onclick="filterCat(this)">🧠 Inteligencia Emocional</button>
+    <button class="filter-btn" data-cat="Hábitos" onclick="filterCat(this)">✅ Hábitos</button>
+    <button class="filter-btn" data-cat="Marca Personal" onclick="filterCat(this)">🏷️ Marca Personal</button>
+    <button class="filter-btn" data-cat="Modelo Canvas" onclick="filterCat(this)">📊 Modelo Canvas</button>
+  </div>
+  <div class="progress-label" id="progress-label">Pregunta 0 de 0</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+  <div id="questions-container"></div>
+  <div id="result-panel">
+    <h2>Resultado final</h2>
+    <div class="score" id="final-score">0/0</div>
+    <p id="final-msg"></p>
+    <button class="restart-btn" onclick="restartTest()">🔄 Repetir test</button>
+  </div>
+</div>
+
+<script>
+// ============================================================ TABS
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ============================================================ ACCORDION
+function toggleAcc(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.acc-arrow');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+function toggleSubAcc(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ============================================================ TERMS
+const terms = [
+  { name: "IE", full: "Inteligencia Emocional", def: "Capacidad de reconocer, comprender y gestionar las emociones propias y las de los demás. Permite regular conductas sociales y emocionales.", origin: "Concepto desarrollado entre otros por Goleman, Salguero, Teruel et al." },
+  { name: "Autoconciencia", full: "Autoconciencia", def: "Habilidad de valorar y conocer las propias emociones. Primera habilidad de la IE según Goleman (1995).", origin: "Goleman (1995)" },
+  { name: "Autocontrol", full: "Autocontrol", def: "Capacidad para regular y controlar las propias emociones ante situaciones de estrés o estimulación.", origin: "Goleman (1995)" },
+  { name: "Empatía afectiva", full: "Empatía afectiva", def: "Capacidad del entrenador de responder a las emociones del cliente con una emoción afín o análoga (similar).", origin: "ACSM (2015)" },
+  { name: "Empatía cognitiva", full: "Empatía cognitiva", def: "Capacidad de identificarse intelectualmente con lo que el cliente piensa; ponerse en su lugar.", origin: "ACSM (2015)" },
+  { name: "Neocórtex", full: "Neocórtex", def: "Parte del cerebro responsable del razonamiento lógico, movimientos voluntarios, lenguaje y aprendizaje. En ventas y toma de decisiones, es el área que NO se debe estimular.", origin: "Teoría del Cerebro Triuno — McLean (1969/1973)" },
+  { name: "Cerebro límbico", full: "Cerebro límbico", def: "Parte del cerebro que alberga las emociones y los estados de ánimo. Es responsable de la aparición de emociones según las experiencias vividas.", origin: "McLean / Gambín (2017)" },
+  { name: "Reptiliano", full: "Cerebro Reptiliano", def: "Área más primitiva del cerebro. Función principal: supervivencia e instinto. Es el 'responsable' de la toma de decisiones de compra. Se activa con 6 estímulos específicos.", origin: "McLean / Garza (2020)" },
+  { name: "Círculo de influencia", full: "Círculo de influencia", def: "Conjunto de pensamientos y situaciones que nos ayudan a tomar decisiones. Asociado al modelo proactivo. Debe crecer para superar al círculo de preocupación.", origin: "Covey (2015)" },
+  { name: "Círculo de preocupación", full: "Círculo de preocupación", def: "Pensamientos negativos que nos hacen estar dubitativos y dificultan la toma de decisiones. Asociado al modelo reactivo.", origin: "Covey (2015)" },
+  { name: "Ganar/Ganar", full: "Modelo Ganar/Ganar", def: "Modelo de interacción humana que busca el beneficio mutuo y la cooperación. La vida se entiende como cooperación donde el éxito conjunto mejora a ambas partes.", origin: "Covey (2015) — Hábito 4" },
+  { name: "Gano/Pierdes", full: "Modelo Gano/Pierdes", def: "Modelo de interacción que busca el uso del poder y la autoridad sobre el otro. Enfoque autoritario; no lleva a la cooperación.", origin: "Covey (2015)" },
+  { name: "Pierdo/Ganas", full: "Modelo Pierdo/Ganas", def: "Modelo de interacción que genera sumisión y busca la aceptación de la sociedad. Personas que buscan agradar.", origin: "Covey (2015)" },
+  { name: "Pierdo/Pierdes", full: "Modelo Pierdo/Pierdes", def: "Ocurre cuando dos personas con mentalidad Gano/Pierdes interactúan. Al ser ambos egoístas, ambos acaban perdiendo.", origin: "Covey (2015)" },
+  { name: "Marca personal", full: "Marca Personal", def: "Imagen que proyectamos hacia los demás. Proceso de identificar y comunicar las características que nos hacen diferentes para destacar en un entorno competitivo. Es el recuerdo emocional que dejamos.", origin: "Roca (2015)" },
+  { name: "Personal Branding", full: "Personal Branding", def: "Cómo gestionamos nuestra marca personal. No es lo mismo que marketing: se centra en la percepción emocional que generamos en los demás.", origin: "Roca (2015)" },
+  { name: "Marketing", full: "Marketing", def: "Conjunto de estrategias empleadas para la comercialización de un producto y para estimular su demanda. Lo que tú dices de ti a los demás.", origin: "RAE (2023)" },
+  { name: "Modelo Canvas", full: "Modelo Canvas / Business Model Canvas", def: "Herramienta metodológica creada por Osterwalder (2004) que ayuda a plasmar las realidades de un negocio en 9 bloques: segmento de mercado, propuesta de valor, canales, relaciones con clientes, fuentes de ingresos, recursos clave, actividades clave, asociaciones clave y estructura de costes.", origin: "Osterwalder (2004)" },
+  { name: "Propuesta de valor", full: "Propuesta de Valor (Canvas)", def: "Bloque del Canvas que busca resolver el problema del cliente y define lo que diferencia a la empresa de la competencia.", origin: "Osterwalder (2004)" },
+  { name: "Canales (Canvas)", full: "Canales (Canvas)", def: "Bloque del Canvas que define los medios de comunicación que utiliza la empresa para dar a conocer su producto (propuesta de valor) a los clientes.", origin: "Osterwalder (2004)" },
+  { name: "Burnout", full: "Burnout", def: "Síndrome de agotamiento extremo en deportistas. Una buena gestión emocional puede reducir los abandonos por burnout.", origin: "Ros-Martínez et al. (2013)" },
+  { name: "Neuromarketing", full: "Neuromarketing", def: "Disciplina que estudia cómo el cerebro responde a los estímulos de marketing. Se basa en la Teoría del Cerebro Triuno para entender la toma de decisiones del consumidor.", origin: "Garza (2020)" },
+  { name: "Mapa de valor", full: "Mapa de Valor", def: "Manera en la que creamos valor para el cliente. No es la calidad del producto en sí, sino la solución de sus problemas o las alegrías que podemos darle.", origin: "Sonderegger (2020)" },
+  { name: "Perfil del cliente", full: "Perfil del Cliente", def: "Análisis del cliente en tres dimensiones: tareas (funcionales, emocionales, sociales), problemas (frustraciones) y alegrías (lo que gana más allá de solucionar el problema).", origin: "Sonderegger (2020)" },
+];
+
+const chipsContainer = document.getElementById('chips-container');
+const termDisplay = document.getElementById('term-display');
+let activeChip = null;
+
+terms.forEach((t, i) => {
+  const chip = document.createElement('div');
+  chip.className = 'chip';
+  chip.textContent = t.name;
+  chip.onclick = () => {
+    if (activeChip === chip) {
+      chip.classList.remove('active');
+      termDisplay.innerHTML = '';
+      activeChip = null;
+      return;
+    }
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeChip = chip;
+    termDisplay.innerHTML = `<div class="term-panel active">
+      <h3>${t.full}</h3>
+      <p>${t.def}</p>
+      <div class="origin">📚 ${t.origin}</div>
+    </div>`;
+  };
+  chipsContainer.appendChild(chip);
+});
+
+// ============================================================ TEST DATA
+const ALL_QUESTIONS = [
+  // INTELIGENCIA EMOCIONAL
+  {cat:"Inteligencia Emocional", q:"¿Qué autor define la IE como la 'capacidad de sentir, entender, controlar y modificar estados emocionales de sí mismo y en los demás'?", opts:["Goleman (1998)","Teruel et al. (2019)","Salguero (2011)","García Fernández y Giménez-Mas (2010)"], correct:2, exp:"Salguero (2011) es quien introduce el matiz de modificar estados tanto en uno mismo como en los demás."},
+  {cat:"Inteligencia Emocional", q:"Según Goleman (1998), ¿cuál es la definición de inteligencia emocional?", opts:["Capacidad de sentir y modificar emociones en sí mismo y en los demás","Conocimiento para abordar eficazmente las emociones y regular conductas","Capacidad de reconocer propios sentimientos, los de los demás, motivarnos y manejar relaciones","Forma de interactuar con el mundo que engloba autoconciencia y motivación"], correct:2, exp:"Goleman (1998) define la IE como la capacidad de reconocer sentimientos propios y ajenos, motivarnos y manejar relaciones."},
+  {cat:"Inteligencia Emocional", q:"¿Qué autores definen la IE como 'conocimiento y/o competencias para abordar eficazmente las emociones y regular conductas sociales y emocionales'?", opts:["Goleman (1995)","Salguero (2011)","García Fernández y Giménez-Mas (2010)","Teruel et al. (2019)"], correct:3, exp:"Esta definición corresponde a Teruel et al. (2019), que también la describe como la fusión de razón y corazón."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes definiciones destaca la capacidad de modificar los estados emocionales tanto en uno mismo como en los demás?", opts:["La definición de Salguero (2011)","La definición de García Fernández y Giménez-Mas (2010)","La definición de Teruel et al. (2019)","La definición de Goleman (1998)"], correct:0, exp:"Salguero (2011) es quien añade el matiz diferenciador de modificar estados en uno mismo Y en los demás."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes NO es una habilidad que compone la IE según Goleman (1995)?", opts:["Habilidades sociales","Empatía","Automotivarse","Competitividad"], correct:3, exp:"Las 5 habilidades de Goleman son: autoconciencia, autocontrol, motivación, empatía y habilidades sociales. La competitividad no está incluida."},
+  {cat:"Inteligencia Emocional", q:"¿Qué habilidad de la IE se refiere a valorar y conocer las propias emociones?", opts:["Autocontrol","Empatía","Autoconciencia","Motivación"], correct:2, exp:"La autoconciencia consiste en valorar y conocer las propias emociones."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes habilidades de la IE permite reconocer las emociones ajenas?", opts:["Autoconciencia","Autocontrol","Habilidades sociales","Empatía"], correct:3, exp:"La empatía es la capacidad para reconocer y entender las emociones de los demás."},
+  {cat:"Inteligencia Emocional", q:"¿Qué definición describe mejor la inteligencia emocional según Goleman (1998)?", opts:["Capacidad de sentir, entender, controlar y modificar estados emocionales de sí mismo y en los demás","El conocimiento y/o las competencias para abordar eficazmente las emociones, con el fin de regular las conductas sociales y emocionales","La capacidad de reconocer nuestros propios sentimientos, los sentimientos de los demás, motivarnos y manejar adecuadamente las relaciones","Una forma de interactuar con el mundo que tiene en cuenta los sentimientos y engloba habilidades como el control de los impulsos"], correct:2, exp:"Goleman (1998) define la IE como la capacidad de reconocer sentimientos propios y ajenos, motivarnos y manejar relaciones."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes afirmaciones describe mejor el concepto de marca personal?", opts:["Es la impresión que dejamos en los demás y cómo nos diferenciamos","Es tener un buen producto para vender","Es la estrategia de marketing que utilizamos para vender productos","Es la cantidad de seguidores que tenemos en redes sociales"], correct:0, exp:"La marca personal es la imagen/recuerdo emocional que proyectamos y nos diferencia de los demás."},
+  {cat:"Inteligencia Emocional", q:"Según la teoría del cerebro triuno, ¿qué porcentaje de las decisiones se toman de forma racional?", opts:["95%","50%","5%","75%"], correct:2, exp:"Según Garza (2020), el 95% de las decisiones no son racionales; solo un 5% lo son."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál es el cerebro responsable de la supervivencia e instinto?", opts:["Neocórtex","Cerebro límbico","Cerebro reptiliano","Cerebro frontal"], correct:2, exp:"El cerebro reptiliano es el área más primitiva, con función principal de supervivencia e instinto."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál de los siguientes cerebros es responsable de la toma de decisiones basadas en la supervivencia e instinto?", opts:["Neocórtex","Cerebro límbico","Cerebro reptiliano","Cerebro frontal"], correct:2, exp:"El cerebro reptiliano es el 'responsable' de la toma de decisiones y responde a estímulos de supervivencia e instinto."},
+  {cat:"Inteligencia Emocional", q:"¿Qué cerebro alberga las emociones y estados de ánimo?", opts:["Neocórtex","Cerebro reptiliano","Cerebro límbico","Córtex prefrontal"], correct:2, exp:"El cerebro límbico es el responsable de las emociones y estados de ánimo."},
+  {cat:"Inteligencia Emocional", q:"En el Modelo del Cerebro Triuno, ¿qué área NO se debe estimular en ventas?", opts:["Cerebro reptiliano","Cerebro límbico","Neocórtex","Los tres por igual"], correct:2, exp:"El neocórtex (razonamiento lógico) es el área que no se debe estimular en el contexto de ventas y toma de decisiones de compra."},
+  {cat:"Inteligencia Emocional", q:"¿Qué función tiene el neocórtex?", opts:["Supervivencia e instinto","Emociones y estados de ánimo","Razonamiento lógico y cognitivo superior","Percepción no consciente"], correct:2, exp:"El neocórtex se encarga de las funciones racionales y cognitivas más elevadas: movimientos voluntarios, aprendizaje y lenguaje."},
+  {cat:"Inteligencia Emocional", q:"¿Quién fue el primero en hablar del modelo del cerebro triuno?", opts:["Goleman","Garza","McLean","Gambín"], correct:2, exp:"Según Carvajal-Santana (2018), McLean presentó el modelo en 1969 y se publicó en 1973."},
+  {cat:"Inteligencia Emocional", q:"¿Cuántos estímulos son necesarios para activar el cerebro reptiliano según Garza (2020)?", opts:["3","5","6","7"], correct:2, exp:"Se necesitan activar 6 estímulos para lograr que el cerebro reptiliano tome la decisión de compra."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál de los siguientes NO es un estímulo que activa el cerebro reptiliano?", opts:["Publicidad visual","Emociones","Contrastes visuales","Razonamiento lógico detallado"], correct:3, exp:"Los 6 estímulos son: anuncios centrados en el consumidor, contrastes visuales, producto tangible, inicio/final llamativo, publicidad visual y emociones. El razonamiento lógico activa el neocórtex, no el reptiliano."},
+  {cat:"Inteligencia Emocional", q:"La empatía afectiva se define como:", opts:["Identificarse intelectualmente con lo que el cliente piensa","Responder a las emociones del cliente con una emoción afín o análoga","Escuchar activamente sin responder emocionalmente","Analizar racionalmente el problema del cliente"], correct:1, exp:"La empatía afectiva es la capacidad de responder a las emociones del cliente con una emoción afín o similar."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes es una condición necesaria para desencadenar un cambio según ACSM (2015)?", opts:["Autoridad y liderazgo","Honestidad y respeto mutuo","Conocimiento técnico avanzado","Número elevado de sesiones"], correct:1, exp:"Según ACSM (2015), las condiciones son: honestidad, respeto mutuo, comunicación eficaz y respuesta cercana al cliente."},
+  {cat:"Inteligencia Emocional", q:"¿Qué autor clasifica las emociones básicas incluyendo: curiosidad, expectativa, miedo, ira y pánico?", opts:["Ekman","James","Panksepp","Plutchik"], correct:2, exp:"Panksepp clasifica las emociones básicas como: curiosidad, expectativa, miedo, ira y pánico."},
+  {cat:"Inteligencia Emocional", q:"¿Qué autor incluye la 'aceptación' y la 'anticipación' entre las emociones básicas?", opts:["Izard","Oatley","James","Plutchik"], correct:3, exp:"Plutchik incluye: aceptación, ira, anticipación, asco, alegría, miedo, tristeza y sorpresa."},
+  {cat:"Inteligencia Emocional", q:"¿Qué beneficios aporta desarrollar la IE en el deporte?", opts:["Mayor rendimiento deportivo y menos lesiones","Más medallas pero mayor burnout","Independencia de factores emocionales","Mayor competitividad individual"], correct:0, exp:"Los beneficios son: menos lesiones, mayor rendimiento deportivo y menos abandonos por burnout."},
+  {cat:"Inteligencia Emocional", q:"¿Por qué las emociones en el éxito deportivo presentan zonas óptimas individuales y no grupales?", opts:["Porque los deportistas trabajan solos","Porque cada atleta reacciona diferente a los estresores de la competición","Porque la táctica grupal supera a la individual","Porque el entrenador gestiona las emociones del grupo"], correct:1, exp:"Cada atleta reacciona de manera diferente a los estresores, generando emociones que les afectan en distinta medida."},
+
+  // HÁBITOS
+  {cat:"Hábitos", q:"¿Cuál de las siguientes frases está asociada con un modelo proactivo?", opts:["Lo intentaré","Debo hacerlo","No puedo hacer nada","Lo haré"], correct:3, exp:"El modelo proactivo usa frases como 'Lo haré', 'Puedo mejorar', 'Quiero hacerlo'. 'Lo intentaré' y 'Debo hacerlo' son frases reactivas."},
+  {cat:"Hábitos", q:"¿Por qué es importante priorizar tareas que son importantes pero no urgentes?", opts:["Nos ayuda a enfocarnos en acciones que contribuyen a nuestro crecimiento y objetivos","Nos permite completar tareas más rápido","Asegura que todas las tareas se completen a tiempo","Reduce la cantidad de tareas que necesitamos hacer"], correct:0, exp:"Las tareas importantes y no urgentes (cuadrante II) contribuyen a nuestros objetivos de crecimiento sin el estrés de la urgencia."},
+  {cat:"Hábitos", q:"¿Cómo se caracteriza el modelo Ganar/Ganar?", opts:["Ocurre cuando dos personas egoístas interactúan y ambas pierden","Se enfoca en el beneficio mutuo y la cooperación","Genera sumisión y busca la aceptación de la sociedad","Se enfoca en el uso del poder y la autoridad"], correct:1, exp:"Ganar/Ganar busca el beneficio mutuo; la vida es cooperación y ese éxito conjunto mejora a ambas partes."},
+  {cat:"Hábitos", q:"¿Qué factor NO es parte del círculo de influencia según Covey?", opts:["Riqueza","Seguridad","Guía","Sabiduría"], correct:0, exp:"El círculo de influencia de Covey se compone de: seguridad, guía, sabiduría y poder. La riqueza no es uno de los 4 factores."},
+  {cat:"Hábitos", q:"¿Qué modelo de interacción genera sumisión y busca la aceptación de la sociedad?", opts:["Gano/Pierdes","Ganar/Ganar","Pierdo/Ganas","Gano"], correct:2, exp:"El modelo Pierdo/Ganas genera sumisión y busca agradar y ser aceptado por la sociedad."},
+  {cat:"Hábitos", q:"¿Qué hábito de Covey se basa en renovarse física, mental y espiritualmente?", opts:["Crear sinergias","Poner primero lo primero","Afilar la sierra","Buscar primero entender"], correct:2, exp:"El hábito 7 'Afilar la sierra' consiste en renovarnos para estar en plenitud física, mental y espiritual."},
+  {cat:"Hábitos", q:"¿Cuál es el hábito que propone priorizar las tareas importantes sobre las urgentes?", opts:["Ser proactivo","Comenzar con un fin en mente","Poner primero lo primero","Crear sinergias"], correct:2, exp:"El hábito 3 'Poner primero lo primero' propone priorizar lo importante sobre lo urgente."},
+  {cat:"Hábitos", q:"¿Qué hábito consiste en escuchar y entender a la otra persona antes de ser entendido?", opts:["Hábito 4 — Pensar ganar/ganar","Hábito 5 — Buscar primero entender","Hábito 6 — Crear sinergias","Hábito 2 — Comenzar con un fin en mente"], correct:1, exp:"El hábito 5 'Buscar primero entender, luego ser entendido' nos pide escuchar y ser empáticos antes de exponer nuestro punto de vista."},
+  {cat:"Hábitos", q:"En el modelo reactivo, ¿qué tipo de frases son características?", opts:["'Lo haré', 'Puedo mejorar'","'Quiero hacerlo', 'Prefiero hacerlo así'","'Lo intentaré', 'No puedo hacer nada'","'Voy a intentarlo con todo', 'Elegiré mi camino'"], correct:2, exp:"El modelo reactivo usa frases como 'Lo intentaré', 'No puedo hacer nada', 'Soy así', 'Debo de hacerlo'."},
+  {cat:"Hábitos", q:"¿Qué representa el círculo de preocupación según Covey?", opts:["Los pensamientos positivos que nos ayudan a decidir","Las situaciones que podemos controlar","Los pensamientos negativos que dificultan la toma de decisiones","El conjunto de metas personales y profesionales"], correct:2, exp:"El círculo de preocupación contiene los pensamientos negativos que nos hacen estar dubitativos y dificultan decidir."},
+  {cat:"Hábitos", q:"¿Cuál es el modelo Pierdo/Pierdes?", opts:["Dos personas que cooperan para alcanzar un beneficio común","Dos personas egoístas que buscan ganar y acaban perdiendo ambas","Una persona que cede ante otra para obtener aceptación","Una persona que impone su voluntad sobre la otra"], correct:1, exp:"Pierdo/Pierdes ocurre cuando interactúan dos personas del ámbito Gano/Pierdes y, al ser ambas egoístas, ambas pierden."},
+  {cat:"Hábitos", q:"¿Qué elementos conforman el círculo de influencia según Covey?", opts:["Motivación, disciplina, metas, acción","Seguridad, guía, sabiduría, poder","Autocontrol, empatía, valores, propósito","Dinero, trabajo, familia, salud"], correct:1, exp:"Los 4 factores del círculo de influencia son: seguridad, guía, sabiduría y poder. Son interdependientes."},
+  {cat:"Hábitos", q:"¿Qué es el hábito 'Crear sinergias' según Covey?", opts:["Buscar el beneficio propio en cada situación","Renovarse física y mentalmente","Cultivar la habilidad de valorar la diversidad para generar ideas superiores","Priorizar las tareas más urgentes del día"], correct:2, exp:"Crear sinergias (hábito 6) consiste en valorar la diversidad; las ideas divergentes producen ideas mejores que las individuales."},
+  {cat:"Hábitos", q:"¿Qué significa 'comenzar con un fin en mente' (hábito 2)?", opts:["Planificar todas las tareas del día con urgencia","Tener un propósito y dirigir los esfuerzos hacia el objetivo real","Empezar siempre por las tareas más fáciles","Definir el presupuesto antes de emprender un proyecto"], correct:1, exp:"Tener un propósito nos da razón de ser y permite dirigir todos los esfuerzos y acciones para conseguir lo que realmente queremos."},
+  {cat:"Hábitos", q:"El modelo Gano/Pierdes se caracteriza por:", opts:["Buscar beneficio mutuo y cooperación","Usar el poder y generar autoridad sobre el otro","Ceder para obtener la aceptación del grupo","Buscar una solución sinérgica donde todos ganen"], correct:1, exp:"Gano/Pierdes busca el uso del poder y generar autoridad; si yo consigo algo, tú no lo consigues."},
+  {cat:"Hábitos", q:"¿Cuántos modelos de interacción humana describe Covey en el hábito 4?", opts:["4","5","6","7"], correct:2, exp:"Covey describe 6 modelos: Ganar/Ganar, Gano/Pierdes, Pierdo/Ganas, Pierdo/Pierdes, Gano, y Ganar/Ganar o no hay trato."},
+  {cat:"Hábitos", q:"En la Matriz del Tiempo de Covey, ¿en qué cuadrante deberían estar la mayoría de nuestras tareas?", opts:["Importante y urgente","Importante y no urgente","No importante y urgente","No importante y no urgente"], correct:1, exp:"La prioridad debe ser el cuadrante II: importante y no urgente (prevención, construir relaciones, planificación), que nos acerca a los objetivos sin estrés."},
+  {cat:"Hábitos", q:"¿Cómo se 'afila la sierra' según Covey?", opts:["Trabajando más horas al día","A través del ejercicio físico, hábitos saludables, lectura y meditación","Estableciendo metas financieras claras","Delegando el máximo de tareas posible"], correct:1, exp:"Afilar la sierra se consigue mediante ejercicio físico, hábitos de vida saludable, reducir el estrés, leer y meditar."},
+  {cat:"Hábitos", q:"¿De qué libro provienen los 7 hábitos de Covey?", opts:["Inteligencia emocional en la práctica","Knowmads","Los 7 hábitos de la gente altamente efectiva","El modelo de negocio Canvas"], correct:2, exp:"Los 7 hábitos de la gente altamente efectiva es la obra de Stephen R. Covey (2015)."},
+  {cat:"Hábitos", q:"¿Qué modelo de interacción busca una solución sinérgica donde ambos ganen o no hay trato?", opts:["Ganar/Ganar","Gano/Pierdes","Gano","Ganar/Ganar o no hay trato"], correct:3, exp:"Ganar/Ganar o no hay trato son personas que buscan beneficio para ambas partes; si no es posible, prefieren no llegar a ningún acuerdo."},
+
+  // MARCA PERSONAL
+  {cat:"Marca Personal", q:"¿Cuál afirmación NO es un beneficio de desarrollar tu marca personal según Roca (2015)?", opts:["Te obliga a aceptar trabajos que no te gustan","Te permite ser conocido por quien quieres que te conozca","Te ayuda a conseguir clientes para tu negocio","Te permite tener el control de lo que emites de ti mismo"], correct:0, exp:"La marca personal ayuda a NO tener que aceptar trabajos que no encajan contigo. Te da las nociones para saber si las oportunidades son compatibles."},
+  {cat:"Marca Personal", q:"¿Qué es la marca personal según Roca (2015)?", opts:["La estrategia de marketing para vender un producto","El número de seguidores en redes sociales","El recuerdo e imagen que dejamos en otras personas","El presupuesto destinado a publicidad personal"], correct:2, exp:"La marca personal es el recuerdo que dejamos en otras personas; lo que les evocamos emocionalmente."},
+  {cat:"Marca Personal", q:"¿Cuáles son los 4 pasos para construir una marca personal según Roca (2015)?", opts:["Diseñar un logo, crear una web, publicar en RRSS, medir resultados","Tener objetivos claros, posicionarse y crear estrategia, elemento diferencial y ser auténtico","Definir el precio, el producto, la distribución y la comunicación","Estudiar el mercado, copiar a la competencia, innovar y medir"], correct:1, exp:"Los 4 pasos son: 1) objetivos claros, 2) posicionamiento y estrategia, 3) elemento diferencial, 4) ser auténtico y generar empatía."},
+  {cat:"Marca Personal", q:"¿En qué se diferencia la marca personal del marketing?", opts:["No hay diferencia, son sinónimos","La marca personal se centra en la percepción emocional que generamos; el marketing en estrategias de comercialización","El marketing es más importante que la marca personal","La marca personal solo funciona en el mundo digital"], correct:1, exp:"La marca personal es la percepción emocional que evocamos. El marketing son las estrategias de comercialización de un producto o servicio."},
+  {cat:"Marca Personal", q:"¿Qué se entiende por marketing según la RAE (2023)?", opts:["La imagen que proyectamos a los demás basada en nuestros valores","El recuerdo emocional que dejamos en las personas","El conjunto de estrategias empleadas para la comercialización de un producto y para estimular su demanda","La gestión de nuestra presencia en redes sociales"], correct:2, exp:"Según la RAE (2023), marketing es el 'conjunto de estrategias empleadas para la comercialización de un producto y para estimular su demanda'."},
+  {cat:"Marca Personal", q:"¿Qué beneficio de la marca personal está relacionado con la visibilidad profesional?", opts:["Reducir los costes del negocio","Que otros te encuentren a ti en lugar de buscar tú","Mejorar las habilidades técnicas","Aumentar el salario automáticamente"], correct:1, exp:"Una marca personal sólida permite que sean los empleadores o clientes quienes te encuentren a ti porque te necesitan."},
+  {cat:"Marca Personal", q:"Según el texto, ¿lo que recordamos de las personas es principalmente...?", opts:["Lo racional y lógico","Lo técnico y profesional","Lo emocional por encima de lo racional","Lo físico y visual"], correct:2, exp:"Lo que recordamos es siempre lo emocional por encima de lo racional (Roca, 2015)."},
+  {cat:"Marca Personal", q:"¿En qué se basa principalmente la marca personal según Roca?", opts:["En el número de seguidores en redes sociales","En las habilidades técnicas certificadas","En nuestras habilidades, valores, acciones y autenticidad","En los premios y reconocimientos obtenidos"], correct:2, exp:"La marca personal se basa en nuestras habilidades, valores y acciones, siendo auténtico y coherente."},
+  {cat:"Marca Personal", q:"¿Por qué es importante diferenciarse en el mercado laboral actual?", opts:["Porque los trabajos son permanentes y competitivos","Porque vivimos en una sociedad inestable donde diferenciarse es una necesidad","Porque las empresas solo contratan a personas con muchos seguidores","Porque el mercado digital ha eliminado la competencia"], correct:1, exp:"Vivimos en un mundo globalizado e hiperconectado donde todo es inestable; diferenciarse se convierte en una necesidad."},
+  {cat:"Marca Personal", q:"¿Qué posición ocupa la marca personal en la mente del consumidor?", opts:["La parte racional y analítica","Lo técnico y funcional","El recuerdo emocional que evocamos","La imagen corporativa de la empresa"], correct:2, exp:"La marca personal es el recuerdo emocional que dejamos; solo se puede entrar en la mente de alguien si has hecho algo por ella."},
+  {cat:"Marca Personal", q:"¿Cuál es el objetivo final de la marca personal según Roca (2015)?", opts:["Venderte a ti mismo al mayor precio posible","Conseguir muchos seguidores en redes sociales","Ser la persona de referencia en tu entorno y dejar huella en la mente de quienes te rodean","Crear un logo personal reconocible"], correct:2, exp:"Como indica Roca (2015), el objetivo es 'conseguir ser la persona de referencia en tu entorno y dejar huella en la mente de quienes te rodean'."},
+  {cat:"Marca Personal", q:"¿Cuándo tiene sentido obtener notoriedad en el mundo online?", opts:["Siempre que se tenga dinero para publicidad","Solo si se tienen miles de seguidores","Cuando eres capaz de ofrecer algo interesante para tu público","Solo si trabajas para una gran empresa"], correct:2, exp:"En el mundo online, solo tiene sentido obtener notoriedad si eres capaz de ofrecer algo que sea interesante para tu público."},
+  {cat:"Marca Personal", q:"¿Qué ventaja ofrecen las redes sociales para la marca personal?", opts:["Permiten espiar a la competencia sin límites","Están activas 24 horas al día y permiten que te encuentren desde cualquier lugar","Garantizan ingresos automáticos si tienes muchos seguidores","Sustituyen la necesidad de formación profesional"], correct:1, exp:"Los perfiles en RRSS están activos 24 horas al día, nunca descansan, y te pueden encontrar en cualquier momento desde cualquier lugar del mundo."},
+
+  // MODELO CANVAS
+  {cat:"Modelo Canvas", q:"¿Cuál de los siguientes bloques del Modelo Canvas se refiere a los medios de comunicación que utiliza la empresa para ofrecer su producto?", opts:["Propuestas de valor","Canales","Relaciones con clientes","Segmento de mercado"], correct:1, exp:"Los Canales son los medios de comunicación por los que la empresa se comunica con los clientes para ofrecer su producto (propuesta única de valor)."},
+  {cat:"Modelo Canvas", q:"¿Quién creó el Modelo Canvas?", opts:["Covey (2015)","Roca (2015)","Osterwalder (2004)","Sonderegger (2020)"], correct:2, exp:"El Modelo Canvas fue creado por Osterwalder en 2004."},
+  {cat:"Modelo Canvas", q:"¿Cuántos bloques tiene el Modelo Canvas?", opts:["7","8","9","10"], correct:2, exp:"El Modelo Canvas tiene 9 bloques determinados."},
+  {cat:"Modelo Canvas", q:"¿Qué bloque del Canvas define quiénes son los clientes de la empresa?", opts:["Canales","Fuentes de ingresos","Propuesta de valor","Segmento de mercado"], correct:3, exp:"El bloque 'Segmento de mercado' define quién es el cliente y permite segmentar de manera muy específica para conocer el nicho."},
+  {cat:"Modelo Canvas", q:"¿Qué busca el bloque 'Propuesta de valor' en el Canvas?", opts:["Definir los costes fijos del negocio","Resolver el problema del cliente y diferenciarse de la competencia","Establecer alianzas con socios estratégicos","Identificar los canales de distribución"], correct:1, exp:"La propuesta de valor busca resolver el problema del cliente y lo que nos diferencia de la competencia."},
+  {cat:"Modelo Canvas", q:"¿Qué son las 'fuentes de ingresos' en el Canvas?", opts:["Los costes necesarios para operar el negocio","Los socios estratégicos del negocio","Lo que genera dinero cuando los clientes compran las propuestas de valor","Los recursos humanos del equipo"], correct:2, exp:"Las fuentes de ingresos surgen cuando los clientes compran las propuestas de valor ofrecidas; son la base que mantiene en pie el negocio."},
+  {cat:"Modelo Canvas", q:"¿Qué tipos de recursos clave existen según Sonderegger (2020)?", opts:["Físicos, digitales, temporales y creativos","Físicos, económicos, humanos y de conocimiento","Materiales, financieros, tecnológicos y de marca","Internos, externos, fijos y variables"], correct:1, exp:"Los recursos clave pueden ser físicos, económicos, humanos y de conocimiento."},
+  {cat:"Modelo Canvas", q:"¿Qué bloque del Canvas describe las estrategias de networking con socios y proveedores externos?", opts:["Recursos clave","Actividades clave","Asociaciones clave","Relaciones con clientes"], correct:2, exp:"Las 'Asociaciones clave' (bloque 8) definen las estrategias de networking con potenciales socios y/o proveedores."},
+  {cat:"Modelo Canvas", q:"¿Cómo puede ser la relación con los clientes según el Canvas?", opts:["Solo digital o presencial","Personal, automatizada o mixta","Formal, informal o neutral","Individual, grupal o masiva"], correct:1, exp:"Según Sonderegger (2020), la relación con el cliente puede ser personal, automatizada o mixta."},
+  {cat:"Modelo Canvas", q:"¿Qué representa el 'Mapa de valor' en el Canvas?", opts:["El presupuesto de marketing de la empresa","La manera en la que creamos valor para el cliente (solución a sus problemas y alegrías)","El organigrama del equipo directivo","El plan de negocio a 5 años"], correct:1, exp:"El Mapa de Valor es la manera en la que creamos valor para el cliente: no la calidad del producto en sí, sino la solución de sus problemas o las alegrías que le podemos dar."},
+  {cat:"Modelo Canvas", q:"¿Cuáles son los tres componentes del perfil del cliente?", opts:["Precio, lugar y producto","Tareas, problemas y alegrías","Misión, visión y valores","Segmento, canal y relación"], correct:1, exp:"El perfil del cliente se compone de: tareas (funcionales, emocionales, sociales), problemas (frustraciones) y alegrías."},
+  {cat:"Modelo Canvas", q:"¿Por qué un enfoque más personal en las relaciones con clientes puede ser un inconveniente?", opts:["Porque es más caro que el automatizado","Porque podría limitar la capacidad de escalar el negocio","Porque los clientes prefieren la automatización","Porque genera menos fidelización"], correct:1, exp:"Un enfoque más personal podría limitar la capacidad de escalar el negocio, ya que requiere más recursos humanos por cliente."},
+  {cat:"Modelo Canvas", q:"¿Qué compra realmente el consumidor según el Canvas?", opts:["El producto en sí","La marca y el prestigio de la empresa","La solución a un problema que tiene","El precio más competitivo del mercado"], correct:2, exp:"El consumidor no compra un producto en sí, sino la solución a un problema. Es fundamental conocer exactamente lo que necesita."},
+  {cat:"Modelo Canvas", q:"¿Qué es la 'Estructura de costes' en el Canvas?", opts:["Lo que el cliente paga por los servicios","Lo que el negocio gana mensualmente","Lo que cuesta el negocio: costes fijos y variables","El presupuesto de marketing del año"], correct:2, exp:"La estructura de costes describe lo que cuesta el negocio y los elementos que lo conforman (costes fijos y variables)."},
+  {cat:"Modelo Canvas", q:"¿Cuál es la relación entre el segmento de mercado y la propuesta de valor en el Canvas?", opts:["Son bloques independientes sin relación directa","Debe existir correspondencia entre ambos: dar al cliente lo que realmente quiere","El segmento define el precio y la propuesta define el coste","Son el mismo bloque dividido en dos"], correct:1, exp:"Debe existir una correspondencia entre la propuesta de valor y el cliente; no se debe dar al cliente lo que no quiere."},
+  {cat:"Modelo Canvas", q:"¿Qué son las 'actividades clave' en el Canvas?", opts:["Las reuniones semanales del equipo directivo","Las actividades fundamentales necesarias para crear y ofrecer la propuesta de valor","Los eventos de marketing de la empresa","Los procesos administrativos del negocio"], correct:1, exp:"Las actividades clave son necesarias para crear y ofrecer una propuesta de valor; son lo fundamental para que el modelo funcione."},
+
+  // PREGUNTAS ADICIONALES MIXTAS
+  {cat:"Inteligencia Emocional", q:"¿Qué autor entiende la emoción como 'un sentimiento que afecta a los propios pensamientos, estados psicológicos, estados biológicos y voluntad de acción'?", opts:["Teruel et al. (2019)","Goleman (1995)","Salguero (2011)","García Fernández (2010)"], correct:1, exp:"Goleman (1995) define la emoción como un sentimiento que afecta a los pensamientos, estados psicológicos, biológicos y la voluntad de acción."},
+  {cat:"Hábitos", q:"¿Qué incluye el modelo proactivo según Covey?", opts:["Reactividad, impulsividad y dependencia","Conciencia, imaginación, voluntad e independencia","Disciplina, obediencia y cumplimiento","Urgencia, efectividad y productividad"], correct:1, exp:"El modelo proactivo incluye: conciencia, imaginación, conciencia, voluntad e independencia."},
+  {cat:"Marca Personal", q:"¿Cuántos pasos propone Roca (2015) para construir una marca personal?", opts:["3","4","5","6"], correct:1, exp:"Roca propone 4 pasos: objetivos claros, posicionamiento y estrategia, elemento diferencial, y ser auténtico generando empatía."},
+  {cat:"Modelo Canvas", q:"¿En qué año fue creado el Modelo Canvas?", opts:["1998","2000","2004","2010"], correct:2, exp:"El Modelo Canvas fue creado por Osterwalder en 2004, publicado como parte de su tesis sobre Business Model Ontology."},
+  {cat:"Inteligencia Emocional", q:"¿Cuál fue el primer autor del módulo en presentar la teoría del cerebro triuno?", opts:["Goleman","McLean","Gambín","Garza"], correct:1, exp:"Según Carvajal-Santana (2018), fue McLean quien presentó el modelo en 1969 (publicado en 1973)."},
+  {cat:"Hábitos", q:"¿Qué ejemplo usa el texto para ilustrar el hábito 'Comenzar con un fin en mente'?", opts:["Elegir entre estudiar o trabajar","Ver la misma situación desde el punto de vista del dinero vs el placer/amigos","Comparar deportes individuales y de equipo","Decidir entre dos propuestas de trabajo"], correct:1, exp:"El texto usa el ejemplo de quedarse a trabajar horas extra: desde el punto de vista del dinero (positivo) vs del placer con amigos (negativo)."},
+  {cat:"Inteligencia Emocional", q:"¿Qué habilidades nombra García Fernández y Giménez-Mas (2010) en su definición de IE?", opts:["Liderazgo, resiliencia y creatividad","Control de impulsos, autoconciencia, motivación, entusiasmo, perseverancia y agilidad mental","Asertividad, comunicación, empatía y adaptabilidad","Autoestima, confianza, disciplina y enfoque"], correct:1, exp:"García Fernández y Giménez-Mas (2010) mencionan: control de impulsos, autoconciencia, motivación, entusiasmo, perseverancia y agilidad mental."},
+  {cat:"Marca Personal", q:"¿En qué contexto tiene especial relevancia la empatía según el módulo?", opts:["En la gestión de inversiones financieras","En el entrenamiento personal, para entender qué le pasa al cliente","En la publicidad masiva de productos","En la contratación de personal"], correct:1, exp:"En el ámbito del entrenamiento personal es muy importante conocer qué le pasa al cliente para exponer el punto de vista con empatía."},
+  {cat:"Inteligencia Emocional", q:"¿Qué afirman Ros-Martínez et al. (2013) sobre IE y deporte?", opts:["Son conceptos completamente separados","Están estrechamente relacionados y las técnicas psicológicas se usan cada vez más","El deporte no necesita inteligencia emocional","La IE reduce el rendimiento deportivo"], correct:1, exp:"Inteligencia Emocional y Deporte están estrechamente relacionados; clubes, federaciones y entrenadores contratan psicólogos para establecer técnicas que mejoren el rendimiento."},
+  {cat:"Hábitos", q:"¿Cómo se puede hacer crecer el círculo de influencia?", opts:["Ignorando los pensamientos negativos","Focalizando los pensamientos en energía positiva","Aumentando las horas de trabajo","Eliminando el círculo de preocupación completamente"], correct:1, exp:"El círculo de influencia crece conforme nuestros pensamientos se focalizan en energía positiva, reduciendo el de preocupación."},
+  {cat:"Modelo Canvas", q:"¿Cuál es la diferencia entre Mapa de Valor y Perfil del Cliente en el Canvas?", opts:["Son lo mismo con nombres distintos","El Mapa de Valor describe cómo creamos valor; el Perfil del Cliente describe sus tareas, problemas y alegrías","El Mapa de Valor es para productos físicos y el Perfil para servicios","El Mapa de Valor es externo y el Perfil es interno"], correct:1, exp:"El Mapa de Valor describe cómo creamos valor (soluciones y alegrías). El Perfil del Cliente describe sus tareas, problemas y alegrías."},
+  {cat:"Inteligencia Emocional", q:"¿Qué factores de diversidad pueden influir en la empatía según ACSM (2015)?", opts:["Solo la edad y el género","El género, la edad, capacidades, creencias religiosas, educación, nivel de ingresos y cultura","Solo el nivel educativo y cultural","Únicamente las diferencias de idioma"], correct:1, exp:"El género, la edad, las capacidades, las creencias a nivel religioso, la educación, el nivel de ingresos y la cultura son elementos que afectan a la empatía."},
+];
+
+// ============================================================ TEST LOGIC
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let currentCat = "Todos";
+let answered = [];
+
+function shuffle(arr) {
+  return arr.slice().sort(() => Math.random() - .5);
+}
+
+function catClass(cat) {
+  if (cat === "Inteligencia Emocional") return "cat-ie";
+  if (cat === "Hábitos") return "cat-ha";
+  if (cat === "Marca Personal") return "cat-mp";
+  if (cat === "Modelo Canvas") return "cat-mc";
+  return "";
+}
+
+function filterCat(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = btn.dataset.cat;
+  startTest();
+}
+
+function startTest() {
+  const pool = currentCat === "Todos" ? ALL_QUESTIONS : ALL_QUESTIONS.filter(q => q.cat === currentCat);
+  currentQuestions = shuffle(pool);
+  currentIndex = 0;
+  score = 0;
+  answered = new Array(currentQuestions.length).fill(null);
+  document.getElementById('result-panel').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const container = document.getElementById('questions-container');
+  if (currentIndex >= currentQuestions.length) {
+    container.innerHTML = '';
+    showResult();
+    return;
+  }
+  updateProgress();
+  const q = currentQuestions[currentIndex];
+  const isAnswered = answered[currentIndex] !== null;
+  const chosen = answered[currentIndex];
+
+  let optsHTML = q.opts.map((o, i) => {
+    let cls = 'option-label';
+    if (isAnswered) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === chosen && chosen !== q.correct) cls += ' wrong';
+    }
+    return `<label class="${cls}">
+      <input type="radio" name="q${currentIndex}" value="${i}" ${isAnswered ? 'disabled' : ''} ${chosen === i ? 'checked' : ''} onchange="selectOption(${i})">
+      <span>${o}</span>
+    </label>`;
+  }).join('');
+
+  const feedbackShow = isAnswered ? 'show' : '';
+  const iconCls = (chosen === q.correct) ? 'ok' : 'fail';
+  const icon = (chosen === q.correct) ? '✓' : '✕';
+  const nextShow = isAnswered ? 'show' : '';
+
+  container.innerHTML = `<div class="question-card">
+    <div class="q-meta">
+      <span class="q-num">Pregunta ${currentIndex + 1} de ${currentQuestions.length}</span>
+      <span class="q-cat ${catClass(q.cat)}">${q.cat}</span>
+    </div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">${optsHTML}</div>
+    ${!isAnswered ? `<button class="submit-btn" onclick="submitAnswer()">ENVIAR</button>` : ''}
+    <div class="feedback ${feedbackShow}">
+      <div class="feedback-icon ${iconCls}">${icon}</div>
+      <div><strong>${chosen === q.correct ? '¡Correcto!' : 'Incorrecto.'}</strong> ${q.exp}</div>
+    </div>
+    <button class="next-btn ${nextShow}" onclick="nextQuestion()">
+      ${currentIndex < currentQuestions.length - 1 ? 'Siguiente →' : 'Ver resultado'}
+    </button>
+  </div>`;
+}
+
+let tempSelected = null;
+function selectOption(i) {
+  tempSelected = i;
+}
+
+function submitAnswer() {
+  if (tempSelected === null) {
+    const checked = document.querySelector(`input[name="q${currentIndex}"]:checked`);
+    if (!checked) { alert('Selecciona una opción primero.'); return; }
+    tempSelected = parseInt(checked.value);
+  }
+  answered[currentIndex] = tempSelected;
+  if (tempSelected === currentQuestions[currentIndex].correct) score++;
+  tempSelected = null;
+  renderQuestion();
+}
+
+function nextQuestion() {
+  currentIndex++;
+  tempSelected = null;
+  renderQuestion();
+}
+
+function updateProgress() {
+  const total = currentQuestions.length;
+  const done = currentIndex;
+  const pct = total > 0 ? (done / total) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Pregunta ${done + 1} de ${total}`;
+}
+
+function showResult() {
+  const panel = document.getElementById('result-panel');
+  panel.style.display = 'block';
+  document.getElementById('final-score').textContent = `${score}/${currentQuestions.length}`;
+  const pct = Math.round((score / currentQuestions.length) * 100);
+  let msg = '';
+  if (pct >= 90) msg = '🏆 Excelente dominio del módulo.';
+  else if (pct >= 70) msg = '✅ Buen resultado. Repasa los errores.';
+  else if (pct >= 50) msg = '📚 Resultado aceptable. Conviene repasar más.';
+  else msg = '🔄 Se recomienda revisar el material y repetir el test.';
+  document.getElementById('final-msg').textContent = msg;
+  document.getElementById('progress-label').textContent = `Completado — ${score}/${currentQuestions.length} correctas (${pct}%)`;
+  document.getElementById('progress-bar').style.width = '100%';
+}
+
+function restartTest() {
+  startTest();
+  document.getElementById('result-panel').style.display = 'none';
+  window.scrollTo({ top: document.getElementById('tab-test').offsetTop - 60, behavior: 'smooth' });
+}
+
+// Init
+startTest();
+</script>
+</body>
+</html>

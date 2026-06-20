@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 4 – Resistencia y Velocidad | Fitness Instructor · Five Stars</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header { background: #1a1a18; color: #fff; padding: 18px 28px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+  header .badge { background: #534AB7; color: #fff; font-size: .72rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 0; background: #fff; border-bottom: 2px solid #e0dfd8; padding: 0 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+  .tab-btn { padding: 14px 20px; font-size: .9rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #666; border-bottom: 3px solid transparent; transition: all .2s; }
+  .tab-btn.active { color: #534AB7; border-bottom-color: #534AB7; }
+  .tab-btn:hover { color: #534AB7; }
+
+  /* ── CONTENT ── */
+  .tab-content { display: none; padding: 24px 20px; max-width: 900px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* ── CARDS ── */
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+  .card-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: .95rem; user-select: none; }
+  .card-header:hover { background: #fafaf8; }
+  .card-body { padding: 0 18px 16px; display: none; }
+  .card.open .card-body { display: block; }
+  .card.open .chevron { transform: rotate(180deg); }
+  .chevron { transition: transform .25s; font-size: .8rem; color: #888; }
+
+  .cat-purple .card-header { background: #EEEDFE; }
+  .cat-teal   .card-header { background: #E1F5EE; }
+  .cat-amber  .card-header { background: #FAEEDA; }
+  .cat-coral  .card-header { background: #FAECE7; }
+
+  /* ── SECTION TITLES ── */
+  .section-title { font-size: 1rem; font-weight: 700; color: #534AB7; margin: 22px 0 10px; letter-spacing: .02em; text-transform: uppercase; }
+  .section-title:first-child { margin-top: 0; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 10px; }
+  th { background: #1a1a18; color: #fff; padding: 8px 10px; text-align: left; }
+  td { padding: 7px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+  tr:nth-child(even) td { background: #fafaf8; }
+
+  /* ── TERM CHIPS ── */
+  .term-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .term-chip { background: #EEEDFE; border: 0.5px solid #c8c5f5; border-radius: 8px; padding: 5px 12px; font-size: .84rem; cursor: pointer; transition: background .15s; }
+  .term-chip:hover { background: #d9d7fc; }
+  .term-detail { background: #f5f4f0; border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-size: .88rem; line-height: 1.6; display: none; }
+
+  /* ── SUMMARY bullets ── */
+  ul.summary { padding-left: 20px; line-height: 1.8; font-size: .9rem; }
+  ul.summary li { margin-bottom: 4px; }
+  .key-box { background: #EEEDFE; border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: .9rem; line-height: 1.7; }
+  .key-box strong { color: #534AB7; }
+
+  /* ── TEST ── */
+  .test-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+  .test-counter { font-size: .9rem; color: #555; }
+  .progress-bar { height: 6px; background: #e0dfd8; border-radius: 3px; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: #534AB7; border-radius: 3px; transition: width .3s; }
+  .question-card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .question-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 14px; line-height: 1.5; }
+  .option-label { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: .9rem; transition: background .15s; margin-bottom: 6px; border: 1px solid transparent; }
+  .option-label:hover { background: #f5f4f0; border-color: #d3d1c7; }
+  .option-label input[type=radio] { margin-top: 3px; accent-color: #534AB7; flex-shrink: 0; }
+  .option-label.correct { background: #E1F5EE; border-color: #86d8a8; }
+  .option-label.wrong   { background: #FAECE7; border-color: #f5a58a; }
+  .option-label.missed  { background: #E1F5EE; border-color: #86d8a8; opacity: .7; }
+
+  .btn-submit { background: #FFD700; color: #1a1a18; border: none; padding: 13px 32px; font-size: 1rem; font-weight: 800; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: .04em; transition: opacity .2s; }
+  .btn-submit:hover { opacity: .88; }
+  .btn-submit:disabled { opacity: .4; cursor: not-allowed; }
+
+  .feedback-box { display: flex; align-items: flex-start; gap: 12px; margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: #f5f4f0; font-size: .87rem; line-height: 1.6; }
+  .fb-circle { width: 28px; height: 28px; border-radius: 50%; background: #1a1a18; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: .85rem; }
+  .fb-ok  .fb-circle::after { content: "✓"; color: #4caf50; }
+  .fb-err .fb-circle::after { content: "✕"; color: #FFD700; }
+
+  .result-panel { background: #1a1a18; color: #fff; border-radius: 12px; padding: 24px; text-align: center; margin-top: 20px; display: none; }
+  .result-panel h2 { font-size: 2rem; color: #FFD700; }
+  .result-panel p { margin-top: 8px; font-size: 1rem; color: #ccc; }
+  .btn-retry { background: #534AB7; color: #fff; border: none; padding: 12px 28px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 18px; font-size: .95rem; }
+
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #d3d1c7; background: #fff; font-size: .82rem; cursor: pointer; transition: all .15s; }
+  .filter-btn.active { background: #534AB7; color: #fff; border-color: #534AB7; }
+
+  p.note { font-size: .82rem; color: #888; margin-top: 6px; }
+  hr.divider { border: none; border-top: 1px solid #e0dfd8; margin: 18px 0; }
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <div><div class="badge">MÓDULO 4</div></div>
+  <h1>Entrenamiento de Resistencia y Velocidad<br><span style="font-weight:400;font-size:.85rem;opacity:.8">Resistencia Cardiorrespiratoria · Metodología · Velocidad · Pliometría</span></h1>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="openTab(this,'esquema')">📋 Esquema</button>
+  <button class="tab-btn" onclick="openTab(this,'resumen')">💡 Resumen clave</button>
+  <button class="tab-btn" onclick="openTab(this,'siglas')">🔤 Siglas y términos</button>
+  <button class="tab-btn" onclick="openTab(this,'test')">✏️ Test</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1 – ESQUEMA
+══════════════════════════════════════════════ -->
+<div id="esquema" class="tab-content active">
+
+  <div class="section-title">1 · Diseño de Programas de Resistencia Cardiorrespiratoria</div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Definición y relevancia <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Resistencia cardiorrespiratoria:</strong> capacidad para realizar tareas moderadas que impliquen grandes masas musculares durante periodos prolongados.</li>
+        <li>Se basa en la capacidad funcional del aparato <strong>circulatorio y respiratorio</strong> de ajustarse y recuperarse del ejercicio.</li>
+        <li>El rendimiento cardiorrespiratorio se mide a través del <strong>VO2máx</strong> (máximo consumo de oxígeno durante el ejercicio).</li>
+        <li>Beneficios: salud cardiovascular, aumento de resistencia, control de peso, salud mental.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Pautas ACSM para el entrenamiento cardiorrespiratorio <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Dosis mínima: <strong>150 minutos</strong> de ejercicio de intensidad moderada a la semana.</li>
+        <li>Puede distribuirse en sesiones continuas o cortas (mínimo 10 min).</li>
+        <li>Opción A: 30–60 min de intensidad moderada, <strong>5 días/semana</strong>.</li>
+        <li>Opción B: 20–60 min de intensidad vigorosa, <strong>3 días/semana</strong>.</li>
+        <li>Progresión <strong>gradual</strong> para reducir riesgo de lesión y aumentar adherencia.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Variables del diseño de programas <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Variable</th><th>Parámetros clave</th></tr>
+        <tr><td><strong>Intensidad</strong></td><td>60–90% FCmáx o 40–85% HRR/VO2R. Variable más importante; controla todas las demás adaptaciones.</td></tr>
+        <tr><td><strong>Frecuencia</strong></td><td>3–5 días/semana según intensidad elegida.</td></tr>
+        <tr><td><strong>Duración</strong></td><td>20–60 min por sesión. Principiantes: 20–30 min moderado.</td></tr>
+        <tr><td><strong>Tipo de ejercicio</strong></td><td>Actividades cíclicas con grandes grupos musculares: caminar, correr, nadar, bicicleta.</td></tr>
+        <tr><td><strong>Progresión</strong></td><td>Aumentar intensidad, duración o frecuencia de forma gradual.</td></tr>
+        <tr><td><strong>Descanso</strong></td><td>Incluir días de recuperación activa; el descanso es tan importante como el ejercicio.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Cálculo de la Frecuencia Cardíaca Máxima (FCM) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Fórmula</th><th>Ecuación</th><th>Observaciones</th></tr>
+        <tr><td><strong>Karvonen (1957)</strong></td><td>FCM = 220 − edad</td><td>Clásica; rápida; desviación estándar ±10–12 lpm; sobreestima en jóvenes y subestima en mayores.</td></tr>
+        <tr><td><strong>Tanaka (2001)</strong></td><td>FCM = 208 − (0,7 × edad)</td><td>Más ajustada; ampliamente usada en la actualidad.</td></tr>
+        <tr><td><strong>Nes (2012)</strong></td><td>FCM = 211 − (0,64 × edad)</td><td>Más individualizada; considera sexo, IMC y FCR.</td></tr>
+      </table>
+      <hr class="divider">
+      <p style="font-weight:700;margin-bottom:6px">Fórmula de Karvonen (FC objetivo):</p>
+      <p style="font-size:.88rem;background:#f5f4f0;padding:10px 14px;border-radius:8px;margin-top:6px">FC objetivo = ((FCM − FCR) × % intensidad) + FCR<br><em>Nota: para natación restar 10 ppm al resultado final (posición horizontal).</em></p>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Ejemplo de progresión a 3 meses <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Mes</th><th>Intensidad</th><th>Progresión gradual</th><th>Recuperación</th></tr>
+        <tr><td><strong>Mes 1</strong></td><td>60% FCmáx</td><td>Caminatas 30 min · 3×/semana</td><td>1–2 días descanso; yoga/estiramientos</td></tr>
+        <tr><td><strong>Mes 2</strong></td><td>65% FCmáx</td><td>45 min · 4×/sem · Intervalos cortos 1×/sem</td><td>Masajes; nutrición; más sueño</td></tr>
+        <tr><td><strong>Mes 3</strong></td><td>70% FCmáx</td><td>60 min · 4–5×/sem · Carrera continua larga</td><td>Recuperación activa (yoga/natación)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">2 · Metodología del Entrenamiento de Resistencia</div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Resistencia aeróbica vs anaeróbica <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Tipo</th><th>Descripción</th><th>Sistema energético</th></tr>
+        <tr><td><strong>Aeróbica</strong></td><td>Esfuerzos prolongados de intensidad moderada–baja sin fatiga extrema</td><td>Sistema oxidativo: ATP a partir de glucógeno, ácidos grasos y aminoácidos (lento y continuo)</td></tr>
+        <tr><td><strong>Anaeróbica</strong></td><td>Esfuerzos intensos incluso en ausencia de O₂ suficiente</td><td>Sistema glucolítico no oxidativo: energía rápida pero limitada con depósitos de glucógeno muscular</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Método Continuo (Uniforme y Variable) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Método continuo:</strong> carga constante e ininterrumpida, sin periodos de descanso. La duración es extensa y determina el efecto del entrenamiento.</li>
+      </ul>
+      <hr class="divider">
+      <table>
+        <tr><th>Subtipo</th><th>Intensidad (%VO2máx)</th><th>Duración</th><th>FC (lat/min)</th><th>Beneficios clave</th></tr>
+        <tr><td><strong>Extensivo</strong></td><td>45–65% (zona subaeróbica)</td><td>30–120+ min</td><td>125–160</td><td>Uso de ácidos grasos; circulación periférica; recuperación</td></tr>
+        <tr><td><strong>Intensivo</strong></td><td>60–85% (subaeróbica–superaeróbica)</td><td>30–90 min</td><td>140–180</td><td>VO2máx; umbral anaeróbico; metabolismo glucógeno; lactato</td></tr>
+        <tr><td><strong>Fartlek (variable)</strong></td><td>60–100% (variable)</td><td>30–60 min + acciones 1–10 min</td><td>130–180</td><td>Cambios de intensidad; acondicionamiento mixto; autonomía</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Método Fraccionado — Interválico <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Alternancia de trabajo y <strong>descanso incompleto</strong> (recuperar hasta 120–130 lpm antes de reiniciar).</li>
+        <li>Efectos: hipertrofia del miocardio durante el trabajo; aumento de capacidad cardíaca en el descanso.</li>
+      </ul>
+      <hr class="divider">
+      <table>
+        <tr><th>Variante</th><th>%VO2máx</th><th>Intervalos</th><th>Pausas</th><th>Efectos</th></tr>
+        <tr><td><strong>Extensivo largo (IEL)</strong></td><td>~85%</td><td>2–8 min</td><td>2–5 min (hasta 120 lpm)</td><td>Capacidad aeróbica; VO2máx; umbral anaeróbico</td></tr>
+        <tr><td><strong>Extensivo medio (IEM)</strong></td><td>85–90%</td><td>60–90 s</td><td>90 s – 2 min</td><td>Capacidad aeróbica; circulación central; tolerancia al lactato</td></tr>
+        <tr><td><strong>Extensivo corto (IEC)</strong></td><td>95–100%</td><td>20–30 s</td><td>2–3 min entre rep; 10–15 min entre series</td><td>Potencia aeróbica; tolerancia al lactato; resistencia anaeróbica</td></tr>
+        <tr><td><strong>Extracorto (IExC)</strong></td><td>&gt;100%</td><td>8–10 s</td><td>2–3 min entre rep</td><td>Capacidad y potencia anaeróbica aláctica</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Método de Repeticiones <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Distancias cortas, intensidad muy alta, <strong>descanso prolongado</strong> (recuperación completa: FC &lt; 100 lpm).</li>
+        <li>Los parámetros funcionales intentan retornar a niveles normales entre repeticiones.</li>
+        <li>Se desarrolla gran coordinación motora por la alta intensidad/velocidad.</li>
+      </ul>
+      <hr class="divider">
+      <table>
+        <tr><th>Variante</th><th>% velocidad competición</th><th>Intervalos</th><th>Pausas</th><th>Efectos</th></tr>
+        <tr><td><strong>Largo (IL)</strong></td><td>80–90%</td><td>2–3 min</td><td>Completa (&lt;100 lpm)</td><td>Potencia aeróbica; VO2máx; tolerancia lactato</td></tr>
+        <tr><td><strong>Medio (IM)</strong></td><td>90–95%</td><td>45–60 s</td><td>Completa (&lt;100 lpm)</td><td>Vía anaeróbica láctica; tolerancia lactato; glucógeno</td></tr>
+        <tr><td><strong>Corto (IC)</strong></td><td>90–100%</td><td>20–30 s</td><td>Completa (&lt;100 lpm)</td><td>Capacidad anaeróbica láctica; producción de lactato</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Tabla resumen de métodos (Viedma Morales, 2017) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Metodología</th><th>Nombre</th><th>Intensidad</th><th>Fase programación</th><th>Ejemplo sesión</th></tr>
+        <tr><td>Continuo</td><td>Uniforme extensivo</td><td>60–75% FCmáx</td><td>Z1 – Regenerativa / iniciados</td><td>1 × (45' 65% FCmáx)</td></tr>
+        <tr><td>Continuo</td><td>Variable (Fartlek)</td><td>60–75% FCmáx</td><td>Z1–Z2</td><td>1 × (45': 3×(10' a 70%+ 5' a 60%))</td></tr>
+        <tr><td>Fraccionado</td><td>Interválico ext. largo</td><td>75–80% FCmáx</td><td>Z3 – MLEE</td><td>2 × (8' 80% + 10' 75% / 5' rest)</td></tr>
+        <tr><td>Fraccionado</td><td>Interválico ext. medio</td><td>80–90% FCmáx</td><td>Z4 – Por encima VO2máx</td><td>2 × (5' 85% + 1' 90% / 5' rest)</td></tr>
+        <tr><td>Fraccionado</td><td>Interválico corto</td><td>90–95% FCmáx</td><td>Z5 – Láctico 2</td><td>2 × (1' 80%–1' 85%–1' 90%–25" ALL OUT / 7' rest)</td></tr>
+        <tr><td>Fraccionado</td><td>Interválico extracorto</td><td>ALL OUT</td><td>Z6 – Sprint máximo</td><td>X metros ALL OUT; recuperar tiempo tardado</td></tr>
+        <tr><td>Repeticiones</td><td>Largo</td><td>80–90% FCmáx</td><td>Z4 – Por encima VO2máx</td><td>6 × (2' 85% FCmáx / 1,5' rest)</td></tr>
+        <tr><td>Repeticiones</td><td>Medio</td><td>90–95% FCmáx</td><td>Z5 – Láctico 2</td><td>5 × (1' 90% FCmáx / 2' rest)</td></tr>
+        <tr><td>Repeticiones</td><td>Corto</td><td>ALL OUT</td><td>Z6 – Sprint máximo</td><td>8 × (20" ALL OUT / 10" rest)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">3 · Recursos para el Entrenamiento de Resistencia</div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Correr y caminar <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Actividades accesibles, sin equipamiento específico.</li>
+        <li><strong>Correr</strong>: muy exigente; afecta al sistema CV y articulaciones (impacto). No recomendado inicialmente para personas sedentarias con sobrepeso.</li>
+        <li>Introducir de forma <strong>gradual</strong> incluso en deportistas (riesgo de lesión).</li>
+        <li><strong>Caminar</strong>: más elemental; requiere técnica adecuada y calzado apropiado; practicar en superficies adecuadas.</li>
+        <li>Cinta de correr: la intensidad puede diferir de correr al aire libre.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Natación y ciclismo (actividades sin impacto) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Natación</strong>: involucra más masa muscular que ciclismo, caminar o correr. Posición horizontal + presión del agua facilitan retorno venoso → FC 10–15% menor que otras actividades con mismo esfuerzo percibido.</li>
+        <li>Alto gasto energético, ideal para personas con sobrepeso o lesiones articulares.</li>
+        <li><strong>Ciclismo</strong>: peso soportado por la bicicleta; terrenos ondulados reducen intensidad; ciclismo indoor (spinning) puede generar alta intensidad cardiorrespiratoria.</li>
+        <li>Ambas actividades: sin impacto articular, aptas para poblaciones especiales.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Máquina elíptica y step <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Elíptica</strong>: imita correr/esquiar; movimientos de brazos y piernas en pie. Consume O₂ y FC equivalentes a correr sin impacto. Técnica fácil de aprender. Opción popular como complemento al entrenamiento de carrera.</li>
+        <li><strong>Step</strong>: subir/bajar escalones. Alto gasto calórico (15 cm ≈ correr 9,6 km/h). Bajada: menos energía pero trabajo excéntrico beneficioso.</li>
+        <li>Inclinarse hacia adelante activa más glúteos; inclinarse hacia atrás activa más cuádriceps (riesgo lumbar sin tensión abdominal).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">4 · Entrenamiento de la Velocidad — Clasificación</div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Concepto de velocidad y factores que la condicionan <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Velocidad (Ortiz, 2004): <em>"capacidad de responder y realizar movimientos ante un estímulo específico en el menor tiempo posible y con la mayor eficacia, sin que la fatiga intervenga."</em></li>
+        <li>Es una <strong>cualidad neuromuscular</strong>: intervienen el sistema nervioso (receptor/transmisor) y el sistema muscular (ejecutor).</li>
+        <li>Depende de: componente genético · tipo de fibras musculares (fibras tipo II) · fuerza explosiva · coordinación intramuscular · flexibilidad dinámica · metabolismo anaeróbico · técnica · concentración y motivación.</li>
+        <li>Desde bioquímica: depende de ATP muscular, velocidad de degradación y capacidad de resíntesis (PCr + glucólisis).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Fibras musculares y velocidad (Tipo I vs Tipo II) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Característica</th><th>Fibras Tipo I (lentas)</th><th>Fibras Tipo II (rápidas)</th></tr>
+        <tr><td>Velocidad contracción</td><td>Baja (hidrólisis ATP lenta)</td><td>3–5× mayor que Tipo I</td></tr>
+        <tr><td>Metabolismo</td><td>Oxidativo (aeróbico); ciclo Krebs + fosforilación oxidativa</td><td>Glucolítico; menor densidad mitocondrial</td></tr>
+        <tr><td>Miofibrillas</td><td>Menos; más sarcoplasma libre</td><td>Más; retículo sarcoplásmico más desarrollado</td></tr>
+        <tr><td>Ca++ (calcio)</td><td>Menor capacidad de almacenamiento y liberación</td><td>Almacenan y liberan Ca++ más rápido</td></tr>
+        <tr><td>Mioglobina</td><td>Alta concentración → mayor captura de O₂</td><td>Menor; más dependientes de glucólisis</td></tr>
+        <tr><td>Orden reclutamiento</td><td>Primero</td><td>Después (IIA → IIX → IIB)</td></tr>
+        <tr><td>Subtipos Tipo II</td><td>—</td><td>IIA (más oxidativa) · IIX (intermedia) · IIB (más glucolítica, más rápida)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Clasificación del entrenamiento de velocidad <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Tipo</th><th>Definición</th></tr>
+        <tr><td><strong>Velocidad de reacción</strong></td><td>Responder a un estímulo lo antes posible (simple: estímulo conocido; compleja: estímulo desconocido con múltiples respuestas posibles)</td></tr>
+        <tr><td><strong>Velocidad gestual</strong></td><td>Rapidez en ejecutar un gesto deportivo específico (acíclico); relacionada con fuerza explosiva</td></tr>
+        <tr><td><strong>Velocidad de aceleración</strong></td><td>Capacidad de alcanzar la máxima velocidad en el menor tiempo (relacionada con fuerza explosiva)</td></tr>
+        <tr><td><strong>Velocidad máxima de desplazamiento</strong></td><td>Capacidad de moverse a máxima velocidad en un espacio = frecuencia × longitud de zancada. Etapas: aceleración → velocidad máxima → desaceleración</td></tr>
+        <tr><td><strong>Velocidad resistencia</strong></td><td>Capacidad de mantener la máxima velocidad el mayor tiempo posible</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Velocidad de reacción — 5 fases (Zatziorski, 1989) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Fase</th><th>Descripción</th><th>Entrenable</th></tr>
+        <tr><td>1. Excitación del receptor</td><td>Producción del estímulo en el receptor sensorial</td><td>✓ (concentración)</td></tr>
+        <tr><td>2. Vía aferente</td><td>Transmisión al SNC; velocidad de conducción nerviosa</td><td>✗</td></tr>
+        <tr><td>3. Elaboración de respuesta</td><td>SNC procesa y selecciona respuesta (memoria)</td><td>✓✓ (la más mejorable)</td></tr>
+        <tr><td>4. Vía eferente</td><td>Transmisión de la señal efectora al músculo</td><td>✗</td></tr>
+        <tr><td>5. Tiempo reacción motriz</td><td>Desde que estímulo traspasa la placa motriz hasta inicio del movimiento</td><td>✓</td></tr>
+      </table>
+      <p class="note">Fases 1–4 = tiempo de reacción premotriz (75–85% del tiempo total de reacción).</p>
+    </div>
+  </div>
+
+  <div class="section-title">5 · Pliometría y Velocidad</div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Entrenamiento pliométrico — fundamentos <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Ciclo de estiramiento-acortamiento (CEA):</strong> movimiento excéntrico (alargamiento) seguido rápidamente de movimiento concéntrico (acortamiento). Mecanismos: energía elástica, precarga, activación muscular, reflejos de estiramiento, interacciones músculo-tendinosas.</li>
+        <li>Término creado por Zaciorski (1966): la tensión en CEA es mayor que en ejercicio isométrico.</li>
+        <li><strong>Clasificación Verkhoshanski:</strong> impacto (con carga externa) / no impacto (sin carga externa).</li>
+        <li><strong>Clasificación moderna:</strong> tradicional · asistido (bandas elásticas) · resistido (agua, arena, cargas).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Efectos del entrenamiento pliométrico (Kons et al., 2023) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Mejoras en: fuerza muscular, potencia muscular, fuerza explosiva, resistencia, cambio de dirección, salto y sprint.</li>
+        <li><strong>Sprint:</strong> efecto pequeño en no atletas (10m y 30m); mayor efecto en sprint de 30m.</li>
+        <li><strong>Género/deporte:</strong> efecto moderado en fútbol femenino, balonmano y voleibol; efecto grande en baloncesto.</li>
+        <li><strong>Tipo de ejercicio:</strong> pliometría unilateral-horizontal → más efectiva para sprint; bilateral-vertical → más útil para salto vertical.</li>
+        <li><strong>Edad:</strong> mayor efecto en niños y adolescentes (proceso de adaptación y desarrollo).</li>
+        <li><strong>Experiencia:</strong> mayor beneficio en iniciados (especialmente en salto).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Recomendaciones para un programa de pliometría <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Precalentamiento con movilidad y estiramientos dinámicos.</li>
+        <li>Seleccionar 3–5 ejercicios distintos.</li>
+        <li>3–4 series por ejercicio; descansos de 1–2 min entre series.</li>
+        <li>Comenzar con volumen moderado y aumentar progresivamente intensidad y dificultad.</li>
+        <li>Priorizar calidad del movimiento y técnica correcta en todo momento.</li>
+        <li>Finalizar con estiramientos para recuperación muscular.</li>
+        <li>Frecuencia recomendada: <strong>2–3 sesiones/semana</strong> para recuperación adecuada.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">6 · Prescripción del Entrenamiento de Velocidad</div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Perfil Fuerza-Velocidad (F-v) en sprint <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>La carrera de alta velocidad consta de: <strong>aceleración</strong> y <strong>velocidad máxima</strong>.</li>
+        <li><strong>Efectividad mecánica:</strong> capacidad de aplicar fuerza en dirección horizontal mientras aumenta la velocidad.</li>
+        <li>El perfil horizontal F-v describe: F₀ (fuerza horizontal máxima teórica en velocidad nula) · V₀ (velocidad máxima teórica) · P_máx (potencia máxima horizontal).</li>
+        <li>Permite identificar si el atleta necesita mejorar fuerza, velocidad o potencia, y diseñar programas individualizados.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Mejora de fuerza a bajas velocidades (fase inicial del sprint) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Indicado para atletas con dificultad para generar fuerza horizontal al inicio del sprint.</li>
+        <li>Ejercicios: arrastres pesados con trineo · sprints con resistencia · marchas con trineo.</li>
+        <li>Cargas de ~85% 1RM; orientación horizontal.</li>
+        <li>Sesión típica: arrastres 2–5 series; hip thrusts; sentadillas traseras; mid-thigh pull.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Mejora de fuerza a altas velocidades y potencia máxima <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Altas velocidades:</strong> para atletas con disminución rápida de fuerza resultante (DRF) al aumentar velocidad. Ejercicios: sprint asistido (DynaSpeed), saltos verticales asistidos con banda, pliometría (bounding, drop jumps, reactive jumps).</li>
+        <li><strong>Potencia máxima (carga óptima):</strong> entrenar a la velocidad donde se alcanza la máxima potencia mecánica. La carga óptima maximiza la potencia para un ejercicio específico.</li>
+        <li>Ejercicios para potencia: sprints con resistencia · sprint máximo · jump squats · pliometría horizontal · sprints asistidos.</li>
+        <li>Metodología: mínimo 48 h recuperación entre sesiones de alta intensidad.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Consideraciones metodológicas generales para velocidad <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Entrenamiento de velocidad: el más complejo de todas las capacidades físicas básicas.</li>
+        <li>Trabajar todos los tipos desde los <strong>16–17 años</strong> (post-puberal), con progresión lógica.</li>
+        <li><strong>Calentamiento imprescindible</strong>: sin él el riesgo de lesión aumenta drásticamente.</li>
+        <li>Siempre acompañar de <strong>trabajo de fuerza</strong>.</li>
+        <li>La intensidad no siempre debe ser máxima; las intensidades submáximas también mejoran manifestaciones de la velocidad.</li>
+        <li>El volumen excesivo con pérdida de intensidad hace perder el objetivo de la sesión → parar la tarea.</li>
+        <li>Tiempo de reacción y frecuencia de movimiento: mejorables desde los <strong>8–10 años</strong> (relacionados con el SNC, no el sistema locomotor).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Ejemplo de sesión combinada de velocidad máxima <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Sesiones en ciclos cercanos a la competición; atleta suficientemente entrenado.</li>
+        <li>Intensidad: 100%.</li>
+        <li>Recuperación: 1 min por cada 10 m recorridos (70 m → 7 min descanso).</li>
+      </ul>
+      <hr class="divider">
+      <p style="font-weight:700;margin-bottom:8px">Ejemplo:</p>
+      <p style="font-size:.88rem;background:#f5f4f0;padding:10px 14px;border-radius:8px">4 × 40 m (4 min recuperación) + 3 × 50 m (5 min recuperación) + 2 × 70 m (7 min recuperación)</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 – RESUMEN CLAVE
+══════════════════════════════════════════════ -->
+<div id="resumen" class="tab-content">
+
+  <div class="section-title">Tema 1 — Resistencia Cardiorrespiratoria</div>
+
+  <div class="key-box">
+    <strong>VO2máx</strong> = cantidad máxima de oxígeno que puede ser tomada y consumida por el cuerpo durante el ejercicio. Es el indicador del rendimiento cardiorrespiratorio.
+  </div>
+
+  <div class="key-box">
+    <strong>Fórmula de Karvonen (FC objetivo):</strong> ((FCM − FCR) × % intensidad) + FCR<br>
+    Es más individualizada que solo usar %FCmáx porque incorpora la FC en reposo (FCR), que refleja mejor el estado cardiovascular del individuo.
+  </div>
+
+  <div class="key-box">
+    <strong>Intensidad recomendada:</strong> 60–90% FCmáx · o · 40–85% HRR/VO2R.<br>
+    Por debajo del umbral mínimo → sin efecto de entrenamiento. Por encima → sobreentrenamiento y efecto negativo.
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Los 9 principios del diseño de programas <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>1. Objetivos claros</strong> — salud CV, resistencia, pérdida de peso o competición.</li>
+        <li><strong>2. Evaluación inicial</strong> — FC en reposo, capacidad aeróbica, condiciones médicas.</li>
+        <li><strong>3. Selección del ejercicio</strong> — adaptado a intereses y estado de salud.</li>
+        <li><strong>4. Frecuencia y duración</strong> — iniciar con 20–30 min de intensidad moderada.</li>
+        <li><strong>5. Control de intensidad</strong> — fórmula Karvonen o escala de Borg.</li>
+        <li><strong>6. Variedad</strong> — diferentes modalidades; trabajar distintos grupos musculares.</li>
+        <li><strong>7. Progresión gradual</strong> — aumentar carga solo cuando el cuerpo se adapta.</li>
+        <li><strong>8. Descanso y recuperación</strong> — tan importante como el propio ejercicio.</li>
+        <li><strong>9. Monitorización</strong> — evaluaciones periódicas de FC, resistencia y composición corporal.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 2 — Metodología de Resistencia</div>
+
+  <div class="key-box">
+    <strong>Método continuo:</strong> Sin pausas. Extensivo (baja intensidad, alto volumen) → base aeróbica. Intensivo (moderada-alta) → VO2máx y umbral anaeróbico. Fartlek → mezcla, cambios libres de intensidad.
+  </div>
+
+  <div class="key-box">
+    <strong>Método fraccionado (interválico):</strong> Pausas INCOMPLETAS (120–130 lpm). Efecto: hipertrofia del miocardio. Variantes por duración: largo (2–8 min) → medio (60–90 s) → corto (20–30 s) → extracorto (8–10 s).
+  </div>
+
+  <div class="key-box">
+    <strong>Método de repeticiones:</strong> Pausas COMPLETAS (&lt; 100 lpm). Alta intensidad, distancias cortas. Desarrolla coordinación motora fina. Variantes: largo (2–3 min) → medio (45–60 s) → corto (20–30 s).
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Comparativa rápida: Interválico vs Repeticiones <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Criterio</th><th>Método Interválico</th><th>Método de Repeticiones</th></tr>
+        <tr><td>Recuperación</td><td>INCOMPLETA (120–130 lpm)</td><td>COMPLETA (&lt;100 lpm)</td></tr>
+        <tr><td>Intensidad</td><td>Moderada–alta (85–100% VO2máx)</td><td>Muy alta (80–100% vel. competición)</td></tr>
+        <tr><td>Efecto principal</td><td>Capacidad aeróbica / anaeróbica mixta</td><td>Coordinación motora + anaeróbico láctico</td></tr>
+        <tr><td>Uso habitual</td><td>Mejora resistencia + tolerancia lactato</td><td>Mejora velocidad + sprint competición</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 3 — Velocidad y Pliometría</div>
+
+  <div class="key-box">
+    <strong>Ciclo Estiramiento-Acortamiento (CEA):</strong> Fase excéntrica (alargamiento) → almacena energía elástica → fase concéntrica (acortamiento) → libera energía → mayor potencia de salida. Base fisiológica de la pliometría.
+  </div>
+
+  <div class="key-box">
+    <strong>Perfil F-v en sprint:</strong> Conocer si el atleta falla en fuerza (inicio del sprint, baja velocidad), en velocidad (sprint máximo, alta velocidad) o en potencia (zona intermedia) orienta la selección de ejercicios para programas individualizados.
+  </div>
+
+  <div class="key-box">
+    <strong>Fibras tipo II:</strong> Subtipos IIA (más oxidativa), IIX (intermedia) e IIB (más glucolítica y rápida). La proporción de fibras Tipo II tiene un componente <em>genético</em> importante, determinante para la velocidad máxima.
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Claves para recordar: velocidad y sprint <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Velocidad máx. de desplazamiento = <strong>frecuencia × longitud de zancada</strong>.</li>
+        <li>Para mejorar aceleración: multisaltos horizontales, arrastres, cuestas ascendentes.</li>
+        <li>Para mejorar velocidad máxima: carreras asistidas, bandas elásticas, ejercicios de supravelocidad.</li>
+        <li>Para mejorar resistencia a la velocidad: interválico, series, fartlek.</li>
+        <li>Pliometría unilateral-horizontal → mejora sprint; bilateral-vertical → mejora salto vertical.</li>
+        <li>Resistencia anaeróbica láctica → clave para mantener velocidad máxima el mayor tiempo posible (pruebas de 200–300 m).</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 – SIGLAS Y TÉRMINOS
+══════════════════════════════════════════════ -->
+<div id="siglas" class="tab-content">
+  <p style="font-size:.9rem;color:#555;margin-bottom:16px">Haz clic en cualquier chip para ver su definición.</p>
+
+  <div class="section-title">Resistencia</div>
+  <div class="term-grid" id="tg-resist"></div>
+
+  <div class="section-title" style="margin-top:18px">Velocidad</div>
+  <div class="term-grid" id="tg-veloc"></div>
+
+  <div class="section-title" style="margin-top:18px">Siglas y acrónimos</div>
+  <div class="term-grid" id="tg-siglas"></div>
+
+  <div class="term-detail" id="term-detail"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 – TEST
+══════════════════════════════════════════════ -->
+<div id="test" class="tab-content">
+  <div class="test-header">
+    <span style="font-weight:700;font-size:1rem">Test de autoevaluación</span>
+    <span class="test-counter" id="test-count"></span>
+  </div>
+  <div class="filter-bar" id="filter-bar"></div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div id="questions-container"></div>
+  <button class="btn-submit" id="btn-submit" onclick="submitTest()">ENVIAR RESPUESTAS</button>
+  <div class="result-panel" id="result-panel">
+    <h2 id="score-display"></h2>
+    <p id="score-msg"></p>
+    <button class="btn-retry" onclick="retryTest()">Volver a intentar</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════ UI HELPERS ══════════════════════ */
+function openTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function toggle(header) {
+  const card = header.closest('.card');
+  card.classList.toggle('open');
+}
+
+/* ══════════════════════ TERMS DATA ══════════════════════ */
+const TERMS = {
+  resist: [
+    {t:'VO2máx', d:'Volumen máximo de oxígeno que el cuerpo puede tomar y consumir durante el ejercicio. Principal indicador del rendimiento cardiorrespiratorio.'},
+    {t:'FCM', d:'Frecuencia Cardíaca Máxima. Número máximo de latidos por minuto que puede alcanzar el corazón. Se calcula con distintas fórmulas (Karvonen, Tanaka, Nes).'},
+    {t:'FCR', d:'Frecuencia Cardíaca en Reposo. Número de latidos por minuto en reposo absoluto. Indicador del estado cardiovascular del individuo; se incluye en la fórmula de Karvonen.'},
+    {t:'HRR', d:'Heart Rate Reserve (Frecuencia Cardíaca de Reserva). Diferencia entre FCM y FCR. Usado en el cálculo del porcentaje de intensidad del ejercicio.'},
+    {t:'VO2R', d:'Consumo de oxígeno de reserva. Diferencia entre VO2máx y VO2 en reposo. Indicador de la reserva funcional del sistema cardiorrespiratorio.'},
+    {t:'HIIT', d:'High Intensity Interval Training. Entrenamiento a intervalos de alta intensidad. Permite adaptaciones cardiorrespiratorias similares a entrenamientos de mayor duración pero menor intensidad.'},
+    {t:'Método continuo', d:'Aplicación de carga de forma constante e ininterrumpida sin periodos de descanso. Subcategorías: uniforme (extensivo/intensivo) y variable (Fartlek).'},
+    {t:'Fartlek', d:'Método continuo variable en el que el individuo decide por sí mismo los cambios de intensidad según el terreno o un objetivo concreto. Intensidades desde regenerativas hasta VO2máx.'},
+    {t:'Método interválico', d:'Método fraccionado con pausas breves e incompletas entre esfuerzos (recuperar hasta 120–130 lpm). Variantes: extensivo largo, medio, corto y extracorto.'},
+    {t:'Método de repeticiones', d:'Método fraccionado con pausas completas entre series (FC < 100 lpm). Distancias cortas, intensidad muy alta. Permite recuperación total antes de cada repetición.'},
+    {t:'Umbral anaeróbico', d:'Intensidad de ejercicio a partir de la cual el lactato empieza a acumularse más rápido de lo que puede eliminarse. Por encima de este punto, el metabolismo anaeróbico predomina.'},
+    {t:'Lactato', d:'Producto del metabolismo glucolítico anaeróbico. A altas intensidades se acumula en sangre y músculo, causando fatiga y disminución del rendimiento.'},
+    {t:'Resistencia aeróbica', d:'Capacidad de realizar esfuerzos prolongados a intensidad moderada–baja sin fatiga extrema. Apoyada en el sistema oxidativo (glucógeno, ácidos grasos, aminoácidos).'},
+    {t:'Resistencia anaeróbica', d:'Capacidad de mantener esfuerzos intensos incluso sin suficiente oxígeno. Depende del sistema glucolítico no oxidativo y los depósitos de glucógeno muscular.'},
+    {t:'Escala de Borg', d:'Escala de percepción subjetiva del esfuerzo (RPE) utilizada para controlar y ajustar la intensidad del ejercicio sin necesidad de medir la FC.'},
+    {t:'CEA', d:'Ciclo de Estiramiento-Acortamiento. Secuencia muscular de fase excéntrica (alargamiento) seguida rápidamente de fase concéntrica (acortamiento). Base fisiológica del entrenamiento pliométrico.'},
+    {t:'MLEE', d:'Máximo Lactato en Estado Estable. Máxima intensidad de ejercicio en la que la producción de lactato se equilibra con su eliminación. Corresponde aproximadamente a la zona 3 del entrenamiento.'},
+  ],
+  veloc: [
+    {t:'Velocidad de reacción', d:'Capacidad de responder rápidamente a un estímulo. Simple: estímulo y respuesta conocidos. Compleja: estímulo desconocido con múltiples respuestas posibles.'},
+    {t:'Velocidad gestual', d:'Rapidez con la que se ejecuta un gesto deportivo específico (acíclico). Relacionada con la fuerza explosiva.'},
+    {t:'Velocidad máxima de desplazamiento', d:'Capacidad de moverse a máxima velocidad = frecuencia × longitud de zancada. Etapas: aceleración, velocidad máxima y desaceleración (resistencia a la velocidad).'},
+    {t:'Pliometría', d:'Entrenamiento basado en el ciclo de estiramiento-acortamiento (CEA). Mejora fuerza explosiva, potencia y velocidad. Clasificación: impacto/no impacto; tradicional/asistido/resistido.'},
+    {t:'Perfil F-v', d:'Perfil Fuerza-Velocidad. Describe la relación entre la fuerza y la velocidad producidas durante la aceleración en sprint. Permite individualizar programas de entrenamiento.'},
+    {t:'F₀', d:'Fuerza horizontal máxima teórica del atleta a velocidad nula (inicio del sprint). Parte del perfil F-v horizontal.'},
+    {t:'V₀', d:'Velocidad horizontal máxima teórica hasta la cual se puede producir fuerza. Parte del perfil F-v horizontal.'},
+    {t:'P_máx', d:'Potencia máxima producida en dirección horizontal durante la aceleración en sprint. Objetivo principal del entrenamiento con carga óptima.'},
+    {t:'DRF', d:'Disminución Rápida de la Fuerza Resultante. Ocurre en atletas que generan bien la fuerza a bajas velocidades pero pierden capacidad de orientarla horizontalmente al aumentar la velocidad.'},
+    {t:'Tiempo de latencia', d:'Tiempo empleado por el sistema nervioso en procesar una señal desde que se recibe hasta que llega al cerebro.'},
+    {t:'Tiempo de reacción', d:'Tiempo desde que el músculo recibe el estímulo hasta que manifiesta externamente el movimiento.'},
+    {t:'Fibras tipo I', d:'Fibras musculares lentas. Baja velocidad de hidrólisis de ATP. Alta capacidad oxidativa. Metabolismo aeróbico. Resistentes a la fatiga. Se reclutan primero.'},
+    {t:'Fibras tipo II', d:'Fibras musculares rápidas. Velocidad de contracción 3–5× mayor que tipo I. Metabolismo predominantemente glucolítico. Subtipos: IIA (más oxidativa), IIX (intermedia), IIB (más rápida y glucolítica).'},
+    {t:'Sprint asistido', d:'Técnica de entrenamiento donde el atleta corre a velocidades superiores a su máximo voluntario, ayudado por bandas elásticas, remolques horizontales (DynaSpeed) o cuestas descendentes.'},
+    {t:'Método de contrastes', d:'Método que alterna ejercicios de alta carga (fuerza máxima) con ejercicios de baja carga a máxima velocidad. Mejora coordinación intramuscular y potencia.'},
+    {t:'Carga óptima', d:'Carga de entrenamiento que maximiza la potencia mecánica para un ejercicio específico. Método más eficaz para aumentar la potencia máxima en sprint (Haff y Nimphius, 2012).'},
+  ],
+  siglas: [
+    {t:'ACSM', d:'American College of Sports Medicine (Colegio Americano del Deporte). Organización que establece las pautas y recomendaciones para el entrenamiento físico y la salud.'},
+    {t:'FCM', d:'Frecuencia Cardíaca Máxima. Número máximo de latidos/min que puede alcanzar el corazón.'},
+    {t:'FCR', d:'Frecuencia Cardíaca en Reposo. Latidos/min en reposo; refleja el estado cardiovascular.'},
+    {t:'HRR', d:'Heart Rate Reserve (Frecuencia Cardíaca de Reserva = FCM − FCR).'},
+    {t:'VO2máx', d:'Consumo máximo de oxígeno. Indicador principal del rendimiento cardiorrespiratorio (ml/kg/min).'},
+    {t:'VO2R', d:'Consumo de Oxígeno de Reserva = VO2máx − VO2 reposo.'},
+    {t:'HIIT', d:'High Intensity Interval Training. Entrenamiento interválico de alta intensidad.'},
+    {t:'CEA', d:'Ciclo de Estiramiento-Acortamiento. Base del entrenamiento pliométrico.'},
+    {t:'MLEE', d:'Máximo Lactato en Estado Estable. Zona de trabajo en la que la producción de lactato se equilibra con su eliminación.'},
+    {t:'F-v', d:'Perfil Fuerza-Velocidad. Herramienta para analizar las salidas mecánicas durante la aceleración en sprint.'},
+    {t:'P_máx', d:'Potencia máxima horizontal. Variable clave del perfil F-v; objetivo del entrenamiento con carga óptima.'},
+    {t:'DRF', d:'Disminución Rápida de la Fuerza Resultante. Indicador de déficit en la orientación horizontal de la fuerza a altas velocidades.'},
+    {t:'RPE', d:'Rate of Perceived Exertion (Percepción Subjetiva del Esfuerzo). Escala de Borg para controlar la intensidad del ejercicio.'},
+    {t:'GRF', d:'Ground Reaction Force (Fuerza de Reacción del Suelo). Fuerza que el suelo ejerce sobre el atleta durante el sprint; componentes horizontal y vertical.'},
+    {t:'SNC', d:'Sistema Nervioso Central. Recibe y procesa estímulos y genera respuestas motoras. Fundamental en el tiempo de reacción y la coordinación.'},
+    {t:'ATP', d:'Adenosín Trifosfato. Molécula energética universal. En ejercicios de velocidad (corta duración) se resintetiza gracias a la PCr y el mecanismo glucolítico.'},
+    {t:'PCr', d:'Fosfocreatina. Sustrato energético de alta energía que permite la resíntesis rápida de ATP durante ejercicios de máxima intensidad y corta duración.'},
+    {t:'1RM', d:'1 Repetición Máxima. Máximo peso que puede levantarse en un ejercicio en una sola repetición. Referencia para calcular cargas de entrenamiento de fuerza.'},
+  ]
+};
+
+function buildTerms() {
+  ['resist','veloc','siglas'].forEach(cat => {
+    const container = document.getElementById('tg-'+cat);
+    TERMS[cat].forEach(item => {
+      const chip = document.createElement('div');
+      chip.className = 'term-chip';
+      chip.textContent = item.t;
+      chip.onclick = () => showTerm(item.t, item.d);
+      container.appendChild(chip);
+    });
+  });
+}
+
+function showTerm(title, def) {
+  const box = document.getElementById('term-detail');
+  box.innerHTML = `<strong>${title}:</strong> ${def}`;
+  box.style.display = 'block';
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+/* ══════════════════════ TEST DATA ══════════════════════ */
+const ALL_QUESTIONS = [
+  /* ── RESISTENCIA ── */
+  {cat:'resistencia', q:"¿Qué mide el VO2máx en el contexto del ejercicio?", opts:["El consumo máximo de oxígeno","La frecuencia cardíaca máxima","La capacidad de resistencia muscular","El nivel de fuerza explosiva"], correct:0, exp:"El VO2máx hace referencia a la cantidad máxima de oxígeno que puede ser tomada y consumida por el cuerpo durante el ejercicio. Es el principal indicador del rendimiento cardiorrespiratorio."},
+  {cat:'resistencia', q:"¿Cuál es la dosis mínima de ejercicio moderado recomendada por el ACSM a la semana?", opts:["100 minutos por semana","150 minutos por semana","75 minutos por semana","200 minutos por semana"], correct:1, exp:"El ACSM establece que la dosis mínima es de 150 minutos de ejercicio de intensidad moderada a la semana. Puede distribuirse en sesiones continuas o cortas (mínimo 10 min)."},
+  {cat:'resistencia', q:"¿Cuál es la duración mínima de cada sesión para que compute según el ACSM?", opts:["5 minutos","10 minutos","15 minutos","20 minutos"], correct:1, exp:"El ACSM establece que la cantidad mínima de 150 min semanales puede alcanzarse con sesiones más cortas, siendo el mínimo aceptado de 10 minutos por sesión."},
+  {cat:'resistencia', q:"¿Entre qué porcentajes de FCM debe oscilar la intensidad del entrenamiento de resistencia?", opts:["40–60% FCM","50–80% FCM","60–90% FCM","70–95% FCM"], correct:2, exp:"La intensidad debe oscilar entre el 60–90% de la frecuencia cardíaca máxima, o sobre el 40–85% de la HRR/VO2R, para obtener adaptaciones cardiorrespiratorias significativas."},
+  {cat:'resistencia', q:"¿Qué ocurre si el entrenamiento cardiorrespiratorio se realiza por debajo del umbral mínimo de intensidad?", opts:["Se produce sobreentrenamiento","No se produce efecto de entrenamiento","Se mejora la fuerza máxima","Se acelera la recuperación"], correct:1, exp:"Si no se consigue estar en los umbrales mínimos de intensidad, se puede dar una falta de efecto del entrenamiento. Sobrepasar el umbral máximo produciría sobreentrenamiento."},
+  {cat:'resistencia', q:"¿Cuál es la fórmula de Tanaka para calcular la frecuencia cardíaca máxima (FCM)?", opts:["FCM = 220 − edad","FCM = 208 − (0,7 × edad)","FCM = 211 − (0,64 × edad)","FCM = 200 − (0,5 × edad)"], correct:1, exp:"La fórmula de Tanaka (2001) es: FCM = 208 − (0,7 × edad). Es más ajustada que la clásica de Karvonen (220 − edad) y está ampliamente utilizada en la actualidad."},
+  {cat:'resistencia', q:"¿Cuál es la fórmula clásica de Karvonen para calcular la FCM?", opts:["FCM = 208 − (0,7 × edad)","FCM = 211 − (0,64 × edad)","FCM = 220 − edad","FCM = 200 − (0,5 × edad)"], correct:2, exp:"La fórmula clásica de Karvonen (1957) es: FCM = 220 − edad. Es rápida de aplicar pero tiene una desviación estándar de ±10–12 lpm y sobreestima en jóvenes y subestima en mayores."},
+  {cat:'resistencia', q:"¿Qué ventaja tiene la fórmula de Karvonen para calcular la FC objetivo respecto a usar solo el % de FCM?", opts:["Es más sencilla de calcular","Incorpora la FCR, dando una estimación más personalizada","Predice mejor el VO2máx","No requiere conocer la edad"], correct:1, exp:"La fórmula de Karvonen incorpora la frecuencia cardíaca en reposo (FCR), que es un mejor indicador de la condición cardiovascular individual, ofreciendo una estimación más precisa y personalizada de la intensidad."},
+  {cat:'resistencia', q:"En natación, al calcular la FC objetivo con Karvonen, ¿qué ajuste se aplica al resultado?", opts:["Se suman 10 pulsaciones","Se restan 10 pulsaciones","Se multiplica por 0,9","No se aplica ningún ajuste"], correct:1, exp:"Para actividades en posición horizontal como la natación, se debe restar 10 pulsaciones al resultado final de la fórmula de Karvonen, porque la posición horizontal facilita el retorno venoso y la FC es menor."},
+  {cat:'resistencia', q:"¿Cuál es la base fundamental para la optimización del rendimiento deportivo y el desarrollo de una condición física integral?", opts:["El entrenamiento de la flexibilidad y la coordinación","El entrenamiento de la fuerza y la potencia","El entrenamiento de la resistencia y la velocidad","El entrenamiento de la técnica y la táctica"], correct:2, exp:"El entrenamiento de la resistencia y la velocidad constituye la base fundamental para la optimización del rendimiento deportivo y el desarrollo de una condición física integral."},
+  {cat:'resistencia', q:"¿Cuál es el principio fundamental del entrenamiento de resistencia que implica aumentar gradualmente la carga de trabajo?", opts:["Entrenamiento de resistencia estática","Entrenamiento de alta intensidad","Sobrecarga progresiva","Entrenamiento en circuito"], correct:2, exp:"La sobrecarga progresiva es el principio que establece que para seguir obteniendo mejoras, hay que aumentar gradualmente la intensidad, la duración o la frecuencia del ejercicio a medida que el cuerpo se adapta."},
+  {cat:'resistencia', q:"¿Cuál es uno de los factores limitantes para la absorción máxima de oxígeno según Bassett y Howley (2000)?", opts:["El nivel de hidratación","La capacidad de transporte de oxígeno de la sangre","El índice de masa corporal","La frecuencia cardíaca en reposo"], correct:1, exp:"Según Bassett y Howley (2000), la capacidad de transporte de oxígeno de la sangre (volumen sistólico, gasto cardíaco, concentración de hemoglobina) es uno de los principales factores limitantes del VO2máx."},
+  {cat:'resistencia', q:"¿Cuál fue el principal hallazgo del estudio de Karvonen, Kentala y Mustala (1957) sobre los efectos del entrenamiento en la frecuencia cardíaca?", opts:["El entrenamiento reduce la frecuencia cardíaca en reposo","El entrenamiento aumenta la frecuencia cardíaca en reposo","El entrenamiento no tiene efecto en la FC en reposo","El entrenamiento solo afecta la FC durante el ejercicio"], correct:0, exp:"El estudio longitudinal de Karvonen et al. (1957) demostró que el entrenamiento aeróbico produce una reducción de la frecuencia cardíaca en reposo, uno de los indicadores de mejora de la condición cardiovascular."},
+  {cat:'resistencia', q:"¿Qué es la resistencia aeróbica?", opts:["Capacidad de mantener esfuerzos máximos sin oxígeno","Capacidad de realizar esfuerzos prolongados de intensidad moderada sin fatiga extrema","Capacidad de sprints repetidos con recuperación corta","Capacidad de fuerza máxima durante tiempo prolongado"], correct:1, exp:"La resistencia aeróbica se describe como la habilidad del cuerpo para realizar esfuerzos prolongados a intensidad moderada–baja, sin experimentar fatiga extrema. Se apoya principalmente en el sistema oxidativo."},
+  {cat:'resistencia', q:"¿Qué sistema energético predomina en la resistencia anaeróbica?", opts:["Sistema oxidativo aeróbico","Sistema de ácidos grasos","Sistema glucolítico no oxidativo","Sistema de fosfocreatina aláctica"], correct:2, exp:"La resistencia anaeróbica se apoya en el sistema glucolítico no oxidativo, que proporciona energía de forma rápida pero limitada en el tiempo, utilizando los depósitos de glucógeno muscular."},
+
+  /* ── METODOLOGÍA ── */
+  {cat:'metodología', q:"¿Cuál es la característica principal del método continuo de entrenamiento?", opts:["Alternancia de esfuerzo y descanso completo","Carga constante sin periodos de descanso","Trabajo en intervalos con recuperación incompleta","Series de alta intensidad con larga recuperación"], correct:1, exp:"El método continuo se caracteriza por la aplicación de una carga de manera constante e ininterrumpida, sin periodos de descanso durante su ejecución."},
+  {cat:'metodología', q:"¿A qué intensidad trabaja el método continuo extensivo?", opts:["70–85% VO2máx","45–65% VO2máx","85–95% VO2máx","Más del 95% VO2máx"], correct:1, exp:"El método continuo extensivo trabaja en intensidad baja, en el rango regenerativo o subaeróbico: 45–65% del VO2máx, con duración prolongada de 30 a más de 120 minutos."},
+  {cat:'metodología', q:"¿Cuál es el beneficio principal del método continuo extensivo?", opts:["Mejora de la potencia anaeróbica","Uso de ácidos grasos como combustible y preservación de glucógeno","Aumento máximo del VO2máx","Mejora de la tolerancia al lactato"], correct:1, exp:"El método continuo extensivo, al trabajar a baja intensidad, favorece el uso de ácidos grasos como fuente de energía, aumento de la circulación periférica, preservación de reservas de glucógeno y mejora de la recuperación."},
+  {cat:'metodología', q:"¿A qué tipo de método pertenece el Fartlek?", opts:["Método continuo uniforme","Método continuo variable","Método fraccionado interválico","Método de repeticiones"], correct:1, exp:"El Fartlek es un método continuo variable donde el individuo determina por sí mismo los cambios de intensidad, o estos son influenciados por el terreno. Es una actividad ininterrumpida con variaciones de ritmo."},
+  {cat:'metodología', q:"¿Cuándo se debe iniciar la siguiente repetición en el método interválico?", opts:["Cuando la FC baje de 100 lpm","Cuando la FC llegue a 120–130 lpm","Cuando la FC vuelva a la basal","Después de un tiempo fijo de 5 minutos"], correct:1, exp:"En el método interválico la recuperación es INCOMPLETA. El siguiente esfuerzo debe iniciarse cuando la FC desciende a 120–130 latidos por minuto, sin esperar a una recuperación completa."},
+  {cat:'metodología', q:"¿A qué intensidad trabaja el método interválico extensivo largo?", opts:["Alrededor del 95% VO2máx","Alrededor del 85% VO2máx","Por encima del 100% VO2máx","Entre el 60–70% VO2máx"], correct:1, exp:"El método interválico extensivo largo se lleva a cabo a una intensidad moderada (~85% del VO2máx), con intervalos de 2 a 8 minutos. Mejora la capacidad aeróbica, el VO2máx y el umbral anaeróbico."},
+  {cat:'metodología', q:"¿Cuál es el objetivo principal del método interválico extracorto?", opts:["Mejorar la capacidad aeróbica y el umbral anaeróbico","Incrementar la capacidad y potencia anaeróbica aláctica","Trabajar la tolerancia al lactato","Aumentar el volumen sistólico"], correct:1, exp:"El método interválico extracorto se realiza a intensidad máxima (>100% VO2máx) con intervalos de 8–10 segundos. Es eficaz para incrementar la capacidad y la potencia anaeróbicas alácticas."},
+  {cat:'metodología', q:"¿Cuál es la diferencia clave entre el método interválico y el de repeticiones?", opts:["La intensidad del esfuerzo","La duración de los intervalos","El tipo de recuperación: incompleta vs completa","El número de series"], correct:2, exp:"La diferencia fundamental es el tipo de recuperación: en el método interválico la recuperación es INCOMPLETA (120–130 lpm), mientras que en el método de repeticiones la recuperación es COMPLETA (<100 lpm)."},
+  {cat:'metodología', q:"En el método de repeticiones, ¿cuándo se puede iniciar la siguiente repetición?", opts:["Cuando la FC llegue a 120 lpm","Cuando la FC baje de 100 lpm","Cuando pasen 2 minutos fijos","Cuando la sensación de esfuerzo sea leve"], correct:1, exp:"En el método de repeticiones la recuperación es COMPLETA. La frecuencia cardíaca debe descender por debajo de los 100 latidos por minuto antes de comenzar otra serie de trabajo específica."},
+  {cat:'metodología', q:"¿En qué fase de la programación se suele usar principalmente el método continuo extensivo?", opts:["Fase competitiva","Fase de pico de rendimiento","Fase preparatoria","Fase de transición"], correct:2, exp:"El método continuo extensivo (baja intensidad, alto volumen) se usa típicamente en periodos preparatorios para generar una base aeróbica sólida antes de introducir métodos más intensos."},
+  {cat:'metodología', q:"¿A qué porcentaje de la velocidad de competición trabaja el método de repeticiones intensivo corto?", opts:["80–90%","90–95%","90–100%","100–105%"], correct:2, exp:"El método de repeticiones intensivo corto se ejecuta a intensidad próxima a la velocidad de competición (90–100%), con intervalos de 20–30 segundos. Aumenta la capacidad anaeróbica láctica y la producción de lactato."},
+  {cat:'metodología', q:"¿Qué efecto produce el método interválico en el corazón durante la fase de TRABAJO?", opts:["Dilatación del miocardio","Hipertrofia del miocardio por mayor resistencia periférica","Reducción de la FC basal","Aumento del volumen sistólico en reposo"], correct:1, exp:"Durante la fase de trabajo del método interválico, la mayor resistencia periférica provoca hipertrofia del miocardio. Durante el descanso, la reducción de la resistencia periférica estimula el aumento de la capacidad cardíaca."},
+  {cat:'metodología', q:"¿Qué herramienta permite controlar la intensidad del ejercicio sin necesidad de medir la FC?", opts:["VO2máx","Escala de Borg (percepción subjetiva del esfuerzo)","Fórmula de Tanaka","Fórmula de Nes"], correct:1, exp:"La escala de Borg (Percepción Subjetiva del Esfuerzo / RPE) permite controlar y ajustar la intensidad del ejercicio basándose en la sensación subjetiva del esfuerzo, sin necesidad de medir la frecuencia cardíaca."},
+  {cat:'metodología', q:"¿Cuántas zonas de entrenamiento cardiorrespiratorio se utilizan en la tabla de metodología de Viedma Morales?", opts:["4 zonas","5 zonas","6 zonas","7 zonas"], correct:2, exp:"La tabla de Viedma Morales utiliza 6 zonas de entrenamiento: Z1 (regenerativa), Z2, Z3 (MLEE/potencia aeróbica), Z4 (por encima VO2máx), Z5 (láctico 2) y Z6 (sprint máximo/capacidad anaeróbica)."},
+  {cat:'metodología', q:"¿Qué significa MLEE en metodología del entrenamiento?", opts:["Método Largo de Esfuerzo Extenso","Máximo Lactato en Estado Estable","Mínima Longitud de Esfuerzo Eficaz","Método Láctico de Ejercicio Extensivo"], correct:1, exp:"MLEE significa Máximo Lactato en Estado Estable. Es la máxima intensidad de ejercicio en la que la producción de lactato se equilibra con su eliminación. Corresponde aproximadamente a la zona 3 de entrenamiento."},
+
+  /* ── RECURSOS ── */
+  {cat:'recursos', q:"¿Por qué la natación genera una frecuencia cardíaca menor que otras actividades con igual percepción de esfuerzo?", opts:["Trabaja menos masa muscular","La posición horizontal y la presión del agua facilitan el retorno venoso","El agua enfría el cuerpo y reduce la FC","Los movimientos son más lentos"], correct:1, exp:"La posición horizontal en el agua y la mayor presión del medio facilitan el retorno venoso, lo que puede resultar en una frecuencia cardíaca hasta un 10–15% menor en comparación con otras actividades, manteniendo una sensación de esfuerzo similar."},
+  {cat:'recursos', q:"¿Cuál es la principal ventaja de las máquinas elípticas respecto a correr?", opts:["Mayor consumo de oxígeno","Trabajo de más grupos musculares","No genera impacto articular con similar consumo de O₂ y FC","Mayor intensidad cardiovascular"], correct:2, exp:"Las máquinas elípticas han demostrado ser equivalentes a correr en términos de consumo de oxígeno y frecuencia cardíaca para la población general, con la ventaja de no generar impacto articular."},
+  {cat:'recursos', q:"¿Por qué no se recomienda iniciar el entrenamiento corriendo en personas sedentarias con sobrepeso?", opts:["Porque correr no mejora la capacidad aeróbica","Porque puede afectar al sistema cardiovascular y articulaciones por el impacto","Porque consume demasiados carbohidratos","Porque requiere equipo especializado"], correct:1, exp:"Correr puede ser muy exigente para personas no acostumbradas, ya que puede afectar tanto al sistema cardiovascular como a las articulaciones debido al impacto. No se recomienda inicialmente para sedentarios con sobrepeso o baja condición física."},
+  {cat:'recursos', q:"¿Qué actividad involucra más masa muscular que el ciclismo, la marcha o la carrera?", opts:["Step","Elíptica","Natación","Spinning"], correct:2, exp:"La natación involucra una mayor cantidad de masa muscular en comparación con el ciclismo y otras actividades como caminar o correr, porque involucra activamente tren superior e inferior de forma continua."},
+  {cat:'recursos', q:"El ejercicio de step con escalones de 15 cm tiene un gasto energético equivalente a correr a:", opts:["6 km/h","7,5 km/h","9,6 km/h","12 km/h"], correct:2, exp:"Subir escalones con escalones de 15 cm ha demostrado un gasto de energía equivalente a correr a 9,6 km/h, lo que convierte el step en una actividad de alto gasto calórico."},
+  {cat:'recursos', q:"¿Qué ajuste debe tenerse en cuenta al entrenar en cinta de correr?", opts:["Aumentar la inclinación al 5%","Reducir el tiempo de entrenamiento a la mitad","La intensidad puede diferir de correr al aire libre","No es necesario ningún ajuste"], correct:2, exp:"Se debe prestar especial atención al uso de cintas de correr, ya que la intensidad puede diferir de correr al aire libre debido a la falta de resistencia del aire y las diferencias en la mecánica de carrera."},
+  {cat:'recursos', q:"¿Qué ejercicio imita el movimiento de correr o esquiar de fondo sin impacto articular?", opts:["Step","Rowing","Máquina elíptica","Bicicleta estática"], correct:2, exp:"Las máquinas elípticas imitan el movimiento de correr o esquiar de fondo, dependiendo del diseño ajustable que sigue el recorrido del pie en una elipse. Es ejercicio sin impacto con movimientos de brazos y piernas."},
+
+  /* ── VELOCIDAD ── */
+  {cat:'velocidad', q:"¿Qué es la velocidad de reacción en el contexto del entrenamiento de velocidad?", opts:["La capacidad de mantener la máxima velocidad durante un tiempo prolongado","La capacidad de responder rápidamente a un estímulo","La capacidad de realizar movimientos acíclicos en el menor tiempo posible","La capacidad de ejecutar movimientos a máxima velocidad"], correct:1, exp:"La velocidad de reacción se refiere a la capacidad de responder rápidamente a un estímulo, ya sea de manera simple (estímulo y respuesta conocidos) o compleja (estímulo desconocido con múltiples respuestas posibles)."},
+  {cat:'velocidad', q:"¿Cuál de las siguientes afirmaciones describe mejor la definición de velocidad según Ortiz?", opts:["La capacidad de conseguir máxima fuerza volitiva y funcionalidad del sistema neuromuscular","La capacidad de realizar acciones motoras en un mínimo de tiempo y con el máximo de eficacia","La capacidad de reaccionar y realizar movimiento ante un estímulo concreto, en el menor tiempo posible, con la mayor eficacia y donde el cansancio aún no ha hecho acto de presencia","La capacidad de hidrolizar ATP rápidamente para contraerse"], correct:2, exp:"Ortiz (2004) define la velocidad como la capacidad de responder y realizar movimientos ante un estímulo concreto, en el menor tiempo posible, con la mayor eficacia y donde el cansancio aún no ha hecho acto de presencia."},
+  {cat:'velocidad', q:"¿Cuáles son los componentes de los gestos acíclicos en el entrenamiento de la velocidad?", opts:["Tiempo de reacción y tiempo de movimiento","Velocidad de desplazamiento y frecuencia de movimientos","Amplitud de movimientos y rapidez de ejecución","Tiempo de reacción y velocidad de contracción muscular"], correct:0, exp:"Los gestos acíclicos tienen dos componentes principales: el tiempo de reacción (desde que se percibe el estímulo hasta el primer movimiento) y el tiempo de movimiento (desde el primer movimiento hasta completar el gesto). Su unión es la rapidez de ejecución."},
+  {cat:'velocidad', q:"¿Cuál de las siguientes opciones describe mejor la velocidad de reacción?", opts:["Capacidad para llevar la velocidad del mínimo al máximo en el menor tiempo","Capacidad de desplazamiento máxima en un espacio concreto en el menor tiempo posible","Capacidad de realizar una acción frente a un estímulo","Capacidad de realizar el máximo número de veces un mismo movimiento en un tiempo determinado"], correct:2, exp:"La velocidad de reacción es la capacidad de realizar una acción frente a un estímulo. También puede llamarse tiempo de reacción. Se distingue entre reacciones simples y discriminativas."},
+  {cat:'velocidad', q:"¿Cuál de las siguientes afirmaciones es correcta sobre el desarrollo de la velocidad?", opts:["El desarrollo de la velocidad no requiere una programación específica","Es fundamental garantizar la especificidad en la práctica del entrenamiento de velocidad","El entrenamiento de velocidad es el más simple de todas las capacidades físicas básicas","No es necesario complementar el entrenamiento de velocidad con ejercicios de fuerza"], correct:1, exp:"Es fundamental garantizar la especificidad en la práctica del entrenamiento de velocidad. Los métodos de desarrollo deben tener en cuenta siempre la especificidad de la competición y centrarse lo máximo posible en ellas."},
+  {cat:'velocidad', q:"¿Cuál de los siguientes componentes es clave en el entrenamiento de velocidad?", opts:["Mejora de la aceleración y la velocidad máxima","Mejora de la flexibilidad","Aumento de la resistencia muscular","Desarrollo de la fuerza máxima exclusivamente"], correct:0, exp:"Los dos componentes clave del entrenamiento de velocidad son la aceleración (capacidad de alcanzar la máxima velocidad en el menor tiempo) y la velocidad máxima (capacidad de desplazarse a la máxima velocidad posible)."},
+  {cat:'velocidad', q:"¿A partir de qué edad pueden trabajarse todos los tipos de velocidad con progresión lógica?", opts:["12–13 años (pubertad)","14–15 años","16–17 años (post-puberal)","Cualquier edad desde los 8 años"], correct:2, exp:"A partir de la etapa post-puberal (16–17 años) se pueden trabajar todos los tipos de velocidad, siempre siguiendo una progresión y programación lógica."},
+  {cat:'velocidad', q:"¿Desde qué edad pueden mejorarse el tiempo de reacción y la frecuencia de movimiento?", opts:["Desde los 14–15 años","Desde los 8–10 años","Solo en adultos","Desde los 5–6 años"], correct:1, exp:"Estos aspectos son mejorables desde los 8–10 años, ya que están unidos al sistema nervioso y no al sistema locomotor (que aún está en desarrollo). Los niños de esas edades alcanzan valores en el SNC similares a los de un adulto."},
+  {cat:'velocidad', q:"¿Cuál de los siguientes métodos se utiliza para mejorar la velocidad de reacción simple?", opts:["Método de repeticiones","Método variado","Método sensorial","Método de extinción"], correct:0, exp:"El método de repeticiones implica responder de manera automática ante un estímulo recurrente, como realizar series de ejercicios al escuchar el mismo sonido repetidamente. Es uno de los métodos para entrenar la velocidad de reacción simple."},
+  {cat:'velocidad', q:"¿Cuál de los siguientes métodos implica responder de manera automática ante un estímulo recurrente?", opts:["El método variado","El método sensorial","El método de repeticiones","El método de extinción"], correct:2, exp:"El método de repeticiones implica responder de manera automática ante un estímulo recurrente, como realizar series de ejercicios al escuchar el mismo sonido repetidamente. El hábito de respuesta se automatiza con la repetición."},
+  {cat:'velocidad', q:"¿Cuál es la velocidad máxima de desplazamiento el resultado de?", opts:["Fuerza × Potencia","Frecuencia × Longitud de zancada","Aceleración × Tiempo","Tiempo de reacción × Velocidad gestual"], correct:1, exp:"La velocidad máxima de desplazamiento es el resultado de la multiplicación entre la frecuencia y la longitud de zancada (o brazada en natación)."},
+  {cat:'velocidad', q:"¿Cuáles son las tres fases de la velocidad de desplazamiento (gestos cíclicos)?", opts:["Salida, aceleración y mantenimiento","Aceleración, velocidad máxima y desaceleración","Reacción, movimiento y desaceleración","Arranque, pico y recuperación"], correct:1, exp:"La velocidad de desplazamiento en gestos cíclicos posee tres fases: incremento de la velocidad (aceleración), desarrollo de la máxima velocidad, y desaceleración (resistencia a la velocidad)."},
+  {cat:'velocidad', q:"¿Cuál de las 5 fases del tiempo de reacción es la MÁS mejorable con entrenamiento?", opts:["Excitación del receptor sensorial","Vía aferente hacia el SNC","Elaboración de la respuesta en el SNC","Vía eferente desde el SNC al músculo"], correct:2, exp:"La fase de elaboración de la respuesta (fase 3), donde el SNC selecciona la respuesta correcta entre las opciones almacenadas en la memoria, es la más susceptible de mejorar con entrenamiento."},
+  {cat:'velocidad', q:"¿Cuál es la clave para desarrollar las distintas manifestaciones de la velocidad?", opts:["La dieta balanceada","El descanso adecuado","La intensidad del entrenamiento","La planificación de ejercicios específicos"], correct:3, exp:"La planificación de ejercicios específicos es clave para desarrollar las distintas manifestaciones de la velocidad. Los métodos deben contemplar las exigencias de la competición y centrarse lo máximo posible en ellas."},
+  {cat:'velocidad', q:"¿Cuáles son las pruebas que se consideran puramente de velocidad en atletismo?", opts:["300m, 200m, 100m, 80m y 60m lisos","400m, 300m, 200m, 100m y 50m lisos","500m, 400m, 300m, 200m y 100m lisos","600m, 500m, 400m, 300m y 200m lisos"], correct:0, exp:"Dentro del atletismo, las pruebas puramente de velocidad son las de 300m, 200m, 100m, 80m y 60m lisos."},
+  {cat:'velocidad', q:"¿Cuál de los siguientes NO es un factor que determina la velocidad según Ortiz (2004)?", opts:["Componente genético y tipo de fibras musculares","Fuerza explosiva y coordinación intramuscular","Nivel de hidratación y alimentación","Técnica motora y concentración"], correct:2, exp:"Ortiz (2004) señala que los factores que condicionan la velocidad son: componente genético, tipo de fibras, fuerza explosiva, coordinación intramuscular, flexibilidad dinámica, metabolismo anaeróbico, técnica y aspectos psicológicos. La hidratación no figura como factor condicionante directo."},
+  {cat:'velocidad', q:"¿Qué herramienta se usa para mejorar la velocidad de aceleración mediante trabajo horizontal con grandes cargas?", opts:["Carreras asistidas con bandas elásticas","Arrastres pesados con trineo","Saltos verticales asistidos","Ejercicios de estimulación nerviosa"], correct:1, exp:"Los arrastres pesados con trineo son uno de los ejercicios orientados a mejorar la fuerza horizontal máxima en el inicio del sprint (bajas velocidades), promoviendo la aplicación de fuerza en la misma dirección de la aceleración."},
+  {cat:'velocidad', q:"¿Cuál de las siguientes herramientas se utiliza para mejorar la fuerza explosiva en el entrenamiento de la velocidad?", opts:["Trabajo con cargas ligeras y ejecución rápida (pliometría)","Carreras cortas con salida lanzada","Ejercicios de estimulación nerviosa","Método de contrastes"], correct:0, exp:"Para mejorar la fuerza explosiva y por tanto la aceleración, se utiliza el trabajo con cargas ligeras y ejecución rápida (pliometría), trabajo con multisaltos horizontales y multisaltos cortos a máxima intensidad."},
+
+  /* ── FIBRAS MUSCULARES ── */
+  {cat:'velocidad', q:"¿Qué tipo de fibras musculares tienen mayor velocidad de contracción?", opts:["Fibras tipo I (lentas)","Fibras tipo IIA","Fibras tipo IIB","Fibras tipo IIX"], correct:2, exp:"Las fibras tipo IIB tienen la mayor velocidad de contracción de todos los tipos. Son las más glucolíticas y rápidas. El orden de velocidad en fibras tipo II es: IIB > IIX > IIA."},
+  {cat:'velocidad', q:"¿Cuál es el orden de reclutamiento de las fibras musculares durante el ejercicio físico?", opts:["Tipo IIB → IIA → I","Tipo I → IIA → IIX → IIB","Tipo IIA → I → IIB","Tipo IIX → IIB → I"], correct:1, exp:"El reclutamiento de las fibras sigue este orden: primero las fibras tipo I (lentas, siempre), y dentro de las tipo II: IIA primero, luego IIX y finalmente IIB, a medida que aumenta la intensidad del ejercicio."},
+  {cat:'velocidad', q:"¿De qué metabolismo obtienen la mayor parte de la energía las fibras tipo I?", opts:["Glucólisis anaeróbica","Sistema de fosfocreatina","Metabolismo aeróbico oxidativo","Sistema glucolítico no oxidativo"], correct:2, exp:"Las fibras tipo I obtienen la mayor parte del ATP para la contracción del metabolismo aeróbico, con elevadas concentraciones de mioglobina, mitocondrias numerosas y dependencia del ciclo de Krebs y la fosforilación oxidativa."},
+  {cat:'velocidad', q:"¿Cuántas veces mayor es la velocidad de contracción de las fibras tipo II respecto a las tipo I?", opts:["2 veces mayor","3–5 veces mayor","5–8 veces mayor","10 veces mayor"], correct:1, exp:"Las fibras tipo II presentan una velocidad de contracción de tres a cinco veces mayor que las de tipo I, gracias a su mayor capacidad de almacenamiento y liberación de Ca++ y a su retículo sarcoplásmico más desarrollado."},
+
+  /* ── PLIOMETRÍA ── */
+  {cat:'pliometría', q:"¿Qué es la pliometría?", opts:["Entrenamiento de fuerza máxima con cargas elevadas","Entrenamiento basado en el ciclo estiramiento-acortamiento para mejorar fuerza explosiva","Entrenamiento de resistencia aeróbica a baja intensidad","Entrenamiento de flexibilidad dinámica con rebotes"], correct:1, exp:"El entrenamiento pliométrico se utiliza para mejorar el rendimiento físico en actividades que implican saltos, cambios de dirección y velocidad. Normalmente incluye ejercicios que utilizan el ciclo de estiramiento-acortamiento (CEA)."},
+  {cat:'pliometría', q:"¿Quién acuñó el término 'pliométrico' y en qué año?", opts:["Grosser, 1992","Verkhoshanski, 1950","Zaciorski, 1966","Karvonen, 1957"], correct:2, exp:"El término 'pliométrico' apareció por primera vez en el trabajo del investigador ruso Zaciorski en 1966, considerando que en ejercicios con CEA la tensión expresada externamente es mayor que en el ejercicio isométrico."},
+  {cat:'pliometría', q:"¿Cuál es la primera clasificación histórica de ejercicios pliométricos?", opts:["Bilateral / Unilateral","Impacto (con carga externa) / No impacto (sin carga externa)","Horizontal / Vertical","Asistido / Resistido"], correct:1, exp:"La primera clasificación fue propuesta por Verkhoshanski, dividiendo los ejercicios pliométricos en: impacto (con alguna carga externa adicional) y no impacto (sin carga externa adicional)."},
+  {cat:'pliometría', q:"Para mejorar la velocidad en sprint horizontal, ¿qué tipo de pliometría es más adecuada según la evidencia?", opts:["Bilateral y vertical","Unilateral y horizontal","Saltos con contramovimiento bilateral","Drop jumps verticales"], correct:1, exp:"Según Gonzalo-Skok et al. (2019), el entrenamiento pliométrico unilateral-horizontal mostró mejoras significativas en todos los tiempos de sprint (5, 10 y 25 metros), mientras que el bilateral-vertical no obtuvo el mismo efecto."},
+  {cat:'pliometría', q:"Para mejorar la altura del salto vertical, ¿qué tipo de pliometría es más recomendada?", opts:["Unilateral y horizontal","Bilateral y vertical","Sprint asistido con banda","Arrastres con trineo"], correct:1, exp:"Para mejorar la altura del salto vertical, el entrenamiento pliométrico bilateral-vertical (saltos en el lugar, drop jumps, saltos con contramovimiento) es más adecuado que el unilateral-horizontal."},
+  {cat:'pliometría', q:"¿Con qué frecuencia semanal se recomienda realizar entrenamiento pliométrico?", opts:["1 vez/semana","2–3 veces/semana","4–5 veces/semana","Todos los días"], correct:1, exp:"Se recomienda realizar sesiones de pliometría de 2 a 3 veces por semana para permitir una recuperación adecuada entre sesiones y evitar el agotamiento excesivo."},
+  {cat:'pliometría', q:"¿En qué población muestra el entrenamiento pliométrico los mayores efectos según Kons et al. (2023)?", opts:["Atletas de alto rendimiento adultos","Deportistas individuales de élite","Niños, adolescentes y deportes colectivos","Corredores de fondo"], correct:2, exp:"Según Kons et al. (2023), el efecto del entrenamiento pliométrico es mayor en niños y adolescentes (por su proceso de adaptación y desarrollo) y en deportes colectivos frente a individuales, especialmente en el género femenino."},
+  {cat:'pliometría', q:"¿Cuál es la base del ciclo de estiramiento-acortamiento (CEA)?", opts:["Fase concéntrica seguida de fase excéntrica","Fase excéntrica (alargamiento) seguida rápidamente de fase concéntrica (acortamiento)","Contracción isométrica mantenida y liberación brusca","Activación de fibras tipo I seguida de fibras tipo II"], correct:1, exp:"El CEA consiste en un movimiento de alargamiento (excéntrico) seguido rápidamente por un movimiento de acortamiento (concéntrico). La energía elástica almacenada en la fase excéntrica potencia la fase concéntrica posterior."},
+  {cat:'pliometría', q:"¿Cuántas series se recomiendan por ejercicio en un programa de pliometría?", opts:["1–2 series","3–4 series","5–6 series","7–8 series"], correct:1, exp:"Se recomiendan realizar entre 3 y 4 series de cada ejercicio pliométrico, tomando descansos de 1 a 2 minutos entre series, priorizando siempre la calidad del movimiento y la técnica adecuada."},
+
+  /* ── SPRINT / PERFIL F-v ── */
+  {cat:'sprint', q:"¿Qué información proporciona el perfil F-v horizontal al entrenador?", opts:["Solo el tiempo de sprint en diferentes distancias","La producción mecánica actual del atleta y sus límites neuromusculares (F₀, V₀ y P_máx)","La frecuencia cardíaca durante el sprint","La composición de fibras musculares"], correct:1, exp:"El perfil F-v horizontal describe la producción mecánica actual del atleta junto con los límites del sistema neuromuscular durante la aceleración: F₀ (fuerza horizontal máxima a velocidad nula), V₀ (velocidad máxima teórica) y P_máx (potencia máxima horizontal)."},
+  {cat:'sprint', q:"¿Qué es la 'carga óptima' en el entrenamiento de potencia para sprint?", opts:["La carga máxima que el atleta puede levantar (1RM)","La carga que maximiza la potencia mecánica para un ejercicio específico","El peso corporal del atleta","El 60% del 1RM"], correct:1, exp:"La carga óptima (Haff y Nimphius, 2012) es aquella que maximiza la potencia mecánica para un ejercicio específico. Entrenar con carga óptima ha demostrado ser el método más eficaz para aumentar la potencia máxima."},
+  {cat:'sprint', q:"¿Cuántas horas mínimas de recuperación deben garantizarse entre sesiones de alta intensidad de fuerza para sprint?", opts:["12 horas","24 horas","48 horas","72 horas"], correct:2, exp:"Se deben garantizar un mínimo de 48 horas de recuperación entre sesiones de alta intensidad para mitigar la fatiga acumulada antes de la próxima sesión de entrenamiento."},
+  {cat:'sprint', q:"Un atleta con 'disminución rápida de la fuerza resultante (DRF)' necesita trabajar principalmente con ejercicios de:", opts:["Fuerza máxima a bajas velocidades (arrastres pesados)","Alta velocidad (sprint asistido, saltos asistidos con banda)","Mayor volumen de carrera continua extensiva","Isometría en posiciones específicas"], correct:1, exp:"La DRF indica que el atleta pierde la capacidad de aplicar y orientar la fuerza horizontal al aumentar la velocidad. Necesita ejercicios de alta velocidad (lado izquierdo del espectro F-v): sprint asistido, saltos asistidos con banda, pliometría."},
+  {cat:'sprint', q:"¿Qué son los arrastres pesados con trineo en el contexto del sprint?", opts:["Ejercicios para mejorar la velocidad máxima","Ejercicios para mejorar la fuerza horizontal a bajas velocidades (inicio del sprint)","Técnica de recuperación activa","Método de entrenamiento de resistencia aeróbica"], correct:1, exp:"Los arrastres pesados con trineo son ejercicios orientados a mejorar la fuerza horizontal máxima en el inicio del sprint (bajas velocidades). Realizados con cargas ~85% 1RM, promueven la aplicación de fuerza en dirección horizontal."},
+  {cat:'sprint', q:"¿Cuáles son los ejercicios recomendados para mejorar la potencia máxima horizontal en sprint?", opts:["Natación, ciclismo y elíptica","Sprints con resistencia, jump squats, pliometría horizontal y sprints asistidos","Hip thrusts y sentadillas con cargas máximas","Fartlek y método continuo extensivo"], correct:1, exp:"Para mejorar la potencia máxima en sprint se recomiendan: sprints con resistencia, sprints a máxima velocidad, jump squats, pliometría (salto horizontal) y sprints asistidos, considerando el espectro F-v del atleta."},
+  {cat:'sprint', q:"¿Por qué dos atletas con el mismo tiempo de sprint y P_máx similar pueden necesitar programas de entrenamiento diferentes?", opts:["Por diferencias de peso corporal","Por diferentes perfiles F-v (diferente equilibrio entre F₀ y V₀)","Por diferencias en la técnica de carrera","Por diferencias en la FCM"], correct:1, exp:"Dos atletas pueden alcanzar tiempos y P_máx similares, pero con diferencias significativas en sus perfiles F-v (valores de F₀ y V₀ distintos). Esto implica que tienen diferentes fortalezas y debilidades mecánicas, requiriendo programas individualizados."},
+  {cat:'sprint', q:"¿Cuántos ejercicios pliométricos distintos se recomiendan seleccionar en cada sesión?", opts:["1–2 ejercicios","3–5 ejercicios","6–8 ejercicios","Más de 8 ejercicios"], correct:1, exp:"Se recomienda seleccionar entre 3 y 5 ejercicios pliométricos distintos por sesión, realizando 3–4 series de cada uno con descansos de 1–2 minutos entre series y comenzando con volumen moderado."},
+];
+
+/* ══════════════════════ TEST ENGINE ══════════════════════ */
+let activeQuestions = [];
+let submitted = false;
+let activeFilter = 'todos';
+
+function buildFilterBar() {
+  const cats = ['todos', ...new Set(ALL_QUESTIONS.map(q => q.cat))];
+  const bar = document.getElementById('filter-bar');
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (c === 'todos' ? ' active' : '');
+    btn.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+    btn.onclick = () => { activeFilter = c; applyFilter(btn); };
+    bar.appendChild(btn);
+  });
+}
+
+function applyFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadQuestions();
+}
+
+function loadQuestions() {
+  submitted = false;
+  activeQuestions = activeFilter === 'todos'
+    ? [...ALL_QUESTIONS]
+    : ALL_QUESTIONS.filter(q => q.cat === activeFilter);
+  for (let i = activeQuestions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [activeQuestions[i], activeQuestions[j]] = [activeQuestions[j], activeQuestions[i]];
+  }
+  renderQuestions();
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('btn-submit').disabled = false;
+  updateProgress();
+}
+
+function renderQuestions() {
+  const c = document.getElementById('questions-container');
+  c.innerHTML = '';
+  document.getElementById('test-count').textContent = `${activeQuestions.length} preguntas`;
+  activeQuestions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'question-card';
+    div.id = 'qcard-' + i;
+    let opts = q.opts.map((o, j) => `
+      <label class="option-label" id="opt-${i}-${j}">
+        <input type="radio" name="q${i}" value="${j}"> ${o}
+      </label>`).join('');
+    div.innerHTML = `<h3>${i + 1}. ${q.q}</h3>${opts}`;
+    c.appendChild(div);
+  });
+  activeQuestions.forEach((_, i) => {
+    document.querySelectorAll(`input[name="q${i}"]`).forEach(inp => {
+      inp.addEventListener('change', updateProgress);
+    });
+  });
+}
+
+function updateProgress() {
+  let answered = 0;
+  activeQuestions.forEach((_, i) => {
+    if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+  });
+  const pct = activeQuestions.length ? (answered / activeQuestions.length * 100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  let score = 0;
+  activeQuestions.forEach((q, i) => {
+    const chosen = document.querySelector(`input[name="q${i}"]:checked`);
+    const chosenVal = chosen ? parseInt(chosen.value) : -1;
+    const isCorrect = chosenVal === q.correct;
+    if (isCorrect) score++;
+    q.opts.forEach((_, j) => {
+      const lbl = document.getElementById(`opt-${i}-${j}`);
+      if (j === q.correct) lbl.classList.add('correct');
+      else if (j === chosenVal) lbl.classList.add('wrong');
+      const inp = lbl.querySelector('input');
+      if (inp) inp.disabled = true;
+    });
+    const card = document.getElementById('qcard-' + i);
+    const fb = document.createElement('div');
+    fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
+    fb.innerHTML = `<div class="fb-circle"></div><div><strong>${isCorrect ? 'Correcto' : 'Incorrecto'}</strong> — ${q.exp}</div>`;
+    card.appendChild(fb);
+  });
+  const total = activeQuestions.length;
+  const pct = Math.round(score / total * 100);
+  document.getElementById('score-display').textContent = `${score} / ${total}`;
+  document.getElementById('score-msg').textContent = pct >= 80
+    ? `¡Excelente! Has acertado el ${pct}% de las preguntas.`
+    : pct >= 60
+    ? `Bien, ${pct}% correcto. Repasa los temas fallados.`
+    : `Necesitas reforzar. Solo ${pct}% correcto. ¡Ánimo!`;
+  document.getElementById('result-panel').style.display = 'block';
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
+  document.getElementById('prog-fill').style.width = '100%';
+}
+
+function retryTest() {
+  loadQuestions();
+  window.scrollTo({top: document.getElementById('test').offsetTop - 60, behavior:'smooth'});
+}
+
+/* ══════════════════════ INIT ══════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildTerms();
+  buildFilterBar();
+  loadQuestions();
+});
+</script>
+</body>
+</html>

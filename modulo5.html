@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 5 – Entrenamiento Funcional I | Fitness Instructor · Five Stars</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header { background: #1a1a18; color: #fff; padding: 18px 28px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+  header .badge { background: #534AB7; color: #fff; font-size: .72rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 0; background: #fff; border-bottom: 2px solid #e0dfd8; padding: 0 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+  .tab-btn { padding: 14px 20px; font-size: .9rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #666; border-bottom: 3px solid transparent; transition: all .2s; }
+  .tab-btn.active { color: #534AB7; border-bottom-color: #534AB7; }
+  .tab-btn:hover { color: #534AB7; }
+
+  /* ── CONTENT ── */
+  .tab-content { display: none; padding: 24px 20px; max-width: 900px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* ── CARDS ── */
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+  .card-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: .95rem; user-select: none; }
+  .card-header:hover { background: #fafaf8; }
+  .card-body { padding: 0 18px 16px; display: none; }
+  .card.open .card-body { display: block; }
+  .card.open .chevron { transform: rotate(180deg); }
+  .chevron { transition: transform .25s; font-size: .8rem; color: #888; }
+
+  .cat-purple .card-header { background: #EEEDFE; }
+  .cat-teal   .card-header { background: #E1F5EE; }
+  .cat-amber  .card-header { background: #FAEEDA; }
+  .cat-coral  .card-header { background: #FAECE7; }
+
+  /* ── SECTION TITLES ── */
+  .section-title { font-size: 1rem; font-weight: 700; color: #534AB7; margin: 22px 0 10px; letter-spacing: .02em; text-transform: uppercase; }
+  .section-title:first-child { margin-top: 0; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 10px; }
+  th { background: #1a1a18; color: #fff; padding: 8px 10px; text-align: left; }
+  td { padding: 7px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+  tr:nth-child(even) td { background: #fafaf8; }
+
+  /* ── TERM CHIPS ── */
+  .term-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .term-chip { background: #EEEDFE; border: 0.5px solid #c8c5f5; border-radius: 8px; padding: 5px 12px; font-size: .84rem; cursor: pointer; transition: background .15s; }
+  .term-chip:hover { background: #d9d7fc; }
+  .term-detail { background: #f5f4f0; border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-size: .88rem; line-height: 1.6; display: none; }
+
+  /* ── SUMMARY bullets ── */
+  ul.summary { padding-left: 20px; line-height: 1.8; font-size: .9rem; }
+  ul.summary li { margin-bottom: 4px; }
+  .key-box { background: #EEEDFE; border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: .9rem; line-height: 1.7; }
+  .key-box strong { color: #534AB7; }
+
+  /* ── TEST ── */
+  .test-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+  .test-counter { font-size: .9rem; color: #555; }
+  .progress-bar { height: 6px; background: #e0dfd8; border-radius: 3px; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: #534AB7; border-radius: 3px; transition: width .3s; }
+  .question-card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .question-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 14px; line-height: 1.5; }
+  .option-label { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: .9rem; transition: background .15s; margin-bottom: 6px; border: 1px solid transparent; }
+  .option-label:hover { background: #f5f4f0; border-color: #d3d1c7; }
+  .option-label input[type=radio] { margin-top: 3px; accent-color: #534AB7; flex-shrink: 0; }
+  .option-label.correct { background: #E1F5EE; border-color: #86d8a8; }
+  .option-label.wrong   { background: #FAECE7; border-color: #f5a58a; }
+  .option-label.missed  { background: #E1F5EE; border-color: #86d8a8; opacity: .7; }
+
+  .btn-submit { background: #FFD700; color: #1a1a18; border: none; padding: 13px 32px; font-size: 1rem; font-weight: 800; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: .04em; transition: opacity .2s; }
+  .btn-submit:hover { opacity: .88; }
+  .btn-submit:disabled { opacity: .4; cursor: not-allowed; }
+
+  .feedback-box { display: flex; align-items: flex-start; gap: 12px; margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: #f5f4f0; font-size: .87rem; line-height: 1.6; }
+  .fb-circle { width: 28px; height: 28px; border-radius: 50%; background: #1a1a18; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: .85rem; }
+  .fb-ok  .fb-circle::after { content: "✓"; color: #4caf50; }
+  .fb-err .fb-circle::after { content: "✕"; color: #FFD700; }
+
+  .result-panel { background: #1a1a18; color: #fff; border-radius: 12px; padding: 24px; text-align: center; margin-top: 20px; display: none; }
+  .result-panel h2 { font-size: 2rem; color: #FFD700; }
+  .result-panel p { margin-top: 8px; font-size: 1rem; color: #ccc; }
+  .btn-retry { background: #534AB7; color: #fff; border: none; padding: 12px 28px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 18px; font-size: .95rem; }
+
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #d3d1c7; background: #fff; font-size: .82rem; cursor: pointer; transition: all .15s; }
+  .filter-btn.active { background: #534AB7; color: #fff; border-color: #534AB7; }
+
+  p.note { font-size: .82rem; color: #888; margin-top: 6px; }
+  hr.divider { border: none; border-top: 1px solid #e0dfd8; margin: 18px 0; }
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <div><div class="badge">MÓDULO 5</div></div>
+  <h1>Entrenamiento Funcional I<br><span style="font-weight:400;font-size:.85rem;opacity:.8">Planos y Ejes · Análisis de Movimiento · Entrenamiento No Convencional · Bandas de Resistencia</span></h1>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="openTab(this,'esquema')">📋 Esquema</button>
+  <button class="tab-btn" onclick="openTab(this,'resumen')">💡 Resumen clave</button>
+  <button class="tab-btn" onclick="openTab(this,'siglas')">🔤 Siglas y términos</button>
+  <button class="tab-btn" onclick="openTab(this,'test')">✏️ Test</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1 – ESQUEMA
+══════════════════════════════════════════════ -->
+<div id="esquema" class="tab-content active">
+
+  <div class="section-title">Tema 1 · Entrenamiento Funcional</div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Concepto de entrenamiento funcional y no convencional <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Entrenamiento no convencional:</strong> enfoques que difieren de las prácticas tradicionales de ejercicio. Métodos creativos, variados, alejados del gimnasio estándar.</li>
+        <li>Puede incluir: neumáticos, cuerdas, kettlebells, masa corporal propia, bandas de resistencia.</li>
+        <li><strong>Entrenamiento funcional ≠ Entrenamiento no convencional</strong> (son conceptos distintos).</li>
+        <li>El entrenamiento funcional se centra en la <strong>aceleración, desaceleración y estabilidad</strong> en múltiples planos y articulaciones.</li>
+        <li>Abarca cualquier ejercicio diseñado para potenciar un movimiento o actividad particular.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Planos de movimiento <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Plano</th><th>División del cuerpo</th><th>Movimientos asociados</th></tr>
+        <tr><td><strong>Sagital / Mediano</strong></td><td>Izquierda y derecha</td><td>Flexión, extensión</td></tr>
+        <tr><td><strong>Frontal / Coronal</strong></td><td>Posterior y anterior</td><td>Abducción, aducción</td></tr>
+        <tr><td><strong>Transversal</strong></td><td>Superior e inferior</td><td>Rotación</td></tr>
+      </table>
+      <ul class="summary" style="margin-top:10px">
+        <li>El <strong>plano mediano</strong> es un tipo específico de plano sagital que divide el cuerpo en dos mitades iguales.</li>
+        <li>Los planos sagitales en general no garantizan una división simétrica (Tortora y Derrickson, 2010).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Ejes de movimiento <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Eje</th><th>Dirección</th><th>Plano relacionado</th><th>Movimientos</th></tr>
+        <tr><td><strong>Lateral u Horizontal</strong></td><td>De lado a lado</td><td>Sagital</td><td>Flexión y extensión</td></tr>
+        <tr><td><strong>Antero-Posterior / DorsoVentral</strong></td><td>De adelante a atrás</td><td>Frontal</td><td>Abducción y aducción</td></tr>
+        <tr><td><strong>Longitudinal / Craneocaudal / Vertical</strong></td><td>De arriba a abajo</td><td>Transversal</td><td>Rotación</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Movimientos sobre planos y ejes <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Movimiento</th><th>Plano</th><th>Descripción</th></tr>
+        <tr><td><strong>Flexión</strong></td><td>Sagital</td><td>Ángulo menor respecto al plano medio. Eje transverso.</td></tr>
+        <tr><td><strong>Extensión</strong></td><td>Sagital</td><td>Ángulo mayor respecto al plano medio. Eje transverso.</td></tr>
+        <tr><td><strong>Abducción</strong></td><td>Frontal</td><td>Alejarse del plano medio del cuerpo.</td></tr>
+        <tr><td><strong>Aducción</strong></td><td>Frontal</td><td>Acercarse al plano medio del cuerpo.</td></tr>
+        <tr><td><strong>Rotación</strong></td><td>Transversal</td><td>Giro en torno al eje longitudinal. Interna (acercarse) / Externa (alejarse).</td></tr>
+        <tr><td><strong>Circunducción</strong></td><td>Varios</td><td>Movimiento circular: flexión → abducción → extensión → aducción.</td></tr>
+        <tr><td><strong>Retracción escapular</strong></td><td>Frontal</td><td>Escápulas se acercan al plano medio.</td></tr>
+        <tr><td><strong>Protracción escapular</strong></td><td>Frontal</td><td>Escápulas se alejan del plano medio.</td></tr>
+        <tr><td><strong>Flexión plantar</strong></td><td>Sagital</td><td>Pie hacia abajo (talón eleva, dedos al suelo).</td></tr>
+        <tr><td><strong>Flexión dorsal</strong></td><td>Sagital</td><td>Pie hacia arriba (talón baja, dedos hacia la espinilla).</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Eficiencia del movimiento <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>La eficiencia de un movimiento se relaciona con la <strong>cantidad de energía necesaria</strong> para llevarlo a cabo.</li>
+        <li>A menor gasto energético para una tarea, mayor eficiencia del movimiento.</li>
+        <li>Con el entrenamiento y la adaptación, el cuerpo consume <strong>menos energía</strong> para el mismo movimiento.</li>
+        <li>La eficiencia muscular se basa en la <strong>coordinación entre músculos antagonistas</strong>: mientras uno se contrae (acortamiento), el otro se estira.</li>
+        <li>El <strong>huso muscular</strong> es el receptor sensorial que regula la longitud y la tensión muscular en este equilibrio.</li>
+        <li><em>Ejemplo:</em> En el lanzamiento de jabalina, exceder o no alcanzar la amplitud de movimiento adecuada reduce la eficiencia.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Análisis de Movimiento <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Proceso de descomponer un movimiento en sus componentes individuales para estudiar articulaciones, tipo de movimiento y músculos.</li>
+      </ul>
+      <table style="margin-top:10px">
+        <tr><th>Elemento del análisis</th><th>Descripción</th></tr>
+        <tr><td><strong>Articulaciones involucradas</strong></td><td>Identificar qué articulaciones participan (rodilla, codo, cadera, tobillo…). Cada una tiene un papel específico.</td></tr>
+        <tr><td><strong>Tipo de movimiento articular</strong></td><td>Flexión, extensión, rotación, abducción, aducción, etc.</td></tr>
+        <tr><td><strong>Músculos en acortamiento</strong></td><td>Fase concéntrica (F &gt; R). Producen la fuerza del movimiento. Ej: bíceps en flexión de codo.</td></tr>
+        <tr><td><strong>Parte excéntrica</strong></td><td>Fase excéntrica (F &lt; R). Alargamiento muscular bajo esfuerzo. Crucial para el control y amortiguación.</td></tr>
+        <tr><td><strong>Fase isométrica</strong></td><td>F = R. Sin cambio de longitud muscular.</td></tr>
+      </table>
+      <p class="note" style="margin-top:8px">Ejemplo 1: Curl de bíceps → Articulación: Codo · Movimiento: Flexión-Extensión · Acortamiento: Tríceps · Excéntrica: Bíceps</p>
+      <p class="note">Ejemplo 2: Remo → Articulaciones: Codo y Hombro · Movimiento: Flexión-Extensión + Retracción-Protracción escapular · Acortamiento: Bíceps, Dorsal, Romboideos · Excéntrica: Pectoral, Tríceps</p>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 2 · Entrenamiento No Convencional</div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Características y objetivos del entrenamiento funcional <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Objetivo principal:</strong> Optimizar la función y transferir las mejoras a la vida diaria o a la competición.</li>
+        <li>Identifica y aborda las debilidades individuales, fortaleciéndolas o reduciéndolas al mínimo.</li>
+        <li><strong>Personalización:</strong> se adapta a las necesidades individuales de cada persona.</li>
+        <li><strong>Fortalecimiento del core</strong> (musculatura central del cuerpo) es un aspecto fundamental.</li>
+      </ul>
+      <table style="margin-top:10px">
+        <tr><th>Objetivos según Heredia et al. (2012)</th></tr>
+        <tr><td>Compensar y mejorar debilidades individuales</td></tr>
+        <tr><td>Desarrollar la capacidad de rendimiento en actividades cotidianas</td></tr>
+        <tr><td>Mantener y mejorar la salud del sistema osteomuscular</td></tr>
+        <tr><td>Considerar adaptaciones y requerimientos individuales (incluye género)</td></tr>
+        <tr><td>Mitigar efectos neurodegenerativos del envejecimiento</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Bandas de resistencia – Beneficios y características <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Son tiras elásticas que ofrecen <strong>resistencia variable</strong> para adaptar la intensidad del entrenamiento.</li>
+        <li>Adecuadas para atletas de todos los niveles.</li>
+      </ul>
+      <table style="margin-top:8px">
+        <tr><th>Ventaja</th><th>Detalle</th></tr>
+        <tr><td><strong>Portabilidad</strong></td><td>Ligeras y compactas; caben en una mochila o maleta.</td></tr>
+        <tr><td><strong>Coste</strong></td><td>Más asequibles que otros equipos de entrenamiento.</td></tr>
+        <tr><td><strong>Versatilidad</strong></td><td>Amplia variedad de ejercicios para todos los grupos musculares.</td></tr>
+        <tr><td><strong>Progresión</strong></td><td>Se puede aumentar la resistencia usando bandas más fuertes o cambiando la posición.</td></tr>
+        <tr><td><strong>Bajo impacto</strong></td><td>Reduce el riesgo de lesiones en articulaciones y músculos.</td></tr>
+      </table>
+      <ul class="summary" style="margin-top:10px">
+        <li>Proporciona ganancias de fuerza <strong>comparables al entrenamiento convencional</strong> (Lopes et al., 2019).</li>
+        <li>También mejora: resistencia, potencia, equilibrio, calidad de vida y composición corporal.</li>
+        <li>Menor tasa de abandono en adolescentes respecto al entrenamiento convencional.</li>
+        <li>Genera adaptaciones neuromusculares beneficiosas en diferentes puntos del rango de movimiento (Joy et al., 2016).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Uso, cuidado y técnica con bandas de resistencia <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Pauta</th><th>Descripción</th></tr>
+        <tr><td><strong>Inspección previa</strong></td><td>Revisar agujeros, grietas o signos de desgaste antes de cada uso.</td></tr>
+        <tr><td><strong>Evitar sol y calor</strong></td><td>La exposición al sol y altas temperaturas reduce la elasticidad. Guardar en lugar fresco y sombrío.</td></tr>
+        <tr><td><strong>Prevenir adherencia</strong></td><td>Aplicar talco en las áreas de contacto banda-piel para facilitar el movimiento.</td></tr>
+        <tr><td><strong>Ejercicios seguros</strong></td><td>Seleccionar ejercicios que no causen dolor o malestar.</td></tr>
+        <tr><td><strong>Enrollamiento doble</strong></td><td>Enrollar la banda dos veces alrededor de la mano (asegurada en el pulgar) o el pie para mayor estabilidad.</td></tr>
+        <tr><td><strong>Ejecución</strong></td><td>Movimientos lentos y controlados, manteniendo posición antes, durante y después.</td></tr>
+        <tr><td><strong>Tensión inicial</strong></td><td>Extender ligeramente la banda antes de comenzar para asegurar tensión desde el inicio.</td></tr>
+        <tr><td><strong>Repeticiones</strong></td><td>15–20 repeticiones por serie, 1–3 series. Progresar aumentando resistencia de la banda.</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 – RESUMEN CLAVE
+══════════════════════════════════════════════ -->
+<div id="resumen" class="tab-content">
+
+  <div class="section-title">Tema 1 · Entrenamiento Funcional</div>
+
+  <div class="key-box">
+    <strong>Entrenamiento funcional vs. no convencional:</strong> Son conceptos distintos. El funcional se centra en la aceleración, desaceleración y estabilidad en múltiples planos. El no convencional se refiere al uso de herramientas o métodos fuera de lo habitual (neumáticos, bandas, kettlebells…).
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Los 3 planos de movimiento <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Sagital:</strong> divide el cuerpo en izquierda/derecha → flexión y extensión.</li>
+        <li><strong>Frontal (Coronal):</strong> divide en posterior/anterior → abducción y aducción.</li>
+        <li><strong>Transversal:</strong> divide en superior/inferior → rotación.</li>
+        <li>El <strong>plano mediano</strong> es el sagital perfecto que divide el cuerpo simétricamente en dos mitades iguales.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Los 3 ejes de movimiento <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Eje lateral (horizontal):</strong> relacionado con el plano sagital → flexión/extensión.</li>
+        <li><strong>Eje antero-posterior (dorsoventral):</strong> relacionado con el plano frontal → abducción/aducción.</li>
+        <li><strong>Eje longitudinal (craneocaudal/vertical):</strong> relacionado con el plano transversal → rotación.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="key-box">
+    <strong>Regla de oro plano–eje:</strong> Sagital ↔ Eje lateral · Frontal ↔ Eje antero-posterior · Transversal ↔ Eje longitudinal.
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Eficiencia muscular <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Menos energía = más eficiencia.</li>
+        <li>La adaptación al ejercicio reduce el gasto energético para el mismo movimiento.</li>
+        <li>Se basa en la coordinación entre <strong>músculos antagonistas</strong> (uno se acorta mientras el otro se estira).</li>
+        <li>El <strong>huso muscular</strong> regula la longitud y tensión muscular en este proceso.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Fases de contracción muscular en el análisis de movimiento <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Concéntrica (acortamiento):</strong> F &gt; R · el músculo se acorta y genera fuerza.</li>
+        <li><strong>Excéntrica (alargamiento):</strong> F &lt; R · el músculo se alarga bajo tensión (control y amortiguación).</li>
+        <li><strong>Isométrica:</strong> F = R · no hay cambio de longitud.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 2 · Entrenamiento No Convencional</div>
+
+  <div class="key-box">
+    <strong>Objetivo central del entrenamiento funcional:</strong> Optimizar la función para que las mejoras se transfieran a la vida diaria o a la competición. Identificar debilidades y abordarlas de forma individualizada.
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Bandas de resistencia – lo más importante <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Económicas, portátiles y adaptables a todos los niveles.</li>
+        <li>Ganancias de fuerza comparables al entrenamiento convencional.</li>
+        <li>Beneficios adicionales: resistencia, potencia, equilibrio, calidad de vida y composición corporal.</li>
+        <li>Menor tasa de abandono que los métodos convencionales (especialmente en adolescentes).</li>
+        <li>Aplicación de <strong>periodización</strong> para maximizar los resultados.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">5 pautas clave de cuidado y uso de bandas <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>1. <strong>Inspección previa</strong> (agujeros, grietas, desgaste).</li>
+        <li>2. <strong>Evitar sol y calor</strong> (pierden elasticidad).</li>
+        <li>3. <strong>Talco</strong> en zonas de contacto para evitar adherencia.</li>
+        <li>4. <strong>Doble enrollamiento</strong> en mano o pie para estabilidad.</li>
+        <li>5. <strong>Movimiento lento y controlado</strong> con tensión inicial en la banda.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Autores y referencias clave del módulo <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Autor(es)</th><th>Aportación</th></tr>
+        <tr><td>Tortora y Derrickson (2010)</td><td>Planos de movimiento sagital y mediano.</td></tr>
+        <tr><td>Sha et al. (2010)</td><td>Eficiencia del movimiento y gasto energético.</td></tr>
+        <tr><td>Heredia et al. (2012)</td><td>Objetivos del entrenamiento funcional en centros de fitness.</td></tr>
+        <tr><td>Liu et al. (2014)</td><td>Evidencia moderada de mejora del funcionamiento físico con entrenamiento funcional multicomponente.</td></tr>
+        <tr><td>Demšar et al. (2015)</td><td>Análisis y visualización del movimiento.</td></tr>
+        <tr><td>Lopes et al. (2019)</td><td>Ganancias de fuerza con bandas elásticas ≈ entrenamiento convencional; menor tasa de abandono.</td></tr>
+        <tr><td>Xiao et al. (2021)</td><td>Efecto del entrenamiento funcional en el rendimiento físico de atletas.</td></tr>
+        <tr><td>Guler et al. (2021)</td><td>Efectividad del entrenamiento funcional en adultos de mediana edad (equilibrio y composición corporal).</td></tr>
+        <tr><td>Joy et al. (2016)</td><td>Bandas elásticas como componente del entrenamiento periodizado.</td></tr>
+        <tr><td>Seguin et al. (2022)</td><td>Eficacia de la resistencia elástica en fuerza y rendimiento del hombro.</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 – SIGLAS Y TÉRMINOS
+══════════════════════════════════════════════ -->
+<div id="siglas" class="tab-content">
+
+  <div class="section-title">Planos y ejes de movimiento</div>
+  <div class="term-grid" id="tg-planos"></div>
+
+  <div class="section-title" style="margin-top:20px">Movimientos articulares</div>
+  <div class="term-grid" id="tg-movimientos"></div>
+
+  <div class="section-title" style="margin-top:20px">Entrenamiento funcional y bandas</div>
+  <div class="term-grid" id="tg-funcional"></div>
+
+  <div class="term-detail" id="term-detail"></div>
+  <p class="note" style="margin-top:12px">Haz clic en cualquier término para ver su definición.</p>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 – TEST
+══════════════════════════════════════════════ -->
+<div id="test" class="tab-content">
+  <div class="test-header">
+    <div>
+      <strong>Test de autoevaluación</strong><br>
+      <span class="test-counter" id="test-count"></span>
+    </div>
+  </div>
+  <div class="filter-bar" id="filter-bar"></div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div id="questions-container"></div>
+  <button class="btn-submit" id="btn-submit" onclick="submitTest()">ENVIAR RESPUESTAS</button>
+  <div class="result-panel" id="result-panel">
+    <h2 id="score-display"></h2>
+    <p id="score-msg"></p>
+    <button class="btn-retry" onclick="retryTest()">Volver a intentar</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════ UI HELPERS ══════════════════════ */
+function openTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function toggle(header) {
+  const card = header.closest('.card');
+  card.classList.toggle('open');
+}
+
+/* ══════════════════════ TERMS DATA ══════════════════════ */
+const TERMS = {
+  planos: [
+    {t:'Plano sagital', d:'Atraviesa el cuerpo longitudinalmente dividiéndolo en mitades izquierda y derecha. Los movimientos de flexión y extensión ocurren en este plano.'},
+    {t:'Plano mediano', d:'Tipo específico de plano sagital que logra una división simétrica del cuerpo en dos partes exactamente iguales.'},
+    {t:'Plano frontal', d:'También llamado plano coronal. Se extiende verticalmente y divide el cuerpo en parte posterior y parte anterior. En él ocurren abducción y aducción.'},
+    {t:'Plano coronal', d:'Otro nombre del plano frontal. Divide el cuerpo en anterior y posterior. Asociado al eje antero-posterior.'},
+    {t:'Plano transversal', d:'Divide el cuerpo en región superior e inferior. En él ocurre la rotación, alrededor del eje longitudinal.'},
+    {t:'Eje lateral', d:'Eje horizontal, de lado a lado del cuerpo. Relacionado con el plano sagital. Permite flexión y extensión.'},
+    {t:'Eje antero-posterior', d:'También llamado eje dorsoventral. Va de adelante hacia atrás. Relacionado con el plano frontal. Permite abducción y aducción.'},
+    {t:'Eje longitudinal', d:'También llamado craneocaudal o vertical. Va de arriba hacia abajo. Relacionado con el plano transversal. Permite la rotación.'},
+  ],
+  movimientos: [
+    {t:'Flexión', d:'Movimiento que reduce el ángulo entre los segmentos corporales. Ocurre en el plano sagital alrededor del eje transverso.'},
+    {t:'Extensión', d:'Movimiento que aumenta el ángulo entre los segmentos corporales. Ocurre en el plano sagital alrededor del eje transverso.'},
+    {t:'Abducción', d:'Movimiento de alejarse del plano medio del cuerpo. Se realiza en el plano frontal.'},
+    {t:'Aducción', d:'Movimiento de acercarse al plano medio del cuerpo. Se realiza en el plano frontal.'},
+    {t:'Rotación', d:'Movimiento de giro del cuerpo alrededor del eje longitudinal. Ocurre en el plano transversal. Se clasifica en interna (medial) y externa (lateral).'},
+    {t:'Rotación interna', d:'También llamada rotación medial. El segmento corporal se acerca al plano medio del cuerpo.'},
+    {t:'Rotación externa', d:'También llamada rotación lateral. El segmento corporal se aleja del plano medio del cuerpo.'},
+    {t:'Circunducción', d:'Movimiento circular que combina flexión, abducción, extensión y aducción (o viceversa). Se diferencia de la rotación.'},
+    {t:'Retracción escapular', d:'Las escápulas se juntan o se acercan al plano medio del cuerpo.'},
+    {t:'Protracción escapular', d:'Las escápulas se separan o se alejan del plano medio del cuerpo.'},
+    {t:'Flexión plantar', d:'Movimiento del pie hacia abajo, alejándolo de la pierna. El talón se eleva y los dedos se dirigen al suelo.'},
+    {t:'Flexión dorsal', d:'Movimiento del pie hacia arriba, acercándolo a la pierna. El talón baja y los dedos se dirigen hacia la espinilla.'},
+    {t:'Pronación', d:'Rotación del antebrazo que lleva la palma hacia abajo o hacia atrás.'},
+    {t:'Supinación', d:'Rotación del antebrazo que lleva la palma hacia arriba o hacia adelante.'},
+  ],
+  funcional: [
+    {t:'Entrenamiento funcional', d:'Enfoque de entrenamiento centrado en la aceleración, desaceleración y estabilidad en múltiples planos y articulaciones. Busca transferir mejoras a la vida diaria o la competición.'},
+    {t:'Entrenamiento no convencional', d:'Métodos de entrenamiento creativos que difieren de las prácticas tradicionales. Incluye neumáticos, cuerdas, kettlebells, bandas de resistencia y ejercicios con masa corporal.'},
+    {t:'Core', d:'Musculatura central del cuerpo. Aspecto fundamental del entrenamiento funcional esencial para actividades cotidianas y deportivas.'},
+    {t:'Huso muscular', d:'Receptor sensorial dentro del músculo que ayuda a regular la longitud y la tensión muscular. Clave en la eficiencia muscular.'},
+    {t:'Contracción concéntrica', d:'Fase del movimiento en la que la fuerza aplicada es mayor que la resistencia (F > R). El músculo se acorta generando la fuerza necesaria.'},
+    {t:'Contracción excéntrica', d:'Fase del movimiento en la que la fuerza aplicada es menor que la resistencia (F < R). El músculo se alarga bajo tensión; crucial para el control y la amortiguación.'},
+    {t:'Fase isométrica', d:'Fase en la que la fuerza aplicada es igual a la resistencia (F = R). No hay cambio de longitud muscular.'},
+    {t:'Bandas de resistencia', d:'Tiras elásticas que ofrecen resistencia variable para el entrenamiento. Económicas, portátiles y versátiles. Producen ganancias de fuerza comparables al entrenamiento convencional.'},
+    {t:'Análisis de movimiento', d:'Proceso de descomponer un movimiento en sus componentes: articulaciones involucradas, tipo de movimiento y músculos implicados.'},
+    {t:'Eficiencia del movimiento', d:'Relación entre la energía consumida y el trabajo realizado. A menor energía para el mismo movimiento, mayor eficiencia. Mejora con la práctica y la adaptación.'},
+    {t:'Músculos antagonistas', d:'Par de músculos que tienen acciones opuestas. Mientras uno se contrae (agonista), el antagonista se estira. Su coordinación determina la eficiencia muscular.'},
+    {t:'Heredia et al. (2012)', d:'Autores que establecen los objetivos del entrenamiento funcional en centros de fitness: compensar debilidades, mejorar rendimiento cotidiano, mantener la salud osteomuscular y mitigar el envejecimiento.'},
+    {t:'Periodización', d:'Estrategia de planificación del entrenamiento que organiza las cargas de forma progresiva. Se usa también con bandas elásticas para garantizar eficacia y seguridad.'},
+  ]
+};
+
+function buildTerms() {
+  ['planos','movimientos','funcional'].forEach(cat => {
+    const container = document.getElementById('tg-'+cat);
+    TERMS[cat].forEach(item => {
+      const chip = document.createElement('div');
+      chip.className = 'term-chip';
+      chip.textContent = item.t;
+      chip.onclick = () => showTerm(item.t, item.d);
+      container.appendChild(chip);
+    });
+  });
+}
+
+function showTerm(title, def) {
+  const box = document.getElementById('term-detail');
+  box.innerHTML = `<strong>${title}:</strong> ${def}`;
+  box.style.display = 'block';
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+/* ══════════════════════ TEST DATA ══════════════════════ */
+const ALL_QUESTIONS = [
+
+  /* ── PLANOS DE MOVIMIENTO ── */
+  {cat:'planos', q:"¿Cuál es la función del plano sagital?", opts:["Divide el cuerpo en superior e inferior","Divide el cuerpo en izquierda y derecha","Divide el cuerpo en anterior y posterior","Divide el cuerpo en proximal y distal"], correct:1, exp:"El plano sagital atraviesa el cuerpo de forma longitudinal, dividiéndolo en dos mitades izquierda y derecha."},
+  {cat:'planos', q:"¿Qué diferencia al plano mediano del resto de planos sagitales?", opts:["Se orienta horizontalmente","Logra una división simétrica del cuerpo en dos partes iguales","Divide el cuerpo en anterior y posterior","Es el único plano que permite la rotación"], correct:1, exp:"El plano mediano es un tipo específico de plano sagital que logra una división simétrica del cuerpo en dos partes iguales. Los demás planos sagitales no garantizan dicha simetría (Tortora y Derrickson, 2010)."},
+  {cat:'planos', q:"¿Cómo divide el cuerpo el plano frontal o coronal?", opts:["En superior e inferior","En izquierda y derecha","En anterior y posterior","En proximal y distal"], correct:2, exp:"El plano frontal o coronal se extiende verticalmente y divide el cuerpo en dos secciones: la parte posterior y la parte anterior."},
+  {cat:'planos', q:"¿Qué plano divide el cuerpo en región superior e inferior?", opts:["Plano sagital","Plano frontal","Plano mediano","Plano transversal"], correct:3, exp:"El plano transversal es el que divide el cuerpo en dos regiones: la superior y la inferior."},
+  {cat:'planos', q:"¿Cuál de los siguientes planos divide el cuerpo en dos mitades, izquierda y derecha?", opts:["Plano sagital","Plano frontal","Plano transversal","Plano coronal"], correct:0, exp:"El plano sagital atraviesa el cuerpo de forma longitudinal, dividiéndolo en mitades izquierda y derecha. El plano mediano es el sagital que lo hace simétricamente."},
+  {cat:'planos', q:"¿Con qué eje de movimiento está relacionado el plano sagital?", opts:["Eje longitudinal","Eje antero-posterior","Eje lateral u horizontal","Eje craneocaudal"], correct:2, exp:"El plano sagital está relacionado con el eje lateral u horizontal, que se extiende de lado a lado del cuerpo."},
+  {cat:'planos', q:"¿Qué eje de movimiento corresponde al plano frontal?", opts:["Eje lateral","Eje antero-posterior","Eje longitudinal","Eje transverso"], correct:1, exp:"El plano frontal corresponde al eje antero-posterior (o dorsoventral), que se extiende de adelante hacia atrás."},
+  {cat:'planos', q:"¿Con qué plano se asocia el eje longitudinal o craneocaudal?", opts:["Plano sagital","Plano frontal","Plano transversal","Plano mediano"], correct:2, exp:"El eje longitudinal/craneocaudal/vertical está asociado con el plano transversal y permite movimientos de rotación."},
+  {cat:'planos', q:"¿En qué campo se usan principalmente los planos de movimiento?", opts:["Nutrición deportiva","Biomecánica y anatomía","Psicología del deporte","Fisiología del ejercicio cardiovascular"], correct:1, exp:"Los planos de movimiento se utilizan principalmente en biomecánica y anatomía para describir la dirección y orientación de los movimientos del cuerpo humano."},
+  {cat:'planos', q:"¿Cuántos planos de movimiento principales existen?", opts:["2","3","4","5"], correct:1, exp:"Existen tres planos de movimiento principales: sagital (y mediano), frontal (o coronal) y transversal."},
+
+  /* ── EJES DE MOVIMIENTO ── */
+  {cat:'ejes', q:"¿Cuál es la dirección del eje lateral u horizontal?", opts:["De arriba hacia abajo","De adelante hacia atrás","De lado a lado del cuerpo","En diagonal"], correct:2, exp:"El eje lateral u horizontal se extiende de lado a lado del cuerpo y está relacionado con el plano sagital."},
+  {cat:'ejes', q:"¿Qué movimientos se producen alrededor del eje lateral?", opts:["Rotación y circunducción","Abducción y aducción","Flexión y extensión","Pronación y supinación"], correct:2, exp:"Los movimientos alrededor del eje lateral incluyen la flexión y la extensión, que implican movimientos hacia adelante y hacia atrás."},
+  {cat:'ejes', q:"¿Qué movimientos ocurren alrededor del eje antero-posterior?", opts:["Flexión y extensión","Abducción y aducción","Rotación interna y externa","Circunducción"], correct:1, exp:"Los movimientos alrededor del eje antero-posterior incluyen la abducción y la aducción, que implican movimientos de lado a lado."},
+  {cat:'ejes', q:"¿Qué movimiento se produce alrededor del eje longitudinal?", opts:["Flexión","Abducción","Rotación","Circunducción"], correct:2, exp:"Los movimientos alrededor del eje longitudinal/craneocaudal comprenden la rotación, como girar la cabeza de un lado a otro."},
+  {cat:'ejes', q:"¿Cuál es otro nombre para el eje longitudinal?", opts:["Eje dorsoventral","Eje transverso","Eje craneocaudal","Eje latero-medial"], correct:2, exp:"El eje longitudinal también recibe los nombres de craneocaudal y vertical. Se extiende de arriba hacia abajo."},
+
+  /* ── MOVIMIENTOS ARTICULARES ── */
+  {cat:'movimientos', q:"¿En qué plano ocurren los movimientos de flexión?", opts:["Frontal","Transversal","Sagital","Coronal"], correct:2, exp:"Los movimientos de flexión ocurren en los planos sagitales y giran alrededor del eje transverso, involucrando ángulos menores respecto al plano medio del cuerpo."},
+  {cat:'movimientos', q:"¿Cómo se llama el movimiento que ocurre en el plano sagital y alrededor del eje transverso?", opts:["Rotación","Protracción","Abducción","Flexión"], correct:3, exp:"La flexión ocurre en el plano sagital alrededor del eje transverso (lateral). Crea un ángulo menor respecto al plano medio del cuerpo."},
+  {cat:'movimientos', q:"¿Qué diferencia la extensión de la flexión?", opts:["El plano en que ocurren","El eje alrededor del cual giran","El ángulo que crean respecto al plano medio","La velocidad del movimiento"], correct:2, exp:"La extensión crea un ángulo mayor respecto al plano medio, mientras que la flexión crea un ángulo menor. Ambas ocurren en el plano sagital alrededor del eje transverso."},
+  {cat:'movimientos', q:"¿En qué plano se realiza la abducción?", opts:["Sagital","Transversal","Frontal","Mediano"], correct:2, exp:"La abducción implica alejarse del plano medio del cuerpo y se realiza en el plano frontal."},
+  {cat:'movimientos', q:"¿Cuál es la definición de aducción?", opts:["Alejarse del plano medio del cuerpo","Girar alrededor del eje longitudinal","Acercarse al plano medio del cuerpo","Doblar el pie hacia abajo"], correct:2, exp:"La aducción conlleva acercarse al plano medio del cuerpo y ocurre en el plano frontal."},
+  {cat:'movimientos', q:"¿Qué es la retracción escapular?", opts:["Las escápulas se alejan del plano medio","Las escápulas se acercan al plano medio","Las escápulas rotan hacia arriba","Las escápulas descienden"], correct:1, exp:"Cuando las escápulas se juntan o se acercan al plano medio del cuerpo, se denomina retracción de escápulas. Lo contrario se llama protracción escapular."},
+  {cat:'movimientos', q:"¿En qué plano ocurre la rotación?", opts:["Sagital","Frontal","Transversal","Mediano"], correct:2, exp:"La rotación ocurre en el plano transversal y se refiere al giro del cuerpo en torno al eje longitudinal."},
+  {cat:'movimientos', q:"¿Qué tipo de rotación nos acerca al plano medio del cuerpo?", opts:["Rotación externa o lateral","Rotación interna o medial","Circunducción","Flexión lateral"], correct:1, exp:"En la rotación interna o medial, el segmento corporal se acerca al plano medio del cuerpo. La rotación externa o lateral lo aleja."},
+  {cat:'movimientos', q:"¿Qué movimiento combina flexión, abducción, extensión y aducción?", opts:["Rotación","Pronación","Circunducción","Supinación"], correct:2, exp:"La circunducción es un movimiento circular que sigue el orden: flexión, abducción, extensión, aducción (o viceversa). Se diferencia de la rotación."},
+  {cat:'movimientos', q:"¿Qué es la flexión plantar?", opts:["Doblar el pie hacia arriba","Doblar el pie hacia abajo","Rotar el pie hacia afuera","Acercar el pie al cuerpo"], correct:1, exp:"La flexión plantar se refiere al movimiento de doblar el pie hacia abajo, alejándolo de la pierna. El talón se eleva mientras los dedos se dirigen al suelo."},
+  {cat:'movimientos', q:"¿Cuál es el movimiento opuesto a la flexión plantar?", opts:["Pronación","Supinación","Flexión dorsal","Abducción"], correct:2, exp:"La flexión dorsal es el movimiento opuesto a la flexión plantar. Se refiere a doblar el pie hacia arriba, acercándolo a la pierna."},
+  {cat:'movimientos', q:"¿Qué tipo de movimiento es la circunducción respecto a la rotación?", opts:["Son exactamente iguales","La circunducción es más lenta","Son movimientos distintos","La rotación incluye a la circunducción"], correct:2, exp:"La circunducción y la rotación son movimientos distintos. La circunducción combina varios movimientos en orden (flexión, abducción, extensión, aducción), mientras que la rotación es un giro puro alrededor del eje longitudinal."},
+
+  /* ── EFICIENCIA DEL MOVIMIENTO ── */
+  {cat:'eficiencia', q:"¿Cómo se define la eficiencia de un movimiento?", opts:["La velocidad máxima alcanzable","La relación entre energía gastada y movimiento logrado","La fuerza generada por el músculo","El número de repeticiones posibles"], correct:1, exp:"La eficiencia de un movimiento se relaciona directamente con la cantidad de energía necesaria para llevarlo a cabo. Cuanta menos energía se gaste, más eficiente será ese movimiento."},
+  {cat:'eficiencia', q:"¿Qué le ocurre al gasto energético de un movimiento al adaptarse a él con el entrenamiento?", opts:["Aumenta","Se mantiene igual","Disminuye","Varía sin patrón"], correct:2, exp:"A medida que entrenamos y nos adaptamos, tendemos a consumir menos energía para realizar un movimiento específico. Esto es una manifestación de la adaptación."},
+  {cat:'eficiencia', q:"¿En qué se basa principalmente la eficiencia muscular?", opts:["En la velocidad de contracción","En la coordinación entre músculos antagonistas","En la longitud de las fibras musculares","En el tipo de fibras predominantes"], correct:1, exp:"La eficiencia muscular, en gran medida, se basa en la coordinación entre músculos antagonistas: mientras uno se contrae (acortamiento), su antagonista realiza el proceso contrario de estiramiento."},
+  {cat:'eficiencia', q:"¿Qué factor es crucial para lograr una alta eficiencia en el movimiento?", opts:["El uso de más energía","El entrenamiento constante sin adaptación","El uso de técnicas incorrectas","La coordinación entre músculos antagonistas"], correct:3, exp:"La eficiencia muscular se basa en la coordinación entre músculos antagonistas. Mientras uno se contrae, el antagonista se estira, permitiendo un movimiento fluido con menor gasto energético."},
+  {cat:'eficiencia', q:"¿Qué receptor sensorial regula la longitud y tensión muscular?", opts:["Órgano tendinoso de Golgi","Huso muscular","Receptor de Pacini","Corpúsculo de Meissner"], correct:1, exp:"El huso muscular es el receptor sensorial situado en el músculo que ayuda a regular la longitud y la tensión muscular, participando en el equilibrio entre músculos antagonistas."},
+  {cat:'eficiencia', q:"En el lanzamiento de jabalina, ¿qué sucede si no se alcanza la amplitud de movimiento adecuada?", opts:["Aumenta la eficiencia","Disminuye la eficiencia","No tiene efecto","Mejora la técnica"], correct:1, exp:"En el lanzamiento de jabalina, si se excede o no se alcanza la amplitud de movimiento adecuada, la eficiencia del lanzamiento disminuye. La técnica adecuada es fundamental."},
+  {cat:'eficiencia', q:"¿Qué autor(es) son referencia para el concepto de eficiencia del movimiento en este módulo?", opts:["Guler et al. (2021)","Sha et al. (2010)","Lopes et al. (2019)","Heredia et al. (2012)"], correct:1, exp:"Sha et al. (2010) son la referencia para el estudio de la eficiencia del movimiento y los gastos de energía mecánica en movimientos de alcance de cuerpo completo."},
+
+  /* ── ANÁLISIS DE MOVIMIENTO ── */
+  {cat:'analisis', q:"¿Cuál es la importancia de identificar las articulaciones involucradas en un análisis de movimiento?", opts:["Ayuda a determinar la velocidad del movimiento","Permite analizar la fase isométrica del movimiento","Permite observar cada articulación en acción y su papel específico","Facilita la medición de la fuerza generada"], correct:2, exp:"Identificar las articulaciones involucradas permite observar cada articulación en acción y su papel específico en el movimiento. Cada articulación (rodilla, codo, cadera, tobillo…) tiene una función particular."},
+  {cat:'analisis', q:"¿Qué fase del movimiento se da cuando la fuerza es mayor que la resistencia (F > R)?", opts:["Fase isométrica","Fase excéntrica","Fase concéntrica","Fase pliométrica"], correct:2, exp:"La fase concéntrica (acortamiento muscular) es aquella en la que la fuerza aplicada es mayor que la resistencia (F > R). Es la fase en que el músculo genera la fuerza para ejecutar el movimiento."},
+  {cat:'analisis', q:"¿Qué caracteriza a la fase excéntrica del movimiento?", opts:["F = R · sin cambio de longitud","F > R · el músculo se acorta","F < R · el músculo se estira bajo tensión","F > R · el músculo se alarga"], correct:2, exp:"La fase excéntrica es donde la fuerza es menor que la resistencia (F < R). Se refiere al alargamiento o estiramiento de los músculos mientras realizan un esfuerzo. Es crucial para el control y la amortiguación."},
+  {cat:'analisis', q:"¿Qué músculo se acorta durante la flexión del codo?", opts:["Tríceps","Bíceps","Deltoides","Pectoral"], correct:1, exp:"En una flexión del codo, los músculos del bíceps se acortan (fase concéntrica), siendo los responsables de producir la fuerza necesaria para ejecutar el movimiento."},
+  {cat:'analisis', q:"En el análisis del remo (rowing), ¿qué músculos están en la parte excéntrica?", opts:["Bíceps y romboideos","Dorsal y romboideos","Pectoral y tríceps","Deltoides y bíceps"], correct:2, exp:"En el ejercicio de remo, la parte excéntrica corresponde al Pectoral y al Tríceps, mientras que en el acortamiento están el Bíceps, el Dorsal y los Romboideos."},
+  {cat:'analisis', q:"¿Cuál es la fase isométrica?", opts:["F < R","F > R","F = R","F × R"], correct:2, exp:"La fase isométrica se da cuando la fuerza aplicada es igual a la resistencia (F = R). En esta fase no hay cambio de longitud muscular."},
+  {cat:'analisis', q:"¿Para qué sirve el análisis detallado del movimiento en el ámbito deportivo?", opts:["Únicamente para medir la velocidad","Diseñar programas específicos, corregir técnica y prevenir lesiones","Determinar la composición corporal del atleta","Calcular el VO2máx"], correct:1, exp:"El análisis detallado permite diseñar programas de entrenamiento específicos, corregir la técnica y prevenir lesiones, comprendiendo la interacción entre articulaciones, músculos y fuerzas en la ejecución del movimiento."},
+  {cat:'analisis', q:"¿Cuántos elementos principales se analizan en un análisis de movimiento?", opts:["2","3","4","5"], correct:2, exp:"Un análisis de movimiento detallado considera: (1) articulaciones involucradas, (2) tipo de movimiento articular, (3) músculos implicados en el acortamiento y (4) parte excéntrica del movimiento (además de la fase isométrica)."},
+
+  /* ── ENTRENAMIENTO FUNCIONAL ── */
+  {cat:'funcional', q:"¿Qué aspecto fundamental del entrenamiento funcional se centra en la musculatura central del cuerpo?", opts:["Reducción del estrés","Aumento de la flexibilidad","Mejora de la capacidad cardiovascular","Fortalecimiento del core"], correct:3, exp:"El entrenamiento funcional abarca el fortalecimiento del core (la musculatura central del cuerpo), que es esencial para realizar una amplia gama de actividades cotidianas."},
+  {cat:'funcional', q:"¿Cuál es una característica clave del entrenamiento funcional según Xiao et al. (2021)?", opts:["Uso de máquinas de gimnasio","Enfoque en la aceleración, desaceleración y estabilidad","Dependencia de pesas y kettlebells","Uso de movimientos y técnicas poco convencionales"], correct:1, exp:"El entrenamiento funcional se caracteriza por su enfoque en la aceleración, desaceleración y estabilidad de varias articulaciones y planos, lo que determina su efectividad (Xiao et al., 2021)."},
+  {cat:'funcional', q:"¿Cuál de los siguientes elementos NO es una característica del entrenamiento no convencional?", opts:["Uso de neumáticos","Ejercicios con el propio uso de la masa corporal","Uso exclusivo de máquinas de gimnasio","Movimientos funcionales"], correct:2, exp:"El entrenamiento no convencional NO se basa en el uso exclusivo de máquinas de gimnasio. Al contrario, usa herramientas como neumáticos, cuerdas, kettlebells y ejercicios con masa corporal."},
+  {cat:'funcional', q:"¿Cuál es el objetivo central del entrenamiento funcional?", opts:["Ganar masa muscular máxima","Optimizar la función y transferir mejoras a la vida diaria","Entrenar únicamente para competiciones","Reducir el peso corporal"], correct:1, exp:"El objetivo central del entrenamiento funcional es optimizar la función, transfiriendo los beneficios a la vida diaria o, en el caso de atletas, a la competición."},
+  {cat:'funcional', q:"¿Qué autores proponen los objetivos del entrenamiento funcional en centros de fitness?", opts:["Liu et al. (2014)","Sha et al. (2010)","Heredia et al. (2012)","Guler et al. (2021)"], correct:2, exp:"Heredia et al. (2012) establecen los objetivos del entrenamiento funcional: compensar debilidades, mejorar el rendimiento cotidiano, mantener la salud osteomuscular y mitigar el envejecimiento."},
+  {cat:'funcional', q:"¿Qué estudio destaca la efectividad del entrenamiento funcional en adultos de mediana edad?", opts:["Sha et al. (2010)","Liu et al. (2014)","Guler et al. (2021)","Lopes et al. (2019)"], correct:2, exp:"Guler et al. (2021) destaca la efectividad del entrenamiento funcional en adultos de mediana edad, donde se observaron mejoras del control del equilibrio y la composición corporal."},
+  {cat:'funcional', q:"¿Qué evidencia mostró Liu et al. (2014) sobre el entrenamiento funcional multicomponente?", opts:["Evidencia fuerte de mejora cardiovascular","Evidencia moderada de mejora del funcionamiento físico","Sin evidencia de beneficios","Evidencia de aumento de masa muscular únicamente"], correct:1, exp:"La revisión de Liu et al. (2014) mostró evidencia moderada de que el entrenamiento funcional con múltiples componentes mejora el funcionamiento físico en adultos mayores."},
+  {cat:'funcional', q:"¿Cuál es la diferencia principal entre entrenamiento funcional y entrenamiento de fuerza convencional?", opts:["El funcional solo usa máquinas","El funcional usa pesos más bajos","El funcional abarca cualquier ejercicio diseñado para potenciar un movimiento específico","El convencional mejora más el equilibrio"], correct:2, exp:"El entrenamiento funcional se distingue del convencional ya que abarca cualquier ejercicio diseñado para potenciar un movimiento o actividad particular. Cuanto más se alinee con el resultado deseado, mejores resultados."},
+  {cat:'funcional', q:"¿Qué significa que el entrenamiento funcional es individualizado?", opts:["Todos hacen los mismos ejercicios","Se adapta a las necesidades y desafíos únicos de cada persona","Solo es válido para deportistas de élite","Requiere equipos especializados"], correct:1, exp:"Un aspecto clave del entrenamiento funcional es su enfoque individualizado. Se adapta a las necesidades únicas de cada persona, reconociendo que lo que funciona para una puede no ser adecuado para otra."},
+  {cat:'funcional', q:"¿Cuál es uno de los objetivos del entrenamiento funcional según Heredia et al. (2012)?", opts:["Aumentar al máximo la hipertrofia muscular","Mitigar los efectos de los procesos neurodegenerativos del envejecimiento","Entrenar únicamente para competiciones de alto nivel","Reducir la frecuencia de entrenamiento"], correct:1, exp:"Según Heredia et al. (2012), uno de los objetivos es mitigar los efectos de los procesos neurodegenerativos naturales asociados al envejecimiento, permitiendo un envejecimiento más activo y saludable."},
+
+  /* ── BANDAS DE RESISTENCIA ── */
+  {cat:'bandas', q:"¿Qué tipo de resistencia ofrecen las bandas de resistencia?", opts:["Resistencia fija","Resistencia variable","Resistencia isométrica","Resistencia gravitacional"], correct:1, exp:"Las bandas de resistencia son tiras elásticas que ofrecen resistencia variable, permitiendo a los usuarios adaptar la intensidad del entrenamiento a sus necesidades y objetivos."},
+  {cat:'bandas', q:"¿Cuál de los siguientes es un beneficio observado del uso de bandas elásticas en el entrenamiento?", opts:["Mejora en la fuerza muscular y resistencia","Aumento en la tasa de abandono del ejercicio","Aumento notable de la flexibilidad únicamente","Disminución de la calidad de vida"], correct:0, exp:"El entrenamiento con bandas elásticas proporciona ganancias de fuerza comparables al entrenamiento convencional, además de mejoras en resistencia, potencia, equilibrio, calidad de vida y composición corporal (Lopes et al., 2019)."},
+  {cat:'bandas', q:"¿Cuál de las siguientes NO es una ventaja de usar bandas de resistencia para el entrenamiento?", opts:["Ofrecen una opción de bajo impacto","Son ligeras y compactas, ideales para viajar","Son más caras que otros equipos de entrenamiento","Permiten una amplia variedad de ejercicios"], correct:2, exp:"Las bandas de resistencia son más asequibles (más baratas) que otros equipos de entrenamiento, no más caras. Esta accesibilidad es una de sus principales ventajas."},
+  {cat:'bandas', q:"¿Qué deben hacer los usuarios con las bandas de resistencia para aumentar progresivamente la dificultad?", opts:["Aumentar el número de articulaciones implicadas","Usar bandas más fuertes o ajustar la posición","Reducir el número de series","Disminuir el tiempo de descanso"], correct:1, exp:"A medida que se gana experiencia y fuerza, es posible aumentar la resistencia utilizando bandas más fuertes o ajustando la forma en que se utilizan, garantizando que el entrenamiento siga siendo desafiante."},
+  {cat:'bandas', q:"Según Lopes et al. (2019), ¿qué característica tienen las bandas elásticas respecto a la tasa de abandono?", opts:["Tienen mayor tasa de abandono que el entrenamiento convencional","Tienen menor tasa de abandono en adolescentes","No hay diferencias en tasas de abandono","Solo aplica en adultos mayores"], correct:1, exp:"Lopes et al. (2019) demostraron que las bandas elásticas tienen una menor tasa de abandono en ejercicios realizados con resistencia elástica en adolescentes, sugiriendo un posible favoritismo hacia este tipo de entrenamiento."},
+  {cat:'bandas', q:"¿Qué adaptaciones genera el uso de bandas elásticas según Joy et al. (2016)?", opts:["Solo adaptaciones cardiovasculares","Adaptaciones neuromusculares beneficiosas en diferentes puntos del rango de movimiento","Únicamente aumento de la flexibilidad","Adaptaciones exclusivamente hormonales"], correct:1, exp:"Joy et al. (2016) señalan que la aplicación de bandas elásticas puede generar adaptaciones neuromusculares beneficiosas al abordar desafíos mecánicos específicos en diferentes puntos del rango de movimiento."},
+  {cat:'bandas', q:"¿En qué tipo de poblaciones se han observado efectos positivos del entrenamiento con bandas elásticas?", opts:["Solo en deportistas de élite","Solo en adultos jóvenes sanos","Ancianos, individuos con osteoartritis y fibromialgia","Exclusivamente en población femenina"], correct:2, exp:"Investigaciones previas mostraron efectos positivos en la ganancia de fuerza muscular al utilizar bandas elásticas en diferentes poblaciones, incluyendo ancianos, individuos con osteoartritis y fibromialgia."},
+  {cat:'bandas', q:"¿Qué estudio destaca la eficacia de la resistencia elástica en el desarrollo de la fuerza del hombro?", opts:["Lopes et al. (2019)","Joy et al. (2016)","Seguin et al. (2022)","Guler et al. (2021)"], correct:2, exp:"Seguin et al. (2022) destaca la eficacia del entrenamiento con resistencia elástica en el desarrollo de la fuerza y el rendimiento del hombro, con implicaciones para la práctica clínica y científica."},
+  {cat:'bandas', q:"¿Qué debes hacer antes de usar las bandas de resistencia?", opts:["Exponerlas al sol para mejorar su elasticidad","Aplicar talco en las áreas de contacto de la banda y la piel","Revisar su estado en busca de agujeros, grietas o signos de desgaste","Seleccionar ejercicios que sean seguros y cómodos"], correct:2, exp:"Antes de usar las bandas, es fundamental revisar su estado. Buscar agujeros, grietas o signos de desgaste que puedan provocar roturas inesperadas (Inspección Previa)."},
+  {cat:'bandas', q:"¿Por qué se recomienda guardar las bandas de resistencia en un lugar fresco y sombrío?", opts:["Para evitar que se contaminen","Porque el sol y el calor reducen su elasticidad","Para que mantengan su color","Porque el frío aumenta su resistencia"], correct:1, exp:"El material de las bandas de resistencia puede perder elasticidad con la exposición al sol y altas temperaturas. Guardarlas en un lugar fresco y sombrío prolonga su vida útil."},
+  {cat:'bandas', q:"¿Para qué se aplica talco en las bandas de resistencia?", opts:["Para aumentar la resistencia de la banda","Para que la banda no se adhiera a la piel por el sudor","Para proteger la banda del desgaste","Para mejorar la elasticidad de la banda"], correct:1, exp:"El sudor puede causar que las bandas de resistencia se peguen a la piel. Para evitar esto, se puede aplicar talco en las áreas de contacto de la banda y la piel, facilitando el movimiento."},
+  {cat:'bandas', q:"¿Cuántas series y repeticiones se recomiendan para un beneficio óptimo con bandas?", opts:["5–10 repeticiones, 4–5 series","10–12 repeticiones, 3–4 series","15–20 repeticiones, 1–3 series","20–30 repeticiones, 1–2 series"], correct:2, exp:"Para lograr un beneficio óptimo, se sugiere realizar de 15 a 20 repeticiones por serie, y completar de 1 a 3 series de ejercicios."},
+  {cat:'bandas', q:"¿Por qué se recomienda el doble enrollamiento de la banda en la mano o pie?", opts:["Para aumentar la resistencia de la banda","Para proporcionar mayor estabilidad y evitar el deslizamiento","Para reducir la longitud de la banda","Para medir la tensión adecuada"], correct:1, exp:"Se recomienda realizar un doble enrollamiento de la banda alrededor de la mano (asegurándola en el pulgar) o el pie, ya que proporciona una mayor estabilidad y evita el deslizamiento inesperado durante los ejercicios."},
+  {cat:'bandas', q:"¿Cuándo se debe detener el ejercicio con bandas de resistencia?", opts:["Después de 20 repeticiones siempre","Cuando la banda comienza a estirarse","Si en algún momento se experimenta dolor o malestar","Cada 5 repeticiones para descansar"], correct:2, exp:"Si en algún momento se experimenta dolor o malestar durante el ejercicio con bandas de resistencia, es esencial detener de inmediato el ejercicio."},
+  {cat:'bandas', q:"¿Por qué se recomienda extender ligeramente la banda antes de comenzar cada ejercicio?", opts:["Para calentar el material","Para asegurar que la tensión esté presente desde el inicio del movimiento","Para medir la resistencia de la banda","Para evitar que la banda se enrolle"], correct:1, exp:"Antes de comenzar cualquier ejercicio, es importante extender ligeramente la banda de resistencia para asegurar que la tensión esté presente desde el principio del movimiento."},
+  {cat:'bandas', q:"¿Cuál es una dificultad reportada por algunos estudios sobre el uso de bandas elásticas?", opts:["Su alto coste","El control de la intensidad del ejercicio","La baja variedad de ejercicios posibles","La falta de evidencia sobre sus beneficios"], correct:1, exp:"Algunos estudios reportaron dificultades relacionadas con el control de la intensidad en el ejercicio con resistencia elástica. Para resolverlo, se utilizan escalas subjetivas de esfuerzo y clasificación por colores."},
+  {cat:'bandas', q:"¿Las ganancias de fuerza con bandas elásticas son comparables a qué tipo de entrenamiento?", opts:["Entrenamiento pliométrico","Entrenamiento interválico de alta intensidad","Entrenamiento con fuerza convencional","Entrenamiento aeróbico continuo"], correct:2, exp:"El entrenamiento con bandas elásticas proporciona ganancias de fuerza comparables al entrenamiento con fuerza convencional, respaldado por investigaciones previas (Lopes et al., 2019)."},
+
+  /* ── PREGUNTAS INTEGRADORAS ── */
+  {cat:'integracion', q:"¿Cuál de los siguientes movimientos ocurre en el plano sagital?", opts:["Flexión","Rotación","Abducción","Circunducción"], correct:0, exp:"La flexión ocurre en el plano sagital, girando alrededor del eje transverso (lateral). Crea un ángulo menor respecto al plano medio del cuerpo."},
+  {cat:'integracion', q:"¿Qué plano está relacionado con el eje antero-posterior y qué movimiento permite?", opts:["Sagital – flexión","Frontal – abducción","Transversal – rotación","Mediano – extensión"], correct:1, exp:"El eje antero-posterior corresponde al plano frontal. Los movimientos alrededor de este eje incluyen la abducción y la aducción."},
+  {cat:'integracion', q:"¿Cuál es el eje y el plano relacionados con la rotación de cabeza de un lado a otro?", opts:["Eje lateral – Plano sagital","Eje antero-posterior – Plano frontal","Eje longitudinal – Plano transversal","Eje horizontal – Plano mediano"], correct:2, exp:"La rotación, como girar la cabeza de un lado a otro, ocurre en el plano transversal alrededor del eje longitudinal (craneocaudal)."},
+  {cat:'integracion', q:"Si un atleta hace una sentadilla, ¿en qué plano ocurre principalmente el movimiento de flexión de rodilla?", opts:["Frontal","Transversal","Sagital","Mediano"], correct:2, exp:"La flexión de rodilla es un movimiento del plano sagital, ya que ocurre alrededor del eje transverso (lateral) y crea un ángulo menor respecto al plano medio del cuerpo."},
+  {cat:'integracion', q:"¿Cuál de los siguientes representa correctamente la relación plano–eje–movimiento?", opts:["Frontal – eje longitudinal – abducción","Sagital – eje lateral – flexión","Transversal – eje antero-posterior – rotación","Frontal – eje lateral – extensión"], correct:1, exp:"La relación correcta es: Plano sagital – Eje lateral (horizontal) – Movimientos de flexión y extensión. El resto de las opciones combinan incorrectamente planos, ejes y movimientos."},
+  {cat:'integracion', q:"¿Cuál de los siguientes planos divide el cuerpo en dos mitades, izquierda y derecha?", opts:["Plano sagital","Plano frontal","Plano transversal","Plano coronal"], correct:0, exp:"El plano sagital (y en particular el mediano) atraviesa el cuerpo longitudinalmente, dividiéndolo en mitades izquierda y derecha."},
+  {cat:'integracion', q:"¿Por qué el entrenamiento funcional se considera una herramienta accesible para todas las personas?", opts:["Porque no requiere ningún esfuerzo físico","Porque se centra en respetar la funcionalidad biológica adaptándose a las demandas individuales","Porque solo trabaja un grupo muscular a la vez","Porque siempre es de baja intensidad"], correct:1, exp:"El entrenamiento funcional es accesible para todas las personas ya que se centra en respetar la funcionalidad biológica en relación a las demandas específicas de la vida diaria de cada uno."},
+  {cat:'integracion', q:"En el remo, ¿qué articulaciones están involucradas principalmente?", opts:["Solo el codo","Solo el hombro","Codo y hombro","Rodilla y tobillo"], correct:2, exp:"En el ejercicio de remo, las articulaciones involucradas son el Codo y el Hombro. Los movimientos incluyen flexión-extensión y retracción-protracción escapular."},
+  {cat:'integracion', q:"¿Qué ocurre con las escápulas durante la protracción escapular?", opts:["Se acercan al plano medio","Se alejan del plano medio","Rotan hacia arriba","Se elevan"], correct:1, exp:"En la protracción escapular, las escápulas se separan o se alejan del plano medio del cuerpo. Lo contrario es la retracción escapular."},
+  {cat:'integracion', q:"¿Cuál es la principal referencia bibliográfica para los planos de movimiento en este módulo?", opts:["Sha et al. (2010)","Heredia et al. (2012)","Tortora y Derrickson (2010)","Lopes et al. (2019)"], correct:2, exp:"La referencia principal para los planos de movimiento sagital y mediano es Tortora y Derrickson (2010), Principios de Anatomía y Fisiología."},
+  {cat:'integracion', q:"¿Qué tipo de adaptaciones busca generar el entrenamiento funcional en la vida cotidiana?", opts:["Adaptaciones exclusivamente estéticas","Adaptaciones positivas para desenvolverse de manera eficaz y segura","Adaptaciones para el rendimiento deportivo exclusivo","Adaptaciones metabólicas únicamente"], correct:1, exp:"El enfoque clave del entrenamiento funcional es promover adaptaciones positivas que permitan a las personas desenvolverse de manera eficaz y segura en su rutina cotidiana."},
+  {cat:'integracion', q:"¿Qué tipo de contracción muscular ocurre cuando el bíceps trabaja en la fase de descenso de un curl?", opts:["Concéntrica","Isométrica","Excéntrica","Pliométrica"], correct:2, exp:"Durante la fase de descenso (lowering) de un curl de bíceps, los músculos del bíceps trabajan en fase excéntrica (F < R), alargándose bajo tensión para controlar el movimiento."},
+  {cat:'integracion', q:"¿Cuántos planos de movimiento y ejes de movimiento existen respectivamente?", opts:["2 planos y 2 ejes","3 planos y 3 ejes","4 planos y 3 ejes","3 planos y 4 ejes"], correct:1, exp:"Existen 3 planos de movimiento (sagital, frontal, transversal) y 3 ejes de movimiento (lateral, antero-posterior, longitudinal), cada uno relacionado entre sí."},
+  {cat:'integracion', q:"¿Cuál es la definición de entrenamiento no convencional?", opts:["Entrenamiento exclusivo con pesas libres","Enfoques que difieren de las prácticas tradicionales usando herramientas y técnicas poco habituales","Entrenamiento solo con máquinas de gimnasio","Método de entrenamiento basado únicamente en el propio peso corporal"], correct:1, exp:"El entrenamiento no convencional hace referencia a enfoques o métodos que difieren de las prácticas tradicionales. Son creativos, variados y se alejan de los ejercicios típicos del gimnasio estándar."},
+
+];
+
+/* ══════════════════════ TEST ENGINE ══════════════════════ */
+let activeQuestions = [];
+let activeFilter = 'todos';
+let submitted = false;
+
+function buildFilterBar() {
+  const bar = document.getElementById('filter-bar');
+  const cats = ['todos', 'planos', 'ejes', 'movimientos', 'eficiencia', 'analisis', 'funcional', 'bandas', 'integracion'];
+  const labels = {todos:'Todos', planos:'Planos', ejes:'Ejes', movimientos:'Movimientos', eficiencia:'Eficiencia', analisis:'Análisis', funcional:'Funcional', bandas:'Bandas', integracion:'Integración'};
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (c === 'todos' ? ' active' : '');
+    btn.textContent = labels[c];
+    btn.onclick = () => { activeFilter = c; applyFilter(btn); };
+    bar.appendChild(btn);
+  });
+}
+
+function applyFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadQuestions();
+}
+
+function loadQuestions() {
+  submitted = false;
+  activeQuestions = activeFilter === 'todos'
+    ? [...ALL_QUESTIONS]
+    : ALL_QUESTIONS.filter(q => q.cat === activeFilter);
+  for (let i = activeQuestions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [activeQuestions[i], activeQuestions[j]] = [activeQuestions[j], activeQuestions[i]];
+  }
+  renderQuestions();
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('btn-submit').disabled = false;
+  updateProgress();
+}
+
+function renderQuestions() {
+  const c = document.getElementById('questions-container');
+  c.innerHTML = '';
+  document.getElementById('test-count').textContent = `${activeQuestions.length} preguntas`;
+  activeQuestions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'question-card';
+    div.id = 'qcard-' + i;
+    let opts = q.opts.map((o, j) => `
+      <label class="option-label" id="opt-${i}-${j}">
+        <input type="radio" name="q${i}" value="${j}"> ${o}
+      </label>`).join('');
+    div.innerHTML = `<h3>${i + 1}. ${q.q}</h3>${opts}`;
+    c.appendChild(div);
+  });
+  activeQuestions.forEach((_, i) => {
+    document.querySelectorAll(`input[name="q${i}"]`).forEach(inp => {
+      inp.addEventListener('change', updateProgress);
+    });
+  });
+}
+
+function updateProgress() {
+  let answered = 0;
+  activeQuestions.forEach((_, i) => {
+    if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+  });
+  const pct = activeQuestions.length ? (answered / activeQuestions.length * 100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  let score = 0;
+  activeQuestions.forEach((q, i) => {
+    const chosen = document.querySelector(`input[name="q${i}"]:checked`);
+    const chosenVal = chosen ? parseInt(chosen.value) : -1;
+    const isCorrect = chosenVal === q.correct;
+    if (isCorrect) score++;
+    q.opts.forEach((_, j) => {
+      const lbl = document.getElementById(`opt-${i}-${j}`);
+      if (j === q.correct) lbl.classList.add('correct');
+      else if (j === chosenVal) lbl.classList.add('wrong');
+      const inp = lbl.querySelector('input');
+      if (inp) inp.disabled = true;
+    });
+    const card = document.getElementById('qcard-' + i);
+    const fb = document.createElement('div');
+    fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
+    fb.innerHTML = `<div class="fb-circle"></div><div><strong>${isCorrect ? 'Correcto' : 'Incorrecto'}</strong> — ${q.exp}</div>`;
+    card.appendChild(fb);
+  });
+  const total = activeQuestions.length;
+  const pct = Math.round(score / total * 100);
+  document.getElementById('score-display').textContent = `${score} / ${total}`;
+  document.getElementById('score-msg').textContent = pct >= 80
+    ? `¡Excelente! Has acertado el ${pct}% de las preguntas.`
+    : pct >= 60
+    ? `Bien, ${pct}% correcto. Repasa los temas fallados.`
+    : `Necesitas reforzar. Solo ${pct}% correcto. ¡Ánimo!`;
+  document.getElementById('result-panel').style.display = 'block';
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
+  document.getElementById('prog-fill').style.width = '100%';
+}
+
+function retryTest() {
+  loadQuestions();
+  window.scrollTo({top: document.getElementById('test').offsetTop - 60, behavior:'smooth'});
+}
+
+/* ══════════════════════ INIT ══════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildTerms();
+  buildFilterBar();
+  loadQuestions();
+});
+</script>
+</body>
+</html>

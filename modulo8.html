@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 8 · Anamnesis y Valoración Funcional — Five Stars</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --header-bg: #1a1a18;
+    --accent: #534AB7;
+    --accent-light: #EEEDFE;
+    --teal: #E1F5EE;
+    --amber: #FAEEDA;
+    --coral: #FAECE7;
+    --card-border: 0.5px solid #d3d1c7;
+    --card-radius: 12px;
+    --yellow: #FFD700;
+    --text: #1a1a18;
+    --text-muted: #6b6963;
+    --white: #ffffff;
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header { background: var(--header-bg); color: #fff; padding: 0 24px; }
+  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 18px 0; }
+  .header-badge { background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
+  .header-title { font-size: 17px; font-weight: 700; line-height: 1.25; }
+  .header-sub { font-size: 12px; color: #aaa8a2; margin-top: 2px; }
+
+  /* TABS */
+  .tabs-bar { background: var(--header-bg); border-top: 1px solid #2e2e2b; padding: 0 24px; }
+  .tabs-inner { max-width: 960px; margin: 0 auto; display: flex; gap: 0; }
+  .tab-btn { background: none; border: none; color: #9b9891; font-size: 13px; font-weight: 500; padding: 12px 18px; cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; white-space: nowrap; }
+  .tab-btn:hover { color: #e5e3dc; }
+  .tab-btn.active { color: #fff; border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* SECTION HEADERS */
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+
+  /* ── ESQUEMA ── */
+  .outline-group { margin-bottom: 12px; }
+  .outline-toggle { width: 100%; text-align: left; background: var(--white); border: var(--card-border); border-radius: var(--card-radius); padding: 14px 18px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; color: var(--text); transition: background .15s; }
+  .outline-toggle:hover { background: #f0efe9; }
+  .outline-toggle .arrow { margin-left: auto; font-size: 11px; color: var(--text-muted); transition: transform .2s; }
+  .outline-toggle.open .arrow { transform: rotate(90deg); }
+  .outline-toggle .tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+  .tag-purple { background: var(--accent-light); color: var(--accent); }
+  .tag-teal { background: var(--teal); color: #0f6b4a; }
+  .tag-amber { background: var(--amber); color: #8b5e00; }
+  .tag-coral { background: var(--coral); color: #8b3320; }
+  .outline-body { display: none; background: var(--white); border: var(--card-border); border-top: none; border-radius: 0 0 var(--card-radius) var(--card-radius); padding: 18px 20px; }
+  .outline-body.open { display: block; }
+  .outline-body h4 { font-size: 13px; font-weight: 700; color: var(--accent); margin: 14px 0 6px; }
+  .outline-body h4:first-child { margin-top: 0; }
+  .outline-body ul { padding-left: 20px; }
+  .outline-body li { font-size: 13px; color: var(--text); margin-bottom: 5px; line-height: 1.55; }
+  .outline-body p { font-size: 13px; color: var(--text); line-height: 1.6; margin-bottom: 8px; }
+  .outline-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 10px 0; }
+  .outline-table th { background: var(--accent-light); color: var(--accent); font-weight: 700; padding: 7px 10px; text-align: left; border: var(--card-border); }
+  .outline-table td { padding: 6px 10px; border: var(--card-border); vertical-align: top; }
+  .outline-table tr:nth-child(even) td { background: #fafaf7; }
+
+  /* ── RESUMEN ── */
+  .key-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .key-card { border: var(--card-border); border-radius: var(--card-radius); padding: 16px 18px; }
+  .key-card.purple { background: var(--accent-light); border-color: #c5c2f8; }
+  .key-card.teal { background: var(--teal); border-color: #b0e6d0; }
+  .key-card.amber { background: var(--amber); border-color: #f5d990; }
+  .key-card.coral { background: var(--coral); border-color: #f5c0b0; }
+  .key-card-title { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
+  .purple .key-card-title { color: var(--accent); }
+  .teal .key-card-title { color: #0c6644; }
+  .amber .key-card-title { color: #7a5100; }
+  .coral .key-card-title { color: #7a2e1a; }
+  .key-card ul { padding-left: 16px; }
+  .key-card li { font-size: 13px; line-height: 1.55; margin-bottom: 4px; }
+  .key-box { background: var(--white); border: var(--card-border); border-radius: var(--card-radius); padding: 18px 20px; margin-bottom: 14px; }
+  .key-box-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .key-box-icon { font-size: 18px; }
+  .formula-box { background: var(--header-bg); color: #fff; border-radius: 8px; padding: 12px 16px; font-family: 'Courier New', monospace; font-size: 13px; margin: 8px 0; line-height: 1.7; }
+  .zones-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .zones-table th { background: var(--accent); color: #fff; padding: 7px 12px; text-align: left; }
+  .zones-table td { padding: 6px 12px; border-bottom: var(--card-border); font-size: 12.5px; }
+  .zones-table tr:nth-child(even) td { background: #fafaf7; }
+
+  /* ── SIGLAS ── */
+  .chips-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .chip { background: var(--white); border: var(--card-border); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s; user-select: none; }
+  .chip:hover, .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .term-definition { background: var(--white); border: var(--card-border); border-radius: var(--card-radius); padding: 20px 22px; display: none; }
+  .term-definition.visible { display: block; }
+  .term-def-title { font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+  .term-def-cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: 10px; }
+  .term-def-text { font-size: 13.5px; line-height: 1.65; }
+
+  /* ── TEST ── */
+  .test-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; align-items: center; }
+  .filter-btn { background: var(--white); border: var(--card-border); border-radius: 20px; padding: 6px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .filter-btn.f-purple.active { background: var(--accent); }
+  .filter-btn.f-teal.active { background: #0c8c5c; border-color: #0c8c5c; }
+  .filter-btn.f-amber.active { background: #a06c00; border-color: #a06c00; }
+  .filter-btn.f-coral.active { background: #8b3320; border-color: #8b3320; }
+  .shuffle-btn { background: var(--header-bg); color: #fff; border: none; border-radius: 20px; padding: 7px 16px; font-size: 12.5px; font-weight: 600; cursor: pointer; margin-left: auto; }
+  .shuffle-btn:hover { background: var(--accent); }
+
+  /* PROGRESS */
+  .progress-bar-wrap { background: #e0dedb; border-radius: 99px; height: 6px; margin-bottom: 6px; }
+  .progress-bar-fill { background: var(--accent); border-radius: 99px; height: 6px; transition: width .4s; }
+  .progress-label { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+
+  /* QUESTION CARD */
+  .q-card { background: var(--white); border: var(--card-border); border-radius: var(--card-radius); padding: 22px 22px 18px; margin-bottom: 14px; }
+  .q-number { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .q-cat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .q-text { font-size: 14.5px; font-weight: 600; line-height: 1.55; margin-bottom: 16px; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt-label { display: flex; align-items: flex-start; gap: 10px; background: var(--bg); border: var(--card-border); border-radius: 8px; padding: 10px 14px; cursor: pointer; font-size: 13.5px; line-height: 1.4; transition: border-color .15s, background .15s; user-select: none; }
+  .opt-label:hover { border-color: var(--accent); background: var(--accent-light); }
+  .opt-label input[type=radio] { margin-top: 1px; accent-color: var(--accent); flex-shrink: 0; }
+  .opt-label.correct-ans { background: #dcfce7; border-color: var(--green); }
+  .opt-label.wrong-ans { background: #fef2f2; border-color: var(--red); }
+  .opt-label.correct-ans::after { content: '✓'; color: var(--green); font-weight: 700; margin-left: auto; }
+  .opt-label.wrong-ans::after { content: '✗'; color: var(--red); font-weight: 700; margin-left: auto; }
+  .submit-btn { margin-top: 14px; background: var(--yellow); color: var(--header-bg); font-size: 13px; font-weight: 700; border: none; border-radius: 8px; padding: 10px 22px; cursor: pointer; transition: opacity .15s; }
+  .submit-btn:hover { opacity: .85; }
+  .submit-btn:disabled { opacity: .4; cursor: default; }
+  .feedback { margin-top: 12px; display: none; }
+  .feedback.visible { display: flex; align-items: flex-start; gap: 10px; }
+  .feedback-icon { width: 22px; height: 22px; border-radius: 50%; background: var(--header-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .feedback-icon.ok { color: var(--green); }
+  .feedback-icon.fail { color: var(--yellow); }
+  .feedback-text { font-size: 13px; line-height: 1.55; color: var(--text); }
+
+  /* RESULTADO FINAL */
+  .result-panel { display: none; background: var(--white); border: var(--card-border); border-radius: var(--card-radius); padding: 36px 30px; text-align: center; margin-top: 24px; }
+  .result-panel.visible { display: block; }
+  .result-score { font-size: 52px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .result-label { font-size: 14px; color: var(--text-muted); margin: 6px 0 20px; }
+  .result-msg { font-size: 16px; font-weight: 600; margin-bottom: 24px; }
+  .result-breakdown { display: flex; justify-content: center; gap: 32px; margin-bottom: 24px; }
+  .rb-item { text-align: center; }
+  .rb-num { font-size: 22px; font-weight: 700; }
+  .rb-lbl { font-size: 12px; color: var(--text-muted); }
+  .restart-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .restart-btn:hover { opacity: .85; }
+
+  @media (max-width: 600px) {
+    main { padding: 20px 16px 48px; }
+    .tab-btn { padding: 11px 12px; font-size: 12px; }
+    .key-grid { grid-template-columns: 1fr; }
+    .result-breakdown { gap: 16px; }
+  }
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <div class="header-inner">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <span class="header-badge">Módulo 8</span>
+      </div>
+      <div class="header-title">Anamnesis y Valoración Funcional</div>
+      <div class="header-sub">Five Stars International Graduate School · Fitness Instructor</div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="esquema">📋 Esquema</button>
+    <button class="tab-btn" data-tab="resumen">💡 Resumen clave</button>
+    <button class="tab-btn" data-tab="siglas">🔤 Siglas y términos</button>
+    <button class="tab-btn" data-tab="test">✏️ Test</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════ ESQUEMA -->
+<div class="tab-panel active" id="tab-esquema">
+  <p class="section-label">Esquema del módulo</p>
+
+  <!-- T1: Anamnesis -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-purple">Tema 1</span> La Anamnesis y la Valoración Corporal
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <h4>¿Qué es la anamnesis?</h4>
+      <ul>
+        <li>Recopilación de <strong>información subjetiva</strong> sobre la historia clínica del cliente.</li>
+        <li>La valoración corporal evalúa de forma <strong>objetiva y física</strong> diversas dimensiones corporales.</li>
+        <li>Ambas son fundamentales para comprender la salud integral y diseñar programas personalizados.</li>
+      </ul>
+      <h4>Primera acción como entrenador personal</h4>
+      <ul>
+        <li>Comprender el <strong>objetivo del cliente</strong> es la tarea inicial más importante.</li>
+        <li>La evaluación se divide en: (1) <strong>en reposo</strong> y (2) <strong>durante el esfuerzo</strong>.</li>
+        <li>Este enfoque guía hacia la <strong>individualización</strong> del proceso.</li>
+      </ul>
+      <h4>Propósito del primer encuentro</h4>
+      <ul>
+        <li>Recopilar datos de referencia para diseñar programas personalizados.</li>
+        <li>Establecer una impresión positiva: organización, puntualidad, profesionalismo.</li>
+        <li>Entrega del consentimiento informado, PAR-Q y PARmed-X.</li>
+        <li>Preguntas: abiertas → cerradas → clarificación (escucha activa).</li>
+      </ul>
+      <h4>Cuestionario de salud: componentes clave</h4>
+      <ul>
+        <li>Historia médica pasada y presente.</li>
+        <li>Dolores en el pecho o dificultad respiratoria.</li>
+        <li>Problemas óseos o articulares.</li>
+        <li>Medicamentos que puedan afectar la respuesta al ejercicio.</li>
+        <li>Historial de mareos o pérdida de conocimiento.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PAR-Q & PARmed-X -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-teal">Tema 1.3</span> PAR-Q &amp; PARmed-X
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <h4>PAR-Q (Shephard, 1988)</h4>
+      <ul>
+        <li>Siglas: <em>Physical Activity Readiness Questionnaire</em>.</li>
+        <li>Cuestionario de <strong>7 preguntas</strong> de Sí/No para evaluar aptitud para actividad física.</li>
+        <li>Si ≥ 1 respuesta es SÍ → se recomienda consultar al médico antes de iniciar.</li>
+        <li>Componentes típicos: historia médica, dolor en el pecho, problemas articulares, medicamentos, mareos.</li>
+      </ul>
+      <h4>PARmed-X</h4>
+      <ul>
+        <li>Diseñado para ser utilizado por <strong>médicos</strong> con pacientes que respondieron SÍ a ≥ 1 pregunta del PAR-Q.</li>
+        <li>Críticas al PAR-Q original: genera <strong>falsos positivos</strong>, restricciones de edad, carece de base en evidencia.</li>
+        <li>Respuesta: Bredin et al. (2013) desarrollaron el <strong>PAR-Q+</strong> y el <strong>ePAR-med-X+</strong>.</li>
+        <li>Objetivo del PAR-Q+ y ePAR-med-X+: reducir barreras y brindar asesoramiento basado en evidencia.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Consentimiento Informado -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-amber">Tema 1.4</span> Consentimiento Informado
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <p>Documento mediante el cual la persona da su aprobación <strong>voluntaria y consciente</strong> para participar en un programa de entrenamiento.</p>
+      <h4>Elementos clave</h4>
+      <ul>
+        <li><strong>Riesgos y beneficios</strong> del programa.</li>
+        <li><strong>Limitaciones y contraindicaciones</strong> médicas.</li>
+        <li><strong>Responsabilidades</strong> del cliente y del entrenador.</li>
+        <li><strong>Uso de equipamiento</strong>: uso adecuado y riesgos.</li>
+        <li><strong>Consentimiento para grabaciones o evaluaciones</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Frecuencia Cardíaca -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-purple">Tema 1.5</span> Frecuencia Cardíaca (FC)
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <p>Número de latidos del corazón por unidad de tiempo, expresado en <strong>latidos por minuto (lpm)</strong>.</p>
+      <h4>Instrumentos de medición</h4>
+      <ul>
+        <li><strong>Pulsómetro / Monitor FC</strong>: correa de pecho o tecnología óptica en muñeca.</li>
+        <li><strong>ECG / EKG</strong>: registra la actividad eléctrica del corazón; más avanzado y preciso.</li>
+        <li>Manual: arterias carótida, radial, cubital, femoral, poplítea.</li>
+      </ul>
+      <h4>Frecuencia Cardíaca Máxima (FCM)</h4>
+      <ul>
+        <li>Número máximo de pulsaciones que puede alcanzar el corazón en 1 minuto de esfuerzo intenso.</li>
+        <li>Disminuye con la edad; varía por genética, forma física y salud del corazón.</li>
+        <li>Fuente de fórmulas: Faff et al. (2007).</li>
+      </ul>
+      <h4>Zonas de entrenamiento (% FCM)</h4>
+      <table class="outline-table">
+        <tr><th>Zona</th><th>% FCM</th><th>Objetivo</th></tr>
+        <tr><td>Z1 – Recuperación</td><td>50–60 %</td><td>Recuperación activa</td></tr>
+        <tr><td>Z2 – Aeróbica</td><td>60–70 %</td><td>Resistencia cardiovascular</td></tr>
+        <tr><td>Z3 – Oxidación de grasas</td><td>70–80 %</td><td>Quema de grasas</td></tr>
+        <tr><td>Z4 – Umbral anaeróbico</td><td>80–90 %</td><td>Capacidad anaeróbica</td></tr>
+        <tr><td>Z5 – Máxima</td><td>90–100 %</td><td>Intervalos cortos, máxima intensidad</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Presión Arterial -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-teal">Tema 1.5</span> Presión Arterial
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <p>Fuerza que ejerce la sangre contra las paredes de las arterias cuando el corazón bombea. Se expresa en <strong>mmHg</strong>.</p>
+      <h4>Valores</h4>
+      <ul>
+        <li><strong>Sistólica</strong>: presión durante la sístole (contracción). Primer número (ej. 120).</li>
+        <li><strong>Diastólica</strong>: presión durante la diástole (relajación). Segundo número (ej. 80).</li>
+      </ul>
+      <h4>Instrumentos</h4>
+      <ul>
+        <li><strong>Brazalete</strong>: colocado a la altura del corazón.</li>
+        <li><strong>Esfigmomanómetro</strong>: manual o digital.</li>
+        <li><strong>Monitor automatizado</strong>: activa onda R del ECG + micrófono sobre arteria braquial (McLaurin et al., 2023).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Composición Corporal -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-amber">Tema 1.5</span> Composición Corporal
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <h4>Componentes principales</h4>
+      <ul>
+        <li><strong>Masa Grasa</strong>: tejido adiposo; almacenamiento de energía e aislamiento térmico.</li>
+        <li><strong>Masa Magra (FFM)</strong>: músculos, huesos, órganos y tejido conectivo.</li>
+      </ul>
+      <h4>Modelos de compartimentos</h4>
+      <table class="outline-table">
+        <tr><th>Modelo</th><th>Compartimentos</th><th>Referencia</th></tr>
+        <tr><td>2C</td><td>Masa grasa + Masa libre de grasa</td><td>–</td></tr>
+        <tr><td>3C</td><td>Añade masa ósea mineral</td><td>–</td></tr>
+        <tr><td>4C</td><td>Grasa + minerales + masa sin grasa + proteínas</td><td>Criterio estándar</td></tr>
+        <tr><td>6C</td><td>Agua, nitrógeno, calcio, potasio, sodio, cloruro</td><td>Multicompartimental</td></tr>
+      </table>
+      <h4>Métodos de medición (Kasper et al., 2021)</h4>
+      <ul>
+        <li><strong>Directos:</strong> Hidrodensitometría (pesaje hidrostático), TC/RM.</li>
+        <li><strong>Indirectos:</strong> Pletismografía por desplazamiento de aire (ADP).</li>
+        <li><strong>Doblemente indirectos:</strong> BIA, BIS, ultrasonido, escaneo fotónico 3D, DXA, antropometría (pliegues cutáneos – estándar ISAK).</li>
+      </ul>
+      <h4>Índices antropométricos adicionales (Cuadernillo)</h4>
+      <ul>
+        <li><strong>IMC</strong> = Peso(kg) / Talla²(m). Limitación: no distingue masa magra de masa grasa.</li>
+        <li><strong>Circunferencia abdominal</strong>: riesgo si &gt; 102 cm (hombres) o &gt; 88 cm (mujeres). Referencia: última costilla – borde cresta ilíaca (OMS).</li>
+        <li><strong>Índice cintura/cadera (ICC)</strong>: riesgo si &gt; 0,9–1 (hombres) o &gt; 0,85–0,9 (mujeres).</li>
+        <li><strong>Bioimpedancia</strong>: mide la resistencia corporal al paso de una corriente eléctrica.</li>
+      </ul>
+      <h4>Medición de talla (posición correcta)</h4>
+      <ul>
+        <li>Bipedestación, talones juntos, pies a 45° entre sí.</li>
+        <li>Talones, glúteos, espalda y región occipital en contacto con la superficie vertical.</li>
+        <li>Realizar una inspiración forzada en el momento de la medición.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Test Cardiovascular -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-coral">Tema 2</span> Test de Evaluación Cardiovascular
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <h4>Tests principales</h4>
+      <table class="outline-table">
+        <tr><th>Test</th><th>Descripción</th></tr>
+        <tr><td>Prueba de Esfuerzo (Ergometría)</td><td>Ejercicio gradualmente incrementado; monitorización FC, PA y respuesta respiratoria.</td></tr>
+        <tr><td>Test de Cooper</td><td>Mayor distancia posible en 12 min. Fórmula: VO₂máx = 22,351×D(km) – 11,288</td></tr>
+        <tr><td>Test de Rockport / Test de la Milla</td><td>Recorrer 1 milla (1609 m). Fórmula incluye PC, edad, sexo, tiempo y FC.</td></tr>
+        <tr><td>Test de la Universidad de Montreal</td><td>Maximal; inicio 8 km/h, +1 km/h cada 2 min hasta agotamiento.</td></tr>
+        <tr><td>Prueba de Caminar de 6 min</td><td>Distancia que se puede caminar en 6 minutos.</td></tr>
+        <tr><td>Prueba de Ruffier-Dickson</td><td>FC antes y después de 30 sentadillas en 1 min. Evalúa adaptación cardiovascular.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Aptitud Muscular -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-purple">Tema 2</span> Aptitud Muscular
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <h4>1RM — Fuerza Muscular</h4>
+      <ul>
+        <li><strong>1RM directo</strong>: máximo peso que se puede levantar una sola vez con técnica correcta.</li>
+        <li>Protocolo: calentamiento → series con 5-10 rep → ajuste progresivo hasta fallo en 1 rep.</li>
+        <li>Ejercicios: básicos y multiarticulares (no unilaterales ni en máquinas que falseen resultados).</li>
+      </ul>
+      <h4>Fórmulas para 1RM indirecto (% del peso levantado)</h4>
+      <ul>
+        <li><strong>Lander:</strong> % 1RM = 101,3 – (2,67123 × nº rep)</li>
+        <li><strong>Brzycki:</strong> % 1RM = 102,78 – (2,78 × nº rep) — más preciso con &lt; 10 rep</li>
+        <li><strong>O'Connor:</strong> % 1RM = 0,025 × (peso × nº rep) + peso</li>
+        <li><strong>Epley:</strong> % 1RM = (peso × 0,033 × nº rep) + peso — más preciso con &gt; 10 rep</li>
+      </ul>
+      <h4>Protocolo % Peso Corporal</h4>
+      <ul>
+        <li>Peso máximo de referencia: 80 kg (hombres) y 65 kg (mujeres).</li>
+        <li>Multiplicar el peso corporal por el factor del ejercicio de la tabla.</li>
+      </ul>
+      <h4>Test de Bosco (tren inferior)</h4>
+      <ul>
+        <li><strong>SJ (Squat Jump)</strong>: salto desde rodillas a 90°, sin contramovimiento, manos en cintura.</li>
+        <li><strong>CMJ (Countermovement Jump)</strong>: permite contramovimiento previo al salto.</li>
+        <li><strong>DJ (Drop Jump)</strong>: salto tras caída desde un cajón.</li>
+        <li>Realizados en plataformas de contacto o apps validadas científicamente.</li>
+      </ul>
+      <h4>Test de Resistencia Muscular</h4>
+      <ul>
+        <li><strong>Test de Flexiones</strong>: resistencia de pecho y brazos.</li>
+        <li><strong>Test de Sit-Ups</strong>: resistencia abdominal.</li>
+        <li><strong>Test de Curl-Up</strong>: resistencia abdominal con repeticiones controladas.</li>
+        <li><strong>Entrenamiento basado en velocidad (Baena-Marín et al., 2022)</strong>: prescripción precisa usando velocidad de ejecución como referencia.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Flexibilidad -->
+  <div class="outline-group">
+    <button class="outline-toggle" onclick="toggleOutline(this)">
+      <span class="tag tag-teal">Tema 2</span> Test de Flexibilidad
+      <span class="arrow">▶</span>
+    </button>
+    <div class="outline-body">
+      <table class="outline-table">
+        <tr><th>Test</th><th>Posición / Descripción</th><th>Evalúa</th></tr>
+        <tr><td>Flexión de tronco</td><td>Sentado, piernas extendidas, alcanza dedos de los pies.</td><td>Columna vertebral y musculatura posterior de piernas.</td></tr>
+        <tr><td>Inclinación lateral</td><td>Sentado, inclinación lateral tratando de alcanzar el pie.</td><td>Músculos laterales del tronco y piernas.</td></tr>
+        <tr><td>Sentadilla profunda</td><td>Sentadilla máxima manteniendo talones en el suelo.</td><td>Caderas, rodillas y tobillos.</td></tr>
+        <tr><td>Back Scratch</td><td>Tocarse las manos por detrás de la espalda.</td><td>Movilidad de hombro (flexión, abducción, rotación lateral).</td></tr>
+        <tr><td>Sit &amp; Reach</td><td>Desde sentado, alcanzar una regla graduada a 15 cm.</td><td>Isquiotibiales y columna lumbar.</td></tr>
+        <tr><td>Leg Raise</td><td>Decúbito supino, elevar una pierna extendida al máximo.</td><td>Movilidad cadera, isquiotibiales, core.</td></tr>
+        <tr><td>Thomas Test</td><td>Acostado en mesa, flexiona una rodilla al pecho.</td><td>Flexores de la cadera.</td></tr>
+        <tr><td>Hamstring Test</td><td>Decúbito, elevar pierna extendida.</td><td>Isquiotibiales.</td></tr>
+        <tr><td>Prueba del Pájaro</td><td>Cuclillas manteniendo talones en el suelo.</td><td>Tobillos, rodillas y caderas.</td></tr>
+      </table>
+      <h4>Rangos Leg Raise (ángulo de elevación)</h4>
+      <ul>
+        <li>70°–90°: excelente movilidad.</li>
+        <li>45°–69°: movilidad adecuada con potenciales limitaciones.</li>
+        <li>&lt; 45°: limitación significativa.</li>
+        <li>Asimetría &gt; 10° entre piernas → posible desequilibrio funcional.</li>
+      </ul>
+      <h4>Clasificación Sit &amp; Reach</h4>
+      <table class="outline-table">
+        <tr><th>Clasificación</th><th>Hombres (cm)</th><th>Mujeres (cm)</th></tr>
+        <tr><td>Baja</td><td>&lt; 14</td><td>&lt; 30</td></tr>
+        <tr><td>Regular</td><td>14–24</td><td>30–33</td></tr>
+        <tr><td>Media</td><td>24–35</td><td>33–37</td></tr>
+        <tr><td>Buena</td><td>35–45</td><td>37–41</td></tr>
+        <tr><td>Excelente</td><td>&gt; 45</td><td>&gt; 41</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /esquema -->
+
+<!-- ═══════════════════════════════════════════════════════ RESUMEN -->
+<div class="tab-panel" id="tab-resumen">
+  <p class="section-label">Resumen clave</p>
+
+  <div class="key-grid">
+    <div class="key-card purple">
+      <div class="key-card-title">🔑 Conceptos fundamentales</div>
+      <ul>
+        <li><strong>Anamnesis</strong>: información subjetiva (historia clínica).</li>
+        <li><strong>Valoración funcional</strong>: evaluación objetiva y física.</li>
+        <li>Primera acción: <strong>comprender el objetivo del cliente</strong>.</li>
+        <li>Evaluación: en reposo + durante el esfuerzo.</li>
+      </ul>
+    </div>
+    <div class="key-card teal">
+      <div class="key-card-title">📋 Cuestionarios de cribado</div>
+      <ul>
+        <li><strong>PAR-Q</strong>: 7 preguntas Sí/No (Shephard, 1988).</li>
+        <li>≥ 1 SÍ → consulta médica obligatoria.</li>
+        <li><strong>PARmed-X</strong>: para uso médico con pacientes PAR-Q positivo.</li>
+        <li><strong>PAR-Q+</strong> y <strong>ePAR-med-X+</strong>: versiones mejoradas (Bredin et al., 2013).</li>
+      </ul>
+    </div>
+    <div class="key-card amber">
+      <div class="key-card-title">❤️ Frecuencia Cardíaca</div>
+      <ul>
+        <li>FCM disminuye con la edad.</li>
+        <li>5 zonas de entrenamiento basadas en % FCM.</li>
+        <li>Zona oxidación grasas: <strong>70–80 %</strong> FCM.</li>
+        <li>Fuente de fórmulas FCM: <strong>Faff et al. (2007)</strong>.</li>
+      </ul>
+    </div>
+    <div class="key-card coral">
+      <div class="key-card-title">⚖️ Composición Corporal</div>
+      <ul>
+        <li>Componentes: <strong>masa grasa</strong> + <strong>masa magra (FFM)</strong>.</li>
+        <li>DXA: criterio estándar en poblaciones atléticas.</li>
+        <li>Riesgo abdominal: &gt; 102 cm (♂) / &gt; 88 cm (♀).</li>
+        <li>ICC riesgo: &gt; 0,9–1 (♂) / &gt; 0,85–0,9 (♀).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Test cardiovascular -->
+  <div class="key-box">
+    <div class="key-box-title"><span class="key-box-icon">🏃</span> Tests Cardiovasculares — Fórmulas VO₂máx</div>
+    <div class="formula-box">Test Cooper: VO₂máx = 22,351 × Distancia(km) – 11,288</div>
+    <div class="formula-box">Test Rockport: VO₂máx = 132,6 – 0,17×PC – 0,39×Edad + 6,31×S – 3,27×T – 0,156×FC</div>
+    <div class="formula-box">Test Montreal: VO₂máx = 22,859 + 1,91×Vel(km/h) – 0,8664×Edad + 0,0667×Vel×Edad</div>
+    <p style="font-size:12.5px;color:#666;margin-top:8px;">S = sexo (1♂ / 0♀) · T = tiempo en minutos · FC = frecuencia cardíaca al finalizar</p>
+  </div>
+
+  <!-- Fórmulas 1RM -->
+  <div class="key-box">
+    <div class="key-box-title"><span class="key-box-icon">💪</span> Fórmulas 1RM indirecto</div>
+    <div class="formula-box">Lander: % 1RM = 101,3 – (2,67123 × reps)
+Brzycki: % 1RM = 102,78 – (2,78 × reps)  ← &lt; 10 rep
+O'Connor: % 1RM = 0,025×(peso×reps) + peso
+Epley: % 1RM = (peso×0,033×reps) + peso  ← &gt; 10 rep</div>
+  </div>
+
+  <!-- Zonas entrenamiento -->
+  <div class="key-box">
+    <div class="key-box-title"><span class="key-box-icon">📊</span> Zonas de Entrenamiento (% FCM)</div>
+    <table class="zones-table">
+      <tr><th>Zona</th><th>% FCM</th><th>Objetivo principal</th></tr>
+      <tr><td>Z1 Recuperación</td><td>50–60 %</td><td>Recuperación activa</td></tr>
+      <tr><td>Z2 Aeróbica</td><td>60–70 %</td><td>Resistencia cardiovascular</td></tr>
+      <tr><td>Z3 Oxidación grasas</td><td>70–80 %</td><td>Quema de grasas</td></tr>
+      <tr><td>Z4 Umbral anaeróbico</td><td>80–90 %</td><td>Capacidad anaeróbica</td></tr>
+      <tr><td>Z5 Máxima</td><td>90–100 %</td><td>Intervalos cortos</td></tr>
+    </table>
+  </div>
+
+  <!-- Test Bosco -->
+  <div class="key-box">
+    <div class="key-box-title"><span class="key-box-icon">🦘</span> Test de Bosco — Saltos</div>
+    <div class="key-grid" style="margin-bottom:0;">
+      <div class="key-card teal" style="padding:14px 16px;">
+        <div class="key-card-title">SJ — Squat Jump</div>
+        <ul><li>Rodillas a 90°, tronco erguido, manos en cintura.</li><li>Sin contramovimiento. Sin ayuda de brazos.</li></ul>
+      </div>
+      <div class="key-card amber" style="padding:14px 16px;">
+        <div class="key-card-title">CMJ — Countermovement</div>
+        <ul><li>Permite contramovimiento previo hacia abajo.</li><li>Manos en cintura durante todo el salto.</li></ul>
+      </div>
+      <div class="key-card coral" style="padding:14px 16px;">
+        <div class="key-card-title">DJ — Drop Jump</div>
+        <ul><li>Caída desde cajón de altura determinada.</li><li>Salto inmediato tras la caída.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMC -->
+  <div class="key-box">
+    <div class="key-box-title"><span class="key-box-icon">📏</span> IMC y clasificación (OMS / SEEDO)</div>
+    <div class="formula-box">IMC = Peso(kg) / Talla²(m)</div>
+    <table class="zones-table" style="margin-top:10px;">
+      <tr><th>Clasificación OMS</th><th>IMC</th><th>Clasificación SEEDO</th><th>IMC</th></tr>
+      <tr><td>Normopeso</td><td>18,5–24,9</td><td>Normopeso</td><td>18,5–24,9</td></tr>
+      <tr><td>Sobrepeso</td><td>25–29,9</td><td>Sobrepeso grado 1</td><td>25–26,9</td></tr>
+      <tr><td>Obesidad grado 1</td><td>30–34,9</td><td>Sobrepeso grado 2</td><td>27–29,9</td></tr>
+      <tr><td>Obesidad grado 2</td><td>35–39,9</td><td>Obesidad grado 3 (mórbida)</td><td>40–49,9</td></tr>
+      <tr><td>Obesidad grado 3</td><td>≥ 40</td><td>Obesidad grado 4 (extrema)</td><td>≥ 50</td></tr>
+    </table>
+    <p style="font-size:12px;color:#888;margin-top:8px;">Limitación IMC: no diferencia masa magra de masa grasa.</p>
+  </div>
+
+</div><!-- /resumen -->
+
+<!-- ═══════════════════════════════════════════════════════ SIGLAS -->
+<div class="tab-panel" id="tab-siglas">
+  <p class="section-label">Siglas y términos — pulsa para ver la definición</p>
+  <div class="chips-grid" id="chips-container"></div>
+  <div class="term-definition" id="term-def-box">
+    <div class="term-def-title" id="td-title"></div>
+    <div class="term-def-cat" id="td-cat"></div>
+    <div class="term-def-text" id="td-text"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ TEST -->
+<div class="tab-panel" id="tab-test">
+  <div class="test-controls">
+    <button class="filter-btn active" data-cat="all">Todas</button>
+    <button class="filter-btn f-purple" data-cat="Anamnesis">Anamnesis</button>
+    <button class="filter-btn f-teal" data-cat="Cuestionarios">Cuestionarios</button>
+    <button class="filter-btn f-amber" data-cat="Valoración Física">Valoración Física</button>
+    <button class="filter-btn f-coral" data-cat="Tests">Tests</button>
+    <button class="shuffle-btn" id="shuffleBtn">🔀 Mezclar</button>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+  <div class="progress-label" id="progressLabel">0 de 0 respondidas</div>
+  <div id="questions-container"></div>
+  <div class="result-panel" id="resultPanel">
+    <div class="result-score" id="resultScore">–</div>
+    <div class="result-label">puntuación</div>
+    <div class="result-breakdown">
+      <div class="rb-item"><div class="rb-num" id="rbCorrect" style="color:#22c55e">–</div><div class="rb-lbl">Correctas</div></div>
+      <div class="rb-item"><div class="rb-num" id="rbWrong" style="color:#ef4444">–</div><div class="rb-lbl">Incorrectas</div></div>
+      <div class="rb-item"><div class="rb-num" id="rbTotal">–</div><div class="rb-lbl">Total</div></div>
+    </div>
+    <div class="result-msg" id="resultMsg"></div>
+    <button class="restart-btn" onclick="restartTest()">Repetir test</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// OUTLINE TOGGLE
+// ─────────────────────────────────────────────────────────────
+function toggleOutline(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ─────────────────────────────────────────────────────────────
+// TERMS / CHIPS
+// ─────────────────────────────────────────────────────────────
+const TERMS = [
+  { term:"Anamnesis", cat:"Concepto general", def:"Recopilación de información subjetiva sobre la historia clínica y los antecedentes médicos, hábitos de vida y objetivos de un paciente o cliente." },
+  { term:"PAR-Q", cat:"Cuestionario / Shephard, 1988", def:"Physical Activity Readiness Questionnaire. Cuestionario de 7 preguntas Sí/No para evaluar si una persona es apta para iniciar un programa de actividad física. Si ≥ 1 respuesta es SÍ, se recomienda consultar a un médico." },
+  { term:"PARmed-X", cat:"Cuestionario médico", def:"Physical Activity Readiness Medical Examination. Diseñado para que médicos aborden inquietudes sobre participación en actividad física en personas que respondieron SÍ a ≥ 1 pregunta del PAR-Q." },
+  { term:"PAR-Q+", cat:"Evolución del PAR-Q / Bredin et al., 2013", def:"Nueva versión del PAR-Q desarrollada por Bredin et al. (2013) para reducir barreras y resultados falsos positivos, brindando asesoramiento seguro y basado en evidencia." },
+  { term:"ePAR-med-X+", cat:"Evolución del PARmed-X / Bredin et al., 2013", def:"Examen médico electrónico de preparación para la actividad física. Versión actualizada del PARmed-X, creada junto al PAR-Q+ para estratificar el riesgo con base en evidencia científica." },
+  { term:"FC", cat:"Sigla / Frecuencia Cardíaca", def:"Frecuencia Cardíaca. Número de latidos del corazón por unidad de tiempo, expresado en latidos por minuto (lpm). Indicador clave de la actividad del sistema cardiovascular." },
+  { term:"FCM", cat:"Sigla / Frecuencia Cardíaca Máxima", def:"Frecuencia Cardíaca Máxima. Número máximo de pulsaciones que puede alcanzar el corazón en 1 minuto durante esfuerzo físico intenso. Disminuye con la edad. Fuente de fórmulas: Faff et al. (2007)." },
+  { term:"ECG / EKG", cat:"Instrumento de medición", def:"Electrocardiograma. Herramienta avanzada que registra la actividad eléctrica del corazón, proporcionando mediciones precisas de la frecuencia cardíaca." },
+  { term:"PA", cat:"Sigla / Presión Arterial", def:"Presión Arterial. Fuerza que ejerce la sangre contra las paredes de las arterias cuando el corazón bombea. Se expresa en mmHg. Valor normal de referencia: 120/80 mmHg." },
+  { term:"Sístole", cat:"Concepto cardiovascular", def:"Fase de contracción del corazón. La presión arterial sistólica es el primer número de la lectura (ej. 120 en 120/80 mmHg)." },
+  { term:"Diástole", cat:"Concepto cardiovascular", def:"Fase de relajación del corazón entre latidos. La presión arterial diastólica es el segundo número de la lectura (ej. 80 en 120/80 mmHg)." },
+  { term:"VO₂máx", cat:"Capacidad aeróbica", def:"Volumen de oxígeno máximo. Capacidad máxima del organismo para consumir oxígeno durante el ejercicio. Principal indicador de la capacidad aeróbica y la aptitud cardiovascular." },
+  { term:"IMC", cat:"Índice de Masa Corporal", def:"Índice de Masa Corporal. Relación entre el peso (kg) y el cuadrado de la talla (m²): IMC = Peso/Talla². Limitación: no diferencia masa grasa de masa magra." },
+  { term:"ICC", cat:"Índice Cintura/Cadera", def:"Índice Cintura/Cadera = Circunferencia cintura / Circunferencia cadera. Riesgo si &gt; 0,9–1 en hombres y &gt; 0,85–0,9 en mujeres." },
+  { term:"FFM", cat:"Sigla / Masa Libre de Grasa", def:"Fat-Free Mass. Masa libre de grasa (también llamada Masa Magra). Incluye músculos, huesos, órganos y tejido conectivo. Contribuye a la fuerza y el rendimiento físico." },
+  { term:"1RM", cat:"Fuerza muscular", def:"1 Repetición Máxima. Peso máximo que un individuo puede levantar en una sola repetición con la técnica correcta en un ejercicio específico." },
+  { term:"BIA", cat:"Método composición corporal", def:"Bioelectrical Impedance Analysis. Impedancia bioeléctrica. Método doblemente indirecto que genera corrientes eléctricas a través del cuerpo para evaluar el agua corporal total (TBW) y estimar la composición corporal." },
+  { term:"BIS", cat:"Método composición corporal", def:"Bioelectrical Impedance Spectroscopy. Espectroscopia de impedancia bioeléctrica. Utiliza múltiples frecuencias y se considera superior a la BIA estándar." },
+  { term:"DXA", cat:"Método composición corporal / Gold Standard", def:"Dual-Energy X-ray Absorptiometry. Absorciometría de rayos X de energía dual. Considerada 'criterio estándar' para evaluar composición corporal en poblaciones atléticas. Mide grasa (FM), masa magra (LM) y contenido mineral óseo (BMC)." },
+  { term:"ADP", cat:"Método composición corporal", def:"Air Displacement Plethysmography. Pletismografía por desplazamiento de aire. Alternativa práctica a la hidrodensitometría; utiliza aire en lugar de agua para medir la densidad corporal." },
+  { term:"BMC", cat:"Sigla / Contenido Mineral Óseo", def:"Bone Mineral Content. Contenido mineral óseo. Parámetro evaluado por la DXA; clave para evaluar la salud ósea y la disponibilidad de energía." },
+  { term:"TBW", cat:"Sigla / Agua Corporal Total", def:"Total Body Water. Agua corporal total. Variable estimada por la BIA y BIS para diferenciar entre líquido intracelular y extracelular." },
+  { term:"SJ", cat:"Test de Bosco", def:"Squat Jump. Salto vertical partiendo desde rodillas flexionadas a 90°, tronco erguido, manos en la cintura. Se realiza sin contramovimiento ni ayuda de los brazos." },
+  { term:"CMJ", cat:"Test de Bosco", def:"Countermovement Jump. Salto con contramovimiento previo hacia abajo. El sujeto puede empezar erguido con las manos en la cintura." },
+  { term:"DJ", cat:"Test de Bosco", def:"Drop Jump. Salto realizado tras la caída desde un cajón de altura determinada. Evalúa la capacidad reactiva del tren inferior." },
+  { term:"ISAK", cat:"Organización / Antropometría", def:"International Society for the Advancement of Kinanthropometry. Organización que ha establecido estándares para la medición de pliegues cutáneos (skinfolds) en la evaluación de la composición corporal." },
+  { term:"Consentimiento Informado", cat:"Documento legal / ético", def:"Documento mediante el cual una persona da su aprobación voluntaria y consciente para participar en un programa de entrenamiento, tras recibir información detallada sobre riesgos, beneficios y alternativas." },
+  { term:"Esfigmomanómetro", cat:"Instrumento de medición", def:"Instrumento utilizado para medir la presión arterial. Puede ser manual (aneroides) o digital (electrónicos). Se utiliza junto con un brazalete colocado en el brazo." },
+  { term:"Hidrodensitometría", cat:"Método composición corporal (directo)", def:"Método directo también llamado pesaje hidrostático. Se basa en medir el volumen de agua desplazado por el cuerpo al sumergirse, comparando el peso en aire con el peso bajo el agua para calcular la densidad corporal." },
+  { term:"Ergometría", cat:"Test cardiovascular", def:"Prueba de esfuerzo. El individuo realiza ejercicio físico gradualmente incrementado mientras se monitoriza FC, presión arterial y respuesta respiratoria en cinta, bicicleta estática o elíptica." },
+  { term:"Ruffier-Dickson", cat:"Test cardiovascular", def:"Evaluación de la frecuencia cardíaca antes y después de realizar 30 sentadillas en 1 minuto. Evalúa la adaptación cardiovascular al esfuerzo." },
+];
+
+const chipsContainer = document.getElementById('chips-container');
+const termBox = document.getElementById('term-def-box');
+let activeChip = null;
+
+TERMS.forEach((t, i) => {
+  const chip = document.createElement('button');
+  chip.className = 'chip';
+  chip.textContent = t.term;
+  chip.addEventListener('click', () => {
+    if (activeChip) activeChip.classList.remove('active');
+    if (activeChip === chip) { activeChip = null; termBox.classList.remove('visible'); return; }
+    chip.classList.add('active');
+    activeChip = chip;
+    document.getElementById('td-title').textContent = t.term;
+    document.getElementById('td-cat').textContent = t.cat;
+    document.getElementById('td-text').innerHTML = t.def;
+    termBox.classList.add('visible');
+    termBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+  chipsContainer.appendChild(chip);
+});
+
+// ─────────────────────────────────────────────────────────────
+// QUESTIONS DATA
+// ─────────────────────────────────────────────────────────────
+const CAT_COLORS = {
+  "Anamnesis": "#534AB7",
+  "Cuestionarios": "#0c8c5c",
+  "Valoración Física": "#a06c00",
+  "Tests": "#8b3320"
+};
+
+const ALL_QUESTIONS = [
+  // ── ANAMNESIS ──
+  {cat:"Anamnesis", q:"¿En qué tipo de información se centra la anamnesis?", opts:["Evaluación objetiva y física","Recopilación de información subjetiva sobre la historia clínica","Medición de la composición corporal","Análisis del rendimiento deportivo"], correct:1, exp:"La anamnesis se centra en la recopilación de información subjetiva sobre la historia clínica del cliente."},
+  {cat:"Anamnesis", q:"¿Cuál es la primera acción que debe emprender un entrenador personal al iniciar con un cliente?", opts:["Medir la composición corporal","Realizar el PAR-Q","Comprender el objetivo del cliente","Tomar la frecuencia cardíaca"], correct:2, exp:"Comprender el objetivo es la principal tarea inicial antes de cualquier evaluación."},
+  {cat:"Anamnesis", q:"¿En cuántas partes se divide la evaluación inicial del cliente?", opts:["Tres: reposo, esfuerzo y flexibilidad","Dos: en reposo y durante el esfuerzo","Una evaluación continua sin divisiones","Cuatro fases progresivas"], correct:1, exp:"La evaluación se divide en: evaluación inicial en reposo y evaluación del rendimiento durante el esfuerzo."},
+  {cat:"Anamnesis", q:"¿Cuál es el propósito principal del primer encuentro con el cliente?", opts:["Vender el programa de entrenamiento","Recopilar datos esenciales como punto de referencia para diseñar programas personalizados","Medir la fuerza máxima","Establecer la frecuencia semanal de entrenamiento"], correct:1, exp:"El propósito es recopilar datos de referencia fundamentales para el diseño posterior de programas personalizados."},
+  {cat:"Anamnesis", q:"¿Qué tipo de preguntas se deben realizar primero al inicio del primer contacto?", opts:["Cerradas y directas","Abiertas para recopilar información relevante","Técnicas sobre rendimiento deportivo","Sobre hábitos alimenticios"], correct:1, exp:"El primer contacto inicia con preguntas abiertas para recopilar información, luego se pasa a preguntas más cerradas."},
+  {cat:"Anamnesis", q:"Según el módulo, ¿qué documento se entrega en el primer contacto junto con el PAR-Q?", opts:["El plan de entrenamiento","El consentimiento informado","El test de Cooper","El test de Bosco"], correct:1, exp:"El primer contacto implica la entrega del consentimiento informado, la evaluación PAR-Q y la identificación de factores de riesgo (PARmed-X)."},
+  {cat:"Anamnesis", q:"¿Qué componentes son esenciales en el primer encuentro para la valoración de riesgos cardiovasculares?", opts:["Prueba de 1RM y test de flexibilidad","Cuestionarios específicos como PAR-Q y PARmed-X","Medición de circunferencias y pliegues","Test de Cooper y Test de Bosco"], correct:1, exp:"Para evaluar riesgos cardiovasculares se implementan cuestionarios específicos como el PAR-Q y el PARmed-X."},
+  {cat:"Anamnesis", q:"El consentimiento informado firmado por el cliente le otorga al entrenador:", opts:["La responsabilidad total de cualquier lesión","La libertad coherente de proceder con el programa planificado","La posibilidad de hacer cualquier tipo de ejercicio","La autorización para cambiar los objetivos del cliente"], correct:1, exp:"Contar con el consentimiento informado firmado otorga la libertad coherente de proceder con el programa de ejercicio físico planificado."},
+  {cat:"Anamnesis", q:"¿Qué aspecto NO forma parte del primer encuentro con el cliente según el módulo?", opts:["Acordar la frecuencia de sesiones","Discutir la indumentaria adecuada","Establecer el 1RM de todos los grupos musculares","Solicitar el formulario de liberación médica"], correct:2, exp:"El 1RM no se establece en el primer encuentro. El primer contacto incluye aspectos logísticos, cuestionarios y el consentimiento informado."},
+  {cat:"Anamnesis", q:"¿Cuál de estos es un elemento clave del Consentimiento Informado?", opts:["El número de sesiones semanales","Los riesgos y beneficios del programa de entrenamiento","El porcentaje de grasa corporal del cliente","La fórmula de FCM a utilizar"], correct:1, exp:"El Consentimiento Informado incluye descripción de riesgos y beneficios, limitaciones, responsabilidades, uso de equipamiento y consentimiento para evaluaciones."},
+  {cat:"Anamnesis", q:"¿Qué diferencia a la valoración corporal de la anamnesis?", opts:["La valoración corporal es subjetiva; la anamnesis es objetiva","La anamnesis es subjetiva; la valoración corporal es objetiva y física","Son sinónimos en el contexto del fitness","La valoración solo se aplica a deportistas"], correct:1, exp:"La anamnesis recoge información subjetiva sobre la historia clínica, mientras que la valoración corporal evalúa de forma objetiva y física."},
+  {cat:"Anamnesis", q:"¿Cuál es la finalidad de individualizar el proceso de evaluación?", opts:["Reducir el tiempo de las sesiones","Adaptar el entrenamiento según los objetivos específicos de cada cliente","Aumentar el número de clientes atendidos","Estandarizar los programas de entrenamiento"], correct:1, exp:"La individualización permite adaptar el entrenamiento según los objetivos específicos de cada cliente."},
+  {cat:"Anamnesis", q:"¿Cuál es la principal diferencia entre la anamnesis y la valoración corporal?", opts:["La anamnesis se enfoca en la evaluación física y la valoración corporal en la historia clínica","La anamnesis se centra en la recopilación de información subjetiva y la valoración corporal en la evaluación física","Ambos se enfocan únicamente en la evaluación física del paciente","La anamnesis y la valoración corporal son procesos idénticos"], correct:1, exp:"La anamnesis recopila información subjetiva (historia clínica, hábitos, antecedentes), mientras que la valoración corporal realiza mediciones objetivas y físicas del cliente."},
+  {cat:"Anamnesis", q:"¿Cuál de los siguientes componentes es parte de una valoración funcional?", opts:["Evaluación de las funciones sociales y económicas del paciente","Evaluación de las funciones físicas, psicológicas y sociales del paciente","Evaluación de las funciones físicas y nutricionales del paciente","Evaluación de las funciones psicológicas y ambientales del paciente"], correct:1, exp:"La valoración funcional evalúa de forma integral las funciones físicas, psicológicas y sociales del paciente."},
+  {cat:"Anamnesis", q:"¿Cuál es nuestro propósito durante el primer encuentro con el cliente como entrenadores personales?", opts:["Establecer una relación personal con el cliente","Examinar y recopilar datos esenciales para diseñar programas personalizados","Determinar la capacidad económica del cliente","Realizar una evaluación física completa del cliente"], correct:1, exp:"El primer encuentro con el cliente tiene como objetivo principal examinar y recopilar los datos esenciales que servirán de referencia para diseñar programas de entrenamiento personalizados."},
+  {cat:"Anamnesis", q:"¿Cuál de los siguientes métodos se utiliza para identificar antecedentes médicos, lesiones previas y hábitos de vida de un cliente?", opts:["Valoración funcional","Anamnesis","Test de resistencia","Evaluación nutricional"], correct:1, exp:"La anamnesis es el método específico para identificar antecedentes médicos, lesiones previas y hábitos de vida del cliente mediante una entrevista estructurada."},
+  {cat:"Anamnesis", q:"¿Qué es la anamnesis en un entorno clínico?", opts:["El proceso de realizar un examen físico detallado del paciente","La técnica de diagnóstico por imágenes para evaluar el estado de salud del paciente","El proceso de administrar medicamentos al paciente para tratar sus síntomas","El proceso de recopilar la historia médica de un paciente a través de una entrevista estructurada"], correct:3, exp:"En el ámbito clínico, la anamnesis es el proceso sistemático de recopilar la historia médica de un paciente mediante una entrevista estructurada, incluyendo antecedentes, síntomas y estilo de vida."},
+  {cat:"Anamnesis", q:"¿Por qué son esenciales la anamnesis y la valoración funcional en el ámbito del entrenamiento físico y deportivo?", opts:["Porque evalúan exclusivamente la fuerza física del cliente","Porque ayudan a diseñar rutinas de ejercicios generales","Porque permiten identificar únicamente los hábitos de vida del cliente","Porque permiten comprender las capacidades, limitaciones y objetivos de cada cliente"], correct:3, exp:"La anamnesis y la valoración funcional son esenciales porque ofrecen una visión completa del cliente: sus capacidades, limitaciones físicas y objetivos, lo que permite personalizar el entrenamiento de forma segura y eficaz."},
+
+  // ── CUESTIONARIOS ──
+  {cat:"Cuestionarios", q:"¿Cuántas preguntas contiene el PAR-Q?", opts:["5","7","10","12"], correct:1, exp:"El PAR-Q contiene una batería simple de 7 preguntas de Sí/No."},
+  {cat:"Cuestionarios", q:"¿Quién desarrolló el PAR-Q original?", opts:["Bredin et al.","Faff et al.","Shephard (1988)","Kasper et al."], correct:2, exp:"El PAR-Q original fue desarrollado por Shephard en 1988."},
+  {cat:"Cuestionarios", q:"Si una persona responde SÍ a una o más preguntas del PAR-Q, ¿qué se recomienda?", opts:["Iniciar el programa con ejercicio suave","Consultar a un médico antes de iniciar actividad física","Completar el PARmed-X directamente","Realizar solo ejercicio de flexibilidad"], correct:1, exp:"Cuando una persona responde positivamente a 1 o más preguntas del PAR-Q, se le recomienda consultar a un médico para obtener autorización."},
+  {cat:"Cuestionarios", q:"¿Para quién está diseñado el PARmed-X?", opts:["Para entrenadores personales","Para médicos, para abordar inquietudes médicas con pacientes PAR-Q positivo","Para todos los clientes antes de iniciar el entrenamiento","Para deportistas de élite"], correct:1, exp:"El PARmed-X fue diseñado para que lo utilicen médicos con pacientes que respondieron SÍ a ≥ 1 pregunta del PAR-Q."},
+  {cat:"Cuestionarios", q:"¿Cuál es una crítica al PAR-Q original identificada por diversas partes interesadas?", opts:["Es demasiado corto y no detecta riesgos","Genera muchos resultados falsos positivos y derivaciones médicas innecesarias","No incluye preguntas sobre medicamentos","No puede ser utilizado en gimnasios"], correct:1, exp:"Una crítica principal al PAR-Q es su naturaleza conservadora, que genera muchos resultados falsos positivos y conduce a derivaciones médicas innecesarias."},
+  {cat:"Cuestionarios", q:"¿Qué nuevas herramientas desarrollaron Bredin et al. (2013) para reemplazar el PAR-Q y PARmed-X?", opts:["PAR-Q2 y ePARmed-X","PAR-Q+ y ePAR-med-X+","PAR-Q Pro y MedX+","PAR-Q Advanced y ePARmed-X Pro"], correct:1, exp:"Bredin et al. (2013) desarrollaron el PAR-Q+ y el ePAR-med-X+ como herramientas mejoradas basadas en evidencia."},
+  {cat:"Cuestionarios", q:"¿Cuál de las siguientes opciones evalúa el PAR-Q?", opts:["La composición corporal del individuo","La aptitud para participar de forma segura en actividad física","El nivel de fuerza máxima del cliente","La capacidad aeróbica en prueba de esfuerzo"], correct:1, exp:"El PAR-Q es un instrumento diseñado para evaluar la aptitud de una persona para participar de manera segura en programas de actividad física."},
+  {cat:"Cuestionarios", q:"¿Qué pregunta NO correspondería al PAR-Q?", opts:["¿Le ha dicho alguna vez un médico que tiene una enfermedad del corazón?","¿Nota dolor en el pecho cuando practica actividad física?","¿Cuál es su porcentaje de grasa corporal actual?","¿Ha perdido la conciencia después de un mareo?"], correct:2, exp:"El PAR-Q evalúa riesgos de salud, no la composición corporal. La medición de grasa corporal es parte de la valoración física, no del cuestionario de cribado."},
+  {cat:"Cuestionarios", q:"El PARmed-X incluye una sección de 'Riesgos para enfermedad cardiovascular'. ¿Cuál NO es un ítem de esa sección?", opts:["Historia familiar de enfermedad cardíaca","Menos de 30 minutos de actividad física moderada la mayoría de los días","Acumulación excesiva de grasa alrededor de la cintura","Resultado bajo en el test de Bosco"], correct:3, exp:"Los factores de riesgo cardiovascular del PARmed-X incluyen historia familiar, sedentarismo, grasa visceral, tabaquismo, HTA y colesterol alto. El Test de Bosco no es un factor de riesgo."},
+  {cat:"Cuestionarios", q:"Según las críticas al PARmed-X, ¿qué queja tienen los médicos sobre este cuestionario?", opts:["Es demasiado corto y sencillo","Es demasiado largo, difícil de usar y carece de base en evidencia","No incluye suficientes preguntas cardiovasculares","Solo puede ser utilizado por especialistas en cardiología"], correct:1, exp:"Los médicos se quejan de que el PARmed-X es demasiado largo, difícil de usar y carece de base en evidencia."},
+  {cat:"Cuestionarios", q:"¿Qué tipo de formato de respuesta utiliza el PAR-Q?", opts:["Escala Likert del 1 al 5","Respuesta abierta con descripción","Sí o No","Escala visual analógica"], correct:2, exp:"El PAR-Q incluye preguntas simples de Sí o No."},
+  {cat:"Cuestionarios", q:"¿Cuál es el objetivo principal del PAR-Q+?", opts:["Sustituir completamente al consentimiento informado","Reducir barreras para la actividad física brindando asesoramiento seguro y basado en evidencia","Aumentar las derivaciones médicas para mayor seguridad","Evaluar exclusivamente la composición corporal"], correct:1, exp:"El PAR-Q+ y el ePAR-med-X+ buscan reducir barreras para la actividad física, brindando asesoramiento seguro y basado en evidencia."},
+  {cat:"Cuestionarios", q:"¿Cuál es el propósito principal del cuestionario PAR-Q?", opts:["Medir la frecuencia cardíaca máxima durante el ejercicio","Recopilar antecedentes médicos y hábitos de vida","Evaluar la composición corporal de una persona","Determinar si una persona puede iniciar actividad física de forma segura"], correct:3, exp:"El PAR-Q (Physical Activity Readiness Questionnaire) tiene como propósito principal determinar si una persona puede iniciar actividad física de forma segura, identificando posibles contraindicaciones médicas."},
+
+  // ── VALORACIÓN FÍSICA ──
+  {cat:"Valoración Física", q:"¿Qué es la Frecuencia Cardíaca (FC)?", opts:["La fuerza que ejerce la sangre en las arterias","El número de latidos del corazón por minuto","La presión máxima durante la sístole","El volumen de oxígeno consumido por minuto"], correct:1, exp:"La FC es el número de latidos del corazón por unidad de tiempo, generalmente expresado como latidos por minuto (lpm)."},
+  {cat:"Valoración Física", q:"¿Qué instrumento registra la actividad eléctrica del corazón?", opts:["Pulsómetro","Pulsioxímetro","Electrocardiograma (ECG/EKG)","Esfigmomanómetro"], correct:2, exp:"El electrocardiograma (ECG o EKG) es la herramienta más avanzada que registra la actividad eléctrica del corazón."},
+  {cat:"Valoración Física", q:"¿Qué mide el pulsioxímetro?", opts:["La frecuencia cardíaca máxima","El porcentaje de saturación de oxígeno en sangre","La presión arterial sistólica","La impedancia bioeléctrica"], correct:1, exp:"Los pulsioxímetros permiten determinar el porcentaje de saturación de oxígeno en sangre."},
+  {cat:"Valoración Física", q:"¿En qué unidad se expresa la presión arterial?", opts:["Latidos por minuto (lpm)","Litros por minuto (L/min)","Milímetros de mercurio (mmHg)","Kilogramos por metro cuadrado (kg/m²)"], correct:2, exp:"La presión arterial se expresa en milímetros de mercurio (mmHg)."},
+  {cat:"Valoración Física", q:"¿Qué indica el número sistólico en una lectura de presión arterial?", opts:["La presión mínima durante la diástole","La presión máxima durante la contracción del corazón (sístole)","La frecuencia cardíaca en reposo","El volumen de oxígeno máximo"], correct:1, exp:"La presión sistólica indica la presión máxima en las arterias cuando el corazón se contrae (sístole). Es el primer número."},
+  {cat:"Valoración Física", q:"¿Qué zona de entrenamiento corresponde al 70–80 % de la FCM?", opts:["Zona de recuperación","Zona aeróbica","Zona de oxidación de grasas","Zona umbral anaeróbico"], correct:2, exp:"La zona de oxidación de grasas corresponde al 70–80 % de la FCM y favorece la quema de grasas."},
+  {cat:"Valoración Física", q:"¿Cuál es la zona de entrenamiento indicada para la recuperación activa?", opts:["50–60 % FCM","60–70 % FCM","70–80 % FCM","90–100 % FCM"], correct:0, exp:"La Zona de Recuperación corresponde al 50–60 % de la FCM y es ideal para la recuperación activa."},
+  {cat:"Valoración Física", q:"¿A qué porcentaje de FCM corresponde la zona máxima de entrenamiento?", opts:["60–70 %","70–80 %","80–90 %","90–100 %"], correct:3, exp:"La Zona Máxima corresponde al 90–100 % de la FCM y se utiliza para intervalos cortos de alta intensidad."},
+  {cat:"Valoración Física", q:"¿Qué afirmación sobre la FCM es correcta?", opts:["Aumenta con la edad","Varía de persona a persona y tiende a disminuir con la edad","Es igual para todos los individuos de la misma edad","No varía con el nivel de entrenamiento"], correct:1, exp:"La FCM varía de persona a persona y tiende a disminuir con la edad."},
+  {cat:"Valoración Física", q:"¿Cuál es el estudio que proporciona las fórmulas de FCM utilizadas en el módulo?", opts:["Bredin et al. (2013)","Kasper et al. (2021)","Faff et al. (2007)","McLaurin et al. (2023)"], correct:2, exp:"Las fórmulas para estimar la FCM provienen de Faff et al. (2007)."},
+  {cat:"Valoración Física", q:"¿Qué componentes forman la Masa Magra (FFM)?", opts:["Solo tejido muscular y huesos","Músculos, huesos, órganos y tejido conectivo","Tejido adiposo y agua corporal","Solo proteínas y minerales"], correct:1, exp:"La Masa Magra o masa libre de grasa incluye músculos, huesos, órganos y tejido conectivo."},
+  {cat:"Valoración Física", q:"¿Qué modelo de composición corporal es considerado el método criterio?", opts:["Modelo 2C","Modelo 3C","Modelo 4C","Modelo 6C"], correct:2, exp:"El modelo de cuatro compartimentos (4C) es considerado el método criterio, aunque su uso es limitado por su complejidad."},
+  {cat:"Valoración Física", q:"¿Cuál es la limitación principal del IMC?", opts:["No puede calcularse sin tener el peso exacto","No diferencia la masa magra de la masa grasa","Sobreestima siempre el porcentaje de grasa","Solo es válido para personas menores de 40 años"], correct:1, exp:"El IMC no tiene en cuenta la masa magra, masa grasa y masa muscular, lo que puede dar resultados falseados en personas musculosas."},
+  {cat:"Valoración Física", q:"Según el módulo, ¿a partir de qué circunferencia abdominal hay riesgo en los hombres?", opts:["88 cm","94 cm","102 cm","110 cm"], correct:2, exp:"En hombres, la circunferencia abdominal es de riesgo si es mayor de 102 cm."},
+  {cat:"Valoración Física", q:"¿En qué punto anatómico recomienda la OMS tomar la circunferencia abdominal?", opts:["A la altura del ombligo","En el punto más estrecho del abdomen","En el punto medio entre la última costilla y el borde de la cresta ilíaca","En la parte más ancha del abdomen"], correct:2, exp:"La OMS indica tomar como referencia la última costilla y el borde de la cresta ilíaca, midiendo en su punto medio."},
+  {cat:"Valoración Física", q:"¿Qué método mide la composición corporal a través de la resistencia que opone el cuerpo al paso de una corriente eléctrica?", opts:["DXA","Hidrodensitometría","Bioimpedancia (BIA)","Antropometría de pliegues"], correct:2, exp:"La bioimpedancia funciona leyendo la resistencia que opone el cuerpo al paso de una corriente eléctrica."},
+  {cat:"Valoración Física", q:"¿Cuál es el 'criterio estándar' para evaluar composición corporal en poblaciones atléticas?", opts:["BIA","ADP","DXA","Ultrasonido"], correct:2, exp:"La DXA (absorciometría de rayos X de energía dual), inicialmente diseñada para la densidad mineral ósea, se ha convertido en el criterio estándar en composición corporal atlética."},
+  {cat:"Valoración Física", q:"¿Qué autor establece los estándares para la medición de pliegues cutáneos?", opts:["Faff et al.","ISAK","Kasper et al.","OMS"], correct:1, exp:"La organización ISAK ha establecido estándares para la cantidad de sitios medidos y las ecuaciones utilizadas en la medición de pliegues cutáneos."},
+  {cat:"Valoración Física", q:"¿Cuál de estos es un método DIRECTO de medición de composición corporal?", opts:["BIA","ADP","Hidrodensitometría (pesaje hidrostático)","Pliegues cutáneos"], correct:2, exp:"Los métodos directos miden directamente grasa y masa magra. La hidrodensitometría es un método directo basado en el principio de Arquímedes."},
+  {cat:"Valoración Física", q:"El ICC será de riesgo en mujeres si es mayor de:", opts:["0,7–0,8","0,85–0,9","0,9–1","1,0–1,1"], correct:1, exp:"En mujeres, la distribución de grasa es de riesgo si el ICC es mayor de 0,85–0,9."},
+  {cat:"Valoración Física", q:"¿Qué posición corporal es correcta para la medición de la talla?", opts:["Sentado con la espalda recta","Bipedestación con talones juntos y pies a 45°, talones-glúteos-espalda-occipital apoyados","De pie con los pies juntos en paralelo","Decúbito supino totalmente estirado"], correct:1, exp:"Para medir la talla: bipedestación, talones juntos, pies a 45°, con talones, glúteos, espalda y región occipital en contacto con la superficie vertical."},
+  {cat:"Valoración Física", q:"¿Cuándo se recomienda pesarse para obtener los datos más fiables?", opts:["Tras el desayuno y después del ejercicio","En ayunas, con vejiga vacía y ropa mínima","Al final del día, con ropa de entrenamiento","Justo antes de entrenar, con el estómago lleno"], correct:1, exp:"Para la medición de peso más fiable: pesarse en ayunas, con vejiga vacía y con ropa mínima."},
+  {cat:"Valoración Física", q:"¿Qué instrumento se utiliza junto con el brazo para medir la presión arterial?", opts:["Pulsómetro","Dinamómetro","Esfigmomanómetro + brazalete","Goniómetro"], correct:2, exp:"La presión arterial se mide con un brazalete colocado alrededor del brazo y un esfigmomanómetro (manual o digital)."},
+  {cat:"Valoración Física", q:"¿Qué estudio menciona el monitor automatizado de presión arterial para tests de esfuerzo?", opts:["Faff et al. (2007)","Bredin et al. (2013)","McLaurin et al. (2023)","Kasper et al. (2021)"], correct:2, exp:"El monitor automatizado para pruebas de esfuerzo es descrito por McLaurin et al. (2023)."},
+  {cat:"Valoración Física", q:"¿Qué es la Frecuencia Cardíaca Máxima (FCM)?", opts:["La cantidad de latidos por minuto que el corazón debe mantener para un entrenamiento efectivo","El número promedio de latidos por minuto en reposo","El número máximo de latidos por minuto que el corazón puede alcanzar durante el ejercicio intenso","El número mínimo de latidos por minuto necesario para mantener la vida"], correct:2, exp:"La FCM es el número máximo de latidos por minuto que el corazón puede alcanzar durante el ejercicio de máxima intensidad. Es un parámetro clave para establecer las zonas de entrenamiento."},
+  {cat:"Valoración Física", q:"¿Cuál es la fórmula para calcular el IMC?", opts:["Peso (KG) / Talla (m)","Peso (KG) / Talla^2 (m)","Peso (KG) * Talla (m)","Peso (KG) + Talla^2 (m)"], correct:1, exp:"El Índice de Masa Corporal (IMC) se calcula dividiendo el peso en kilogramos entre el cuadrado de la talla en metros: IMC = Peso(kg) / Talla²(m)."},
+  {cat:"Valoración Física", q:"¿Cuál de las siguientes afirmaciones es correcta sobre la frecuencia cardíaca?", opts:["Es el número de veces que el corazón late por minuto","Es la cantidad de sangre que el corazón bombea en una hora","Es la presión que la sangre ejerce contra las arterias","Es la cantidad de oxígeno en la sangre"], correct:0, exp:"La frecuencia cardíaca (FC) es el número de veces que el corazón late por minuto (lpm). Es una medida fundamental para monitorizar la intensidad del ejercicio."},
+
+  // ── TESTS ──
+  {cat:"Tests", q:"¿En qué consiste el Test de Cooper?", opts:["Correr 1 milla en el menor tiempo posible","Recorrer la mayor distancia posible en 12 minutos","Pedalear en bicicleta estática durante 20 minutos","Caminar 6 minutos a máxima velocidad"], correct:1, exp:"En el Test de Cooper se trata de recorrer la mayor distancia posible en 12 minutos para evaluar la capacidad aeróbica."},
+  {cat:"Tests", q:"¿Cuál es la fórmula para calcular el VO₂máx en el Test de Cooper?", opts:["VO₂máx = 132,6 – 0,17×PC","VO₂máx = 22,351 × Distancia(km) – 11,288","VO₂máx = 22,859 + 1,91×Vel","VO₂máx = 101,3 – 2,67×reps"], correct:1, exp:"La fórmula del Test de Cooper es: VO₂máx = 22,351 × Distancia(km) – 11,288."},
+  {cat:"Tests", q:"¿Cuántos metros equivale 1 milla en el Test de Rockport?", opts:["1000 m","1200 m","1609 m","2000 m"], correct:2, exp:"1 milla equivale a 1609 metros. El Test de Rockport consiste en recorrer esta distancia en el menor tiempo posible."},
+  {cat:"Tests", q:"¿Cómo progresa la velocidad en el Test de la Universidad de Montreal?", opts:["Aumenta 0,5 km/h cada minuto","Aumenta 1 km/h cada 2 minutos, iniciando a 8 km/h","Aumenta 2 km/h cada 5 minutos","Es constante a 10 km/h durante 20 minutos"], correct:1, exp:"El Test de Montreal inicia a 8 km/h y aumenta 1 km/h cada 2 minutos hasta el agotamiento."},
+  {cat:"Tests", q:"¿Qué evalúa la Prueba de Ruffier-Dickson?", opts:["La fuerza isométrica de piernas","La flexibilidad de isquiotibiales","La adaptación cardiovascular al esfuerzo midiendo FC antes y después de sentadillas","La capacidad pulmonar máxima"], correct:2, exp:"La Prueba de Ruffier-Dickson evalúa la FC antes y después de hacer sentadillas durante un minuto para medir la adaptación cardiovascular."},
+  {cat:"Tests", q:"¿Qué tipo de ejercicios se deben seleccionar para el test de 1RM directo?", opts:["Unilaterales con grandes grupos musculares","Básicos y multiarticulares, no complementarios","Ejercicios en máquinas para mayor control","Ejercicios de aislamiento de un solo músculo"], correct:1, exp:"Se deben elegir ejercicios básicos y multiarticulares (no complementarios), ya que el control es mayor cuando actúan grandes grupos musculares y varias articulaciones."},
+  {cat:"Tests", q:"¿Cuántas repeticiones se realizan en la primera serie de calentamiento del protocolo 1RM?", opts:["1-2 repeticiones","3-4 repeticiones","5-10 repeticiones con facilidad","15-20 repeticiones al 50 %"], correct:2, exp:"El protocolo 1RM comienza con una primera serie con cargas que permitan realizar con facilidad entre 5 y 10 repeticiones."},
+  {cat:"Tests", q:"¿Qué fórmula de 1RM indirecto es más precisa para menos de 10 repeticiones?", opts:["Epley","O'Connor","Brzycki","Lander"], correct:2, exp:"La fórmula de Brzycki parece ser la más precisa cuando se ejecutan menos de 10 repeticiones."},
+  {cat:"Tests", q:"¿Qué fórmula de 1RM indirecto es más precisa para más de 10 repeticiones?", opts:["Brzycki","Lander","Epley","O'Connor"], correct:2, exp:"La fórmula de Epley es la más adecuada cuando se superan las 10 repeticiones."},
+  {cat:"Tests", q:"En el Test de Bosco, ¿desde qué posición parte el SJ (Squat Jump)?", opts:["De pie erguido","Desde rodillas flexionadas a 90°, sin contramovimiento","Desde una caída de un cajón","Con contramovimiento hacia abajo previo al salto"], correct:1, exp:"El SJ consiste en un salto vertical partiendo desde las rodillas flexionadas a 90°, con el tronco erguido y las manos en la cintura, sin contramovimiento."},
+  {cat:"Tests", q:"¿Qué diferencia al CMJ del SJ en el Test de Bosco?", opts:["En el CMJ las manos ayudan en el salto","El CMJ permite un contramovimiento previo hacia abajo antes del salto","El CMJ parte desde rodillas a 90°","El CMJ se realiza desde un cajón"], correct:1, exp:"El CMJ permite realizar un contramovimiento hacia abajo antes de efectuar el salto, a diferencia del SJ que no permite este movimiento previo."},
+  {cat:"Tests", q:"¿En qué consiste el DJ (Drop Jump) del Test de Bosco?", opts:["Salto desde rodillas a 90° sin movimiento previo","Salto con contramovimiento desde posición erguida","Salto tras la caída desde un cajón de altura determinada","Salto lateral con una pierna"], correct:2, exp:"El DJ es la realización de un salto tras la posterior caída desde un cajón de medida determinada en función del objetivo."},
+  {cat:"Tests", q:"¿Qué evalúa el Test Back Scratch?", opts:["La flexibilidad de isquiotibiales","La movilidad de los hombros (flexión, abducción y rotación lateral)","La resistencia abdominal","La fuerza de los extensores de cadera"], correct:1, exp:"El Test Back Scratch evalúa la movilidad de los hombros. Los brazos realizan un movimiento de flexión, abducción y rotación lateral."},
+  {cat:"Tests", q:"En el Test Sit & Reach, ¿a qué distancia se sitúan los 15 cm de la regla?", opts:["A la altura de las rodillas","Coincidiendo con los topes de los pies","A 15 cm de distancia del sujeto","En el borde del cajón"], correct:1, exp:"En el Test Sit & Reach, se sitúa una regla sobre el escalón haciendo coincidir los 15 cm con los topes de los pies."},
+  {cat:"Tests", q:"¿Cuál es el objetivo del Test Sit & Reach?", opts:["Evaluar la flexibilidad de hombros","Evaluar isquiotibiales y columna lumbar","Medir la fuerza de los flexores de cadera","Evaluar la movilidad de tobillos"], correct:1, exp:"El Test Sit & Reach evalúa la flexibilidad de isquiotibiales y columna lumbar."},
+  {cat:"Tests", q:"¿Qué clasificación obtiene un hombre con 40 cm en el Test Sit & Reach?", opts:["Baja","Regular","Buena","Excelente"], correct:2, exp:"Según la tabla de clasificación, los hombres con 35–45 cm tienen una clasificación 'Buena'."},
+  {cat:"Tests", q:"¿Qué clasificación obtiene una mujer con 28 cm en el Test Sit & Reach?", opts:["Baja","Regular","Media","Buena"], correct:0, exp:"Según la tabla, en mujeres una puntuación menor de 30 cm corresponde a clasificación 'Baja'."},
+  {cat:"Tests", q:"¿Qué ángulo de elevación en el Test Leg Raise indica excelente movilidad?", opts:["30°–45°","45°–69°","70°–90°","Más de 90°"], correct:2, exp:"En el Test Leg Raise, un ángulo de 70° a 90° indica excelente movilidad de cadera."},
+  {cat:"Tests", q:"En el Test Leg Raise, ¿qué indica una diferencia mayor de 10° entre ambas piernas?", opts:["Excelente control neuromuscular","Un posible desequilibrio funcional entre piernas","Un resultado normal y esperado","Una alta capacidad de flexibilidad global"], correct:1, exp:"Una asimetría mayor de 10° entre piernas en el Leg Raise podría indicar un desequilibrio funcional."},
+  {cat:"Tests", q:"¿Cuál es el objetivo del Thomas Test?", opts:["Evaluar la flexibilidad de los isquiotibiales","Evaluar la movilidad de los flexores de la cadera","Medir la resistencia abdominal","Evaluar la movilidad de la columna lumbar"], correct:1, exp:"El Thomas Test evalúa la flexibilidad de los flexores de la cadera. La persona se acuesta sobre una mesa con las piernas colgando y flexiona una rodilla al pecho."},
+  {cat:"Tests", q:"¿Qué evalúa el Test de Flexiones (push-ups)?", opts:["La resistencia de los músculos del pecho y brazos","La fuerza máxima del tren superior","La flexibilidad de los músculos pectorales","La capacidad aeróbica del tren superior"], correct:0, exp:"El Test de Flexiones evalúa la resistencia de los músculos del pecho y brazos al realizar un número máximo en un tiempo determinado."},
+  {cat:"Tests", q:"¿Qué evalúa el Test de Sit-Ups?", opts:["La flexibilidad de la columna","La fuerza máxima de los flexores de cadera","La resistencia de los músculos abdominales","La estabilidad del core"], correct:2, exp:"El Test de Sit-Ups mide la resistencia de los músculos abdominales al realizar un número específico de repeticiones."},
+  {cat:"Tests", q:"¿Cuál es la diferencia entre el Test Sit-Ups y el Test Curl-Up?", opts:["El Curl-Up evalúa la fuerza máxima y el Sit-Up la resistencia","El Curl-Up evalúa la resistencia abdominal mediante repeticiones controladas, similar al Sit-Up","El Curl-Up incluye movimiento de cadera mientras el Sit-Up es solo de abdomen","Son el mismo test con diferente nombre"], correct:1, exp:"El Test de Curl-Up es similar al Sit-Ups pero evalúa la resistencia abdominal mediante repeticiones controladas."},
+  {cat:"Tests", q:"El entrenamiento de fuerza basado en velocidad usa la velocidad de ejecución como referencia. ¿Qué estudio lo avala?", opts:["Faff et al. (2007)","Baena-Marín et al. (2022)","McLaurin et al. (2023)","Bredin et al. (2013)"], correct:1, exp:"Baena-Marín et al. (2022) consideran el entrenamiento basado en velocidad como una variable útil y confiable para monitorear y ajustar las cargas de entrenamiento."},
+  {cat:"Tests", q:"¿Qué evalúa la Prueba de Caminar de 6 Minutos?", opts:["La velocidad máxima de carrera","La distancia que una persona puede caminar en 6 minutos","La frecuencia cardíaca de recuperación tras el ejercicio","La capacidad anaeróbica del sistema muscular"], correct:1, exp:"La Prueba de Caminar de 6 minutos mide la distancia que una persona puede caminar en ese tiempo determinado."},
+  {cat:"Tests", q:"¿Qué evalúa la Prueba de Ergometría (prueba de esfuerzo)?", opts:["La composición corporal y el IMC","FC, presión arterial y respuesta respiratoria durante ejercicio gradualmente incrementado","La flexibilidad de los principales grupos musculares","La fuerza máxima en ejercicios de tren inferior"], correct:1, exp:"La Prueba de Esfuerzo monitoriza la FC, la presión arterial y la respuesta respiratoria mientras se realiza ejercicio gradualmente incrementado."},
+  {cat:"Tests", q:"¿Cuál es el peso corporal máximo de referencia para las tablas de % de PC en mujeres?", opts:["50 kg","60 kg","65 kg","70 kg"], correct:2, exp:"El peso máximo a utilizar en las tablas de porcentaje de peso corporal es de 65 kg en mujeres y 80 kg en hombres."},
+  {cat:"Tests", q:"¿En qué porcentaje de 1RM corresponde realizar 10 repeticiones según la tabla del módulo?", opts:["86 %","80 %","75 %","69 %"], correct:2, exp:"Según la tabla de porcentaje de 1RM, 10 repeticiones corresponden al 75 % del 1RM."},
+  {cat:"Tests", q:"¿Qué instrumento se utiliza para medir el ángulo de elevación en el Test Leg Raise?", opts:["Cinta métrica","Goniómetro o aplicaciones digitales de medición","Dinamómetro","Pulsómetro"], correct:1, exp:"Para medir cuantitativamente el Leg Raise se utiliza un goniómetro o aplicaciones digitales de medición."},
+  {cat:"Tests", q:"¿En qué categoría de VO₂máx se sitúa un hombre de 30 años con resultado de 45 ml/kg/min en el test Rockport?", opts:["Nivel bajo","Nivel regular","Nivel bueno","Nivel excelente"], correct:2, exp:"Según la tabla del Test de Rockport para hombres de 30-39 años, un VO₂máx de 44-47 corresponde a nivel bueno."},
+  {cat:"Tests", q:"¿Cómo se denominan los tres tipos de saltos del Test de Bosco?", opts:["SJ, CMJ y HJ","SJ, CMJ y DJ","VJ, CMJ y DJ","SJ, BJ y DJ"], correct:1, exp:"El Test de Bosco se compone de tres tipos de saltos: SJ (Squat Jump), CMJ (Countermovement Jump) y DJ (Drop Jump)."},
+  {cat:"Tests", q:"¿Dónde se realizan normalmente los saltos del Test de Bosco?", opts:["Sobre una colchoneta de gimnasia","En plataformas de contacto o apps validadas científicamente","En pistas de atletismo","En tapiz rodante con sensores de fuerza"], correct:1, exp:"Estos saltos se realizan normalmente en plataformas de contacto o, si no se dispone de ellas, existen apps para smartphones validadas científicamente."},
+  {cat:"Tests", q:"¿Qué tipo de ejercicio es el Test de Flexión de Rodilla (Hamstring Test)?", opts:["Desde posición sentada, alcanzar los dedos de los pies","Decúbito, elevar una pierna extendida hacia arriba","Sentadilla profunda con talones en el suelo","Rotación de hombros detrás de la espalda"], correct:1, exp:"En el Hamstring Test la persona se acuesta y levanta una pierna extendida hacia arriba para evaluar la flexibilidad de los isquiotibiales."},
+  {cat:"Tests", q:"¿Cuál es la principal utilidad de los tests de evaluación cardiovascular en el diseño de programas de entrenamiento?", opts:["Evalúan la flexibilidad y la movilidad de las articulaciones","Permiten medir la fuerza máxima de un individuo en un solo esfuerzo","Ayudan a entender el nivel de condición física inicial del individuo y a diseñar un programa de entrenamiento acorde a sus necesidades y metas","Proporcionan información sobre la dieta y la nutrición del individuo"], correct:2, exp:"Los tests de evaluación cardiovascular permiten conocer el estado de condición física inicial del cliente, lo que facilita diseñar un programa de entrenamiento ajustado a sus necesidades, capacidades y objetivos específicos."},
+  {cat:"Tests", q:"¿Cuál de los siguientes tests se utiliza para evaluar la capacidad aeróbica basada en la distancia que una persona puede correr en 12 minutos?", opts:["Prueba de Ruffier-Dickson","Prueba de Esfuerzo (Ergometría)","Prueba de Cooper","Prueba de Caminar de 6 minutos"], correct:2, exp:"La Prueba de Cooper consiste en recorrer la mayor distancia posible en 12 minutos y es uno de los tests más utilizados para evaluar la capacidad aeróbica."},
+  {cat:"Tests", q:"¿Cuál es la fórmula correcta para calcular el VO2 máx en el Test de Rockport?", opts:["VO2 máx = 132,6 - 0,17 x PC - 0,39 x Edad + 6,31 x S - 3,27 x T - 0,156 x FC","VO2 máx = 22,859 + 1,91 x Vel. (Km/h) - 0,8664 x Edad + 0,0667 x Vel. (Km/h) x Edad","VO2 máx = 22,352 x Distancia (Km) - 11,288","VO2 máx = 132,6 - 0,17 x PC - 0,39 x Edad + 6,31 x S - 3,27 x T - 0,156 x FC + 5"], correct:1, exp:"La fórmula del Test de Rockport para calcular el VO2 máx es: VO2 máx = 22,859 + 1,91 × Vel.(Km/h) - 0,8664 × Edad + 0,0667 × Vel.(Km/h) × Edad."},
+  {cat:"Tests", q:"¿Cuál es el término usado para indicar el peso máximo que una persona puede elevar solo una vez en un ejercicio?", opts:["1RM","RM","Peso máximo","Carga máxima"], correct:0, exp:"1RM (Una Repetición Máxima) es el término técnico que designa el peso máximo que una persona puede levantar en un ejercicio determinado realizando solo una repetición con técnica correcta."},
+  {cat:"Tests", q:"¿Cuál es el propósito del Test Back Scratch?", opts:["Evaluar la fuerza de los brazos","Evaluar la movilidad de los hombros","Evaluar la flexibilidad de la espalda","Evaluar la resistencia cardiovascular"], correct:1, exp:"El Test Back Scratch (o rascarse la espalda) evalúa específicamente la movilidad de los hombros, valorando los movimientos de flexión, abducción y rotación lateral de la articulación glenohumeral."},
+];
+
+// ─────────────────────────────────────────────────────────────
+// TEST LOGIC
+// ─────────────────────────────────────────────────────────────
+let currentQuestions = [];
+let answered = 0, correct = 0, total = 0;
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getFilteredQuestions(cat) {
+  return cat === 'all' ? [...ALL_QUESTIONS] : ALL_QUESTIONS.filter(q => q.cat === cat);
+}
+
+let activeFilter = 'all';
+
+function renderQuestions(qs) {
+  currentQuestions = qs;
+  answered = 0; correct = 0; total = qs.length;
+  updateProgress();
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  document.getElementById('resultPanel').classList.remove('visible');
+
+  qs.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.dataset.idx = idx;
+
+    const color = CAT_COLORS[q.cat] || '#534AB7';
+    card.innerHTML = `
+      <div class="q-number">
+        <span class="q-cat-dot" style="background:${color}"></span>
+        ${idx + 1} / ${qs.length} · <span style="color:${color}">${q.cat}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((opt, oi) => `
+          <label class="opt-label">
+            <input type="radio" name="q${idx}" value="${oi}"> ${opt}
+          </label>
+        `).join('')}
+      </div>
+      <button class="submit-btn" onclick="submitAnswer(this, ${idx})">ENVIAR</button>
+      <div class="feedback">
+        <div class="feedback-icon"></div>
+        <div class="feedback-text"></div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+function submitAnswer(btn, idx) {
+  const card = btn.closest('.q-card');
+  const selected = card.querySelector(`input[name="q${idx}"]:checked`);
+  if (!selected) return;
+
+  const q = currentQuestions[idx];
+  const chosen = parseInt(selected.value);
+  const isCorrect = chosen === q.correct;
+
+  // Disable all options
+  card.querySelectorAll('input[type=radio]').forEach(r => r.disabled = true);
+  btn.disabled = true;
+
+  // Style options
+  card.querySelectorAll('.opt-label').forEach((lbl, oi) => {
+    if (oi === q.correct) lbl.classList.add('correct-ans');
+    else if (oi === chosen && !isCorrect) lbl.classList.add('wrong-ans');
+  });
+
+  // Feedback
+  const fb = card.querySelector('.feedback');
+  const fbIcon = fb.querySelector('.feedback-icon');
+  const fbText = fb.querySelector('.feedback-text');
+  fb.classList.add('visible');
+  if (isCorrect) {
+    fbIcon.textContent = '✓';
+    fbIcon.classList.add('ok');
+    correct++;
+  } else {
+    fbIcon.textContent = '✕';
+    fbIcon.classList.add('fail');
+  }
+  fbText.textContent = q.exp;
+
+  answered++;
+  updateProgress();
+  if (answered === total) setTimeout(showResult, 600);
+}
+
+function updateProgress() {
+  const pct = total > 0 ? (answered / total * 100) : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${answered} de ${total} respondidas`;
+}
+
+function showResult() {
+  const pct = Math.round(correct / total * 100);
+  document.getElementById('resultScore').textContent = pct + '%';
+  document.getElementById('rbCorrect').textContent = correct;
+  document.getElementById('rbWrong').textContent = total - correct;
+  document.getElementById('rbTotal').textContent = total;
+  const msgs = ['¡Sigue practicando! Repasa los temas con puntuación baja.', 'Buen trabajo, pero aún hay margen de mejora.', '¡Muy bien! Dominas la mayor parte del módulo.', '¡Excelente! Dominio sobresaliente del Módulo 8.'];
+  const mi = pct < 50 ? 0 : pct < 70 ? 1 : pct < 90 ? 2 : 3;
+  document.getElementById('resultMsg').textContent = msgs[mi];
+  const rp = document.getElementById('resultPanel');
+  rp.classList.add('visible');
+  rp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restartTest() {
+  renderQuestions(shuffle(getFilteredQuestions(activeFilter)));
+  window.scrollTo({ top: document.getElementById('tab-test').offsetTop - 60, behavior: 'smooth' });
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.cat;
+    renderQuestions(shuffle(getFilteredQuestions(activeFilter)));
+  });
+});
+
+document.getElementById('shuffleBtn').addEventListener('click', () => {
+  renderQuestions(shuffle(getFilteredQuestions(activeFilter)));
+});
+
+// Initial render
+renderQuestions(shuffle(ALL_QUESTIONS));
+</script>
+</body>
+</html>

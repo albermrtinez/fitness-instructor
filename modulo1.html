@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 1 – Entrenamiento de Fuerza y ADM</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a18;line-height:1.6}
+header{background:#1a1a18;color:#fff;padding:1.5rem 2rem}
+header h1{font-size:1.4rem;font-weight:500}
+header p{font-size:0.85rem;color:#9c9a92;margin-top:0.25rem}
+nav{display:flex;background:#fff;border-bottom:0.5px solid #d3d1c7;overflow-x:auto}
+nav button{padding:0.75rem 1.1rem;font-size:0.85rem;font-weight:500;border:none;background:none;cursor:pointer;color:#73726c;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s}
+nav button.active{color:#1a1a18;border-bottom-color:#1a1a18}
+nav button:hover:not(.active){background:#f5f4f0}
+.section{display:none;padding:2rem;max-width:960px;margin:0 auto}
+.section.active{display:block}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1.5rem}
+.topic-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.2s}
+.topic-card:hover{border-color:#888780;transform:translateY(-1px)}
+.topic-card.open{border-color:#534AB7}
+.card-header{display:flex;align-items:center;gap:10px}
+.icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.topic-card h3{font-size:0.95rem;font-weight:500}
+.badge{font-size:0.7rem;padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block}
+.detail{display:none;margin-top:1rem;padding-top:1rem;border-top:0.5px solid #d3d1c7;font-size:0.85rem;color:#3d3d3a}
+.topic-card.open .detail{display:block}
+.detail ul{padding-left:1.2rem}
+.detail li{margin-bottom:0.4rem}
+.detail table{width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.8rem}
+.detail th{background:#f5f4f0;padding:6px 8px;text-align:left;font-weight:500}
+.detail td{padding:5px 8px;border-top:0.5px solid #d3d1c7}
+.tag-grid{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem}
+.tag{padding:4px 12px;border-radius:20px;font-size:0.8rem}
+.tag-purple{background:#EEEDFE;color:#3C3489}
+.tag-teal{background:#E1F5EE;color:#085041}
+.tag-amber{background:#FAEEDA;color:#633806}
+.tag-coral{background:#FAECE7;color:#4A1B0C}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.75rem}
+.compare-box{padding:0.75rem;border-radius:8px;font-size:0.85rem}
+.compare-box h4{font-size:0.85rem;font-weight:500;margin-bottom:0.5rem}
+.compare-box ul{padding-left:1.2rem}
+.compare-box li{margin-bottom:0.25rem}
+.summary-section{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.summary-section h3{font-size:0.95rem;font-weight:500;color:#534AB7;border-bottom:0.5px solid #d3d1c7;padding-bottom:0.5rem;margin-bottom:1rem}
+.alert-box{background:#FAEEDA;padding:8px 12px;border-radius:8px;font-size:0.85rem;color:#633806;margin-top:0.5rem}
+.test-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.5rem}
+.test-header h2{font-size:1.1rem;font-weight:500}
+.progress-bar{background:#d3d1c7;border-radius:4px;height:6px;width:200px}
+.progress-fill{background:#534AB7;height:6px;border-radius:4px;transition:width 0.3s}
+.question-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.question-num{font-size:0.75rem;color:#73726c;margin-bottom:0.5rem}
+.question-text{font-size:1rem;font-weight:500;margin-bottom:1.25rem;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:0.6rem}
+.option-btn{padding:0.75rem 1rem;border:0.5px solid #d3d1c7;border-radius:8px;background:#fff;text-align:left;cursor:pointer;font-size:0.875rem;transition:all 0.2s}
+.option-btn:hover:not(:disabled){border-color:#534AB7;background:#EEEDFE}
+.option-btn.correct{background:#EAF3DE;border-color:#3B6D11;color:#173404}
+.option-btn.incorrect{background:#FCEBEB;border-color:#A32D2D;color:#501313}
+.option-btn.show-correct{background:#EAF3DE;border-color:#3B6D11;color:#173404}
+.explanation{margin-top:1rem;padding:0.75rem 1rem;border-radius:8px;font-size:0.85rem;display:none}
+.explanation.visible{display:block}
+.explanation.correct-exp{background:#EAF3DE;color:#27500A;border:0.5px solid #639922}
+.explanation.incorrect-exp{background:#FCEBEB;color:#791F1F;border:0.5px solid #E24B4A}
+.nav-btns{display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap}
+.btn{padding:0.6rem 1.25rem;border-radius:8px;font-size:0.875rem;cursor:pointer;font-weight:500;transition:all 0.2s}
+.btn-primary{background:#534AB7;color:#fff;border:none}
+.btn-primary:hover{background:#3C3489}
+.btn-secondary{background:#fff;color:#1a1a18;border:0.5px solid #d3d1c7}
+.btn-secondary:hover{background:#f5f4f0}
+.score-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:2rem;text-align:center}
+.score-num{font-size:3rem;font-weight:500;color:#534AB7}
+.score-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+.score-item{background:#f5f4f0;padding:1rem;border-radius:8px}
+.score-item .num{font-size:1.5rem;font-weight:500}
+.score-item .lbl{font-size:0.75rem;color:#73726c}
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <h1>Módulo 1 — Entrenamiento de Fuerza y Amplitud de Movimiento</h1>
+  <p>Fitness Instructor · Five Stars International Graduate School</p>
+</header>
+<nav>
+  <button class="active" onclick="showTab('esquema')">📋 Esquema</button>
+  <button onclick="showTab('resumen')">📝 Resumen clave</button>
+  <button onclick="showTab('siglas')">🔤 Siglas y términos</button>
+  <button onclick="showTab('test')">🧠 Test (50 preguntas)</button>
+</nav>
+
+<!-- ESQUEMA -->
+<div id="esquema" class="section active">
+  <p style="font-size:0.85rem;color:#73726c;margin-bottom:1rem">Haz clic en cada bloque para desplegar los conceptos clave</p>
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#EEEDFE">⚡</div>
+        <div><h3>Adaptación aguda</h3><span class="badge" style="background:#EEEDFE;color:#3C3489">Respuesta inmediata</span></div>
+      </div>
+      <div class="detail">
+        <ul>
+          <li><strong>Fatiga muscular</strong>: acumulación de subproductos metabólicos y reducción de sustratos energéticos</li>
+          <li><strong>↑ Frecuencia cardíaca</strong>: mejora flujo sanguíneo y aporte de O₂ y nutrientes</li>
+          <li><strong>↑ Temperatura corporal</strong>: optimiza función metabólica y enzimática</li>
+          <li><strong>Activación SNC</strong>: reclutamiento de unidades motoras y coordinación muscular</li>
+          <li><strong>Coordinación intramuscular</strong> (dentro del músculo) e <strong>intermuscular</strong> (entre músculos)</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Respuesta hormonal aguda:</p>
+        <table>
+          <tr><th>Hormona</th><th>Efecto</th><th>Tipo</th></tr>
+          <tr><td>Testosterona + GH</td><td>Síntesis proteínas, hipertrofia</td><td>Anabólica</td></tr>
+          <tr><td>IGF-1</td><td>Crecimiento y reparación muscular</td><td>Anabólica</td></tr>
+          <tr><td>Adrenalina / Noradrenalina</td><td>↑ FC, ↑ presión arterial, ↑ glucosa</td><td>Estresor</td></tr>
+          <tr><td>Cortisol</td><td>Moviliza energía; catabólico si es crónico</td><td>Catabólica</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;font-size:0.8rem;color:#73726c">Nota: no hay relación clara confirmada entre segregación hormonal endógena y síntesis de proteínas miofibrilares</p>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAEEDA">⚡⚡</div>
+        <div><h3>Sistemas energéticos</h3><span class="badge" style="background:#FAEEDA;color:#633806">ATP-PCr · Glucólisis · Aeróbico</span></div>
+      </div>
+      <div class="detail">
+        <table>
+          <tr><th>Sistema</th><th>Intensidad</th><th>Duración</th><th>Sustrato</th></tr>
+          <tr><td><strong>ATP-PCr</strong> (Fosfocreatina)</td><td>Muy alta</td><td>Corta (~10s)</td><td>Fosfocreatina</td></tr>
+          <tr><td><strong>Glicolítico</strong> (Glucólisis)</td><td>Moderada-alta</td><td>Media (10s–2min)</td><td>Glucógeno → ácido láctico</td></tr>
+          <tr><td><strong>Aeróbico</strong></td><td>Baja-moderada</td><td>Prolongada</td><td>Carbohidratos + grasas + O₂</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;font-size:0.8rem">La intensidad y duración del ejercicio determinan qué sistema predomina. En la práctica, los tres coexisten.</p>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#E1F5EE">💪</div>
+        <div><h3>Adaptación crónica</h3><span class="badge" style="background:#E1F5EE;color:#085041">Largo plazo</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Tipos de hipertrofia:</p>
+        <div class="compare-grid">
+          <div class="compare-box" style="background:#EEEDFE">
+            <h4 style="color:#3C3489">Convencional (miofibrilar)</h4>
+            <ul>
+              <li>↑ cantidad/tamaño de miofibrillas</li>
+              <li>↑ síntesis proteínas miofibrilares</li>
+              <li>Mayor fuerza real</li>
+            </ul>
+          </div>
+          <div class="compare-box" style="background:#E1F5EE">
+            <h4 style="color:#085041">Sarcoplásmica</h4>
+            <ul>
+              <li>↑ volumen del sarcoplasma</li>
+              <li>Aspecto más "inflado"</li>
+              <li>Sin gran ↑ de fuerza</li>
+            </ul>
+          </div>
+        </div>
+        <ul style="margin-top:0.75rem">
+          <li><strong>Adaptaciones neurales:</strong> mejor coordinación UM, mayor reclutamiento, mayor frecuencia de disparo</li>
+          <li><strong>Adaptaciones estructurales:</strong> ↑ tamaño y densidad de fibras musculares</li>
+          <li><strong>↑ Densidad mineral ósea</strong> (osteoblastos activados por cargas mecánicas)</li>
+          <li><strong>↑ Sensibilidad insulina</strong> (IGF-1 y GLUT-4)</li>
+          <li><strong>Mejora cardiovascular:</strong> función endotelial, ↓ presión arterial, ↑ capacidad cardiorrespiratoria</li>
+          <li><strong>Mejora cognitiva y mental:</strong> ↑ BDNF, ↓ estrés y ansiedad</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAECE7">⚠️</div>
+        <div><h3>Sobre/desentrenamiento</h3><span class="badge" style="background:#FAECE7;color:#4A1B0C">Conceptos clave</span></div>
+      </div>
+      <div class="detail">
+        <div class="compare-grid">
+          <div class="compare-box" style="background:#FAEEDA">
+            <h4 style="color:#633806">Sobreentrenamiento</h4>
+            <ul>
+              <li>Exceso de carga sin recuperación</li>
+              <li>Volumen o intensidad excesivos</li>
+              <li>Falta de variación, descanso o nutrición</li>
+            </ul>
+          </div>
+          <div class="compare-box" style="background:#FAECE7">
+            <h4 style="color:#4A1B0C">Desentrenamiento</h4>
+            <ul>
+              <li>Pérdida parcial/completa de adaptaciones</li>
+              <li>Por reducción o suspensión del entrenamiento</li>
+              <li>Afecta CV, muscular, neural, metabólico</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:0.75rem;font-weight:500">Síntomas de sobreentrenamiento:</p>
+        <ul>
+          <li>Fatiga persistente y ↓ rendimiento</li>
+          <li>↑ tiempo de recuperación tras ejercicio</li>
+          <li>Cambios en el apetito y problemas de sueño</li>
+          <li>Irritabilidad y síntomas de depresión</li>
+          <li>↓ sistema inmunológico</li>
+          <li>↑ riesgo de lesiones</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Control de la carga:</p>
+        <table>
+          <tr><th>Herramienta</th><th>Qué mide</th></tr>
+          <tr><td>RPE + RIR</td><td>Esfuerzo percibido y reps en reserva</td></tr>
+          <tr><td>Encoder lineal (Vitruve)</td><td>Velocidad por repetición (VMP)</td></tr>
+          <tr><td>CMJ / SJ</td><td>Potencia y fatiga neuromuscular</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;font-size:0.8rem">Pérdidas más rápidas en CV y resistencia; más lentas en fuerza y masa muscular. La reversibilidad puede ser <em>parcial</em> (memoria muscular).</p>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#EEEDFE">📊</div>
+        <div><h3>Escala RPE y RIR</h3><span class="badge" style="background:#EEEDFE;color:#3C3489">Control del esfuerzo</span></div>
+      </div>
+      <div class="detail">
+        <table>
+          <tr><th>RPE</th><th>RIR</th><th>Nivel de esfuerzo</th></tr>
+          <tr><td>10</td><td>0</td><td>Esfuerzo máximo. No puedo hacer más repeticiones</td></tr>
+          <tr><td>9,5</td><td>0</td><td>No más reps pero podría incrementar algo la carga</td></tr>
+          <tr><td>9 / 8,5</td><td>1 / 1-2</td><td>Esfuerzo cerca del máximo. Podría haber hecho 1-2 más</td></tr>
+          <tr><td>8</td><td>2</td><td>Esfuerzo duro. Podría haber hecho 2 más</td></tr>
+          <tr><td>7,5 / 7 / 6</td><td>2-3 / 3 / 4</td><td>Esfuerzo duro. Podría haber hecho 3-4 más</td></tr>
+          <tr><td>5 / 4</td><td>5 / 6</td><td>Esfuerzo medio duro. 5-6 repeticiones más</td></tr>
+          <tr><td>1-3</td><td>&gt;6</td><td>Esfuerzo ligero o sin esfuerzo</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#E1F5EE">🎯</div>
+        <div><h3>Principios del entrenamiento</h3><span class="badge" style="background:#E1F5EE;color:#085041">SEIR</span></div>
+      </div>
+      <div class="detail">
+        <ul>
+          <li><strong>Sobrecarga progresiva:</strong> ↑ gradual de carga, volumen, frecuencia o variación de ejercicios. Base del desarrollo muscular.</li>
+          <li><strong>Especificidad:</strong> las adaptaciones son específicas del estímulo: grupos musculares implicados, ángulo de entrenamiento y velocidad de ejecución.</li>
+          <li><strong>Individualidad:</strong> evaluar perfil fuerza-velocidad (F0 vs V0). Cada sujeto responde de forma única.</li>
+          <li><strong>Reversibilidad:</strong> pérdida de adaptaciones al interrumpir o reducir el entrenamiento. Puede ser parcial (memoria muscular).</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Perfil Fuerza-Velocidad:</p>
+        <table>
+          <tr><th>Déficit</th><th>Qué entrenar</th></tr>
+          <tr><td>Déficit de F0 (fuerza)</td><td>Cargas altas, pocas repeticiones</td></tr>
+          <tr><td>Déficit de V0 (velocidad)</td><td>Cargas bajas, máxima velocidad</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAEEDA">📊</div>
+        <div><h3>Variables de programación</h3><span class="badge" style="background:#FAEEDA;color:#633806">V · I · F · D</span></div>
+      </div>
+      <div class="detail">
+        <table>
+          <tr><th>Variable</th><th>Datos clave</th></tr>
+          <tr><td><strong>Volumen</strong></td><td>Series × Reps × Ejercicios. &gt;250 reps/semana → mayor ganancia. 5-9 series o &gt;10 → mayor incremento</td></tr>
+          <tr><td><strong>Intensidad</strong></td><td>% 1RM o RPE. &gt;80% 1RM → mayor ganancia de fuerza que &lt;60% 1RM</td></tr>
+          <tr><td><strong>Frecuencia</strong></td><td>2-3 sesiones/semana por grupo muscular. Más frecuencia puede facilitar aprendizaje motor</td></tr>
+          <tr><td><strong>Duración</strong></td><td>↑ rápida fuerza en los primeros 3 meses (neurológica); después → hipertrofia</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Tempo (TUT — Time Under Tension):</p>
+        <p style="font-size:0.82rem">Mismas series y repeticiones generan distinto estímulo según el tempo. Sujeto con 6s/rep → 1800s TUT vs sujeto con 2s/rep → 600s TUT en las mismas 300 reps.</p>
+        <p style="margin-top:0.5rem;font-weight:500">Tabla intensidad → repeticiones (%1RM):</p>
+        <table>
+          <tr><th>Reps</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>8</th><th>10</th></tr>
+          <tr><td>%1RM</td><td>100</td><td>95</td><td>93</td><td>90</td><td>87</td><td>85</td><td>80</td><td>75</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#E1F5EE">📉</div>
+        <div><h3>Carácter del esfuerzo</h3><span class="badge" style="background:#E1F5EE;color:#085041">González-Badillo</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-size:0.82rem;margin-bottom:0.5rem">Concepto de Badillo (2008): grado real de exigencia. Relaciona <em>lo realizado</em> con <em>lo realizable</em>. Une intensidad y volumen en un indicador.</p>
+        <table>
+          <tr><th>CdE</th><th>Pérdida veloc.</th><th>50%RM</th><th>60%RM</th><th>70%RM</th><th>80%RM</th><th>90%RM</th></tr>
+          <tr><td>Bajo</td><td>10%</td><td>5-6</td><td>4-5</td><td>3-4</td><td>2-3</td><td>1-2</td></tr>
+          <tr><td>Medio</td><td>20%</td><td>8-10</td><td>6-8</td><td>4-5</td><td>3-4</td><td>2</td></tr>
+          <tr><td>Medio-alto</td><td>30%</td><td>12-14</td><td>10-12</td><td>6-8</td><td>4-5</td><td>3</td></tr>
+          <tr><td>Alto</td><td>40%</td><td>19-20</td><td>15-16</td><td>8-9</td><td>6-7</td><td>4</td></tr>
+          <tr><td>Máximo</td><td>50-70%</td><td>25-30</td><td>20-25</td><td>12-14</td><td>8</td><td>4</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAEEDA">📅</div>
+        <div><h3>Fases del sujeto y periodización</h3><span class="badge" style="background:#FAEEDA;color:#633806">Progresión</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Niveles según experiencia (Heredia et al., 2012):</p>
+        <table>
+          <tr><th>Fase</th><th>Experiencia</th></tr>
+          <tr><td>Inicial</td><td>Sin experiencia previa</td></tr>
+          <tr><td>Básica</td><td>Menos de 2-6 meses</td></tr>
+          <tr><td>Intermedia</td><td>8-12 meses</td></tr>
+          <tr><td>Avanzada I</td><td>12 meses – 1,5 años</td></tr>
+          <tr><td>Avanzada II</td><td>2 o más años</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Periodos de programación:</p>
+        <div class="tag-grid">
+          <span class="tag tag-coral">ABO — Acondicionamiento Básico Orientado</span>
+          <span class="tag tag-amber">OM — Orientación Metabólica</span>
+          <span class="tag tag-purple">ON — Orientación Neural</span>
+          <span class="tag tag-teal">OE — Orientación Estructural (hipertrofia)</span>
+          <span class="tag" style="background:#f5f4f0;color:#3d3d3a">PM — Mantenimiento</span>
+        </div>
+        <p style="margin-top:0.75rem;font-weight:500">Modelos de periodización:</p>
+        <div class="compare-grid">
+          <div class="compare-box" style="background:#EEEDFE">
+            <h4 style="color:#3C3489">Lineal (Matveyev)</h4>
+            <ul><li>Inicio: vol ↑, intensidad ↓</li><li>Progresión: vol ↓, intensidad ↑</li><li>Tappering final</li></ul>
+          </div>
+          <div class="compare-box" style="background:#E1F5EE">
+            <h4 style="color:#085041">Ondulante</h4>
+            <ul><li>Vol e intensidad oscilan</li><li>Mejor para entrenados (mayor 1RM)</li></ul>
+          </div>
+        </div>
+        <p style="margin-top:0.75rem;font-weight:500">Modelo ATR (Verjochanski):</p>
+        <div class="tag-grid">
+          <span class="tag tag-coral">Acumulación: vol ↑, base</span>
+          <span class="tag tag-amber">Transformación: habilidades específicas</span>
+          <span class="tag tag-teal">Realización: vol ↓, pico rendimiento</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#E1F5EE">🤸</div>
+        <div><h3>Amplitud de movimiento (ADM)</h3><span class="badge" style="background:#E1F5EE;color:#085041">Flexibilidad y elasticidad</span></div>
+      </div>
+      <div class="detail">
+        <table>
+          <tr><th>Concepto</th><th>Definición</th></tr>
+          <tr><td><strong>Elasticidad</strong></td><td>Capacidad de volver a la longitud inicial tras deformarse</td></tr>
+          <tr><td><strong>Elongación</strong></td><td>Capacidad de estirarse ante una fuerza externa aplicada</td></tr>
+          <tr><td><strong>Flexibilidad</strong></td><td>ROM máximo de todos los músculos de una articulación (Solas, 2006)</td></tr>
+          <tr><td><strong>ADM</strong></td><td>Movilidad articular + elasticidad muscular</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Componentes que influyen en la ADM:</p>
+        <ul>
+          <li><strong>Anatómicos:</strong> cápsula articular, ligamentos, acción muscular</li>
+          <li><strong>Físicos:</strong> temperatura (frío → ↑ viscosidad), calentamiento (↓ viscosidad sinovial)</li>
+          <li><strong>Psíquicos:</strong> estrés, cansancio, hora del día (mañana = peor movilidad)</li>
+          <li><strong>Otros:</strong> edad (↓ elasticidad), genética</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Joint by Joint (Gray Cook):</p>
+        <table>
+          <tr><th>Movilidad</th><th>Estabilidad</th></tr>
+          <tr><td>Tobillo, cadera, columna lumbar, tórax</td><td>Rodilla, columna torácica, columna cervical</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAECE7">🧘</div>
+        <div><h3>Técnicas de ADM</h3><span class="badge" style="background:#FAECE7;color:#4A1B0C">Métodos de estiramiento</span></div>
+      </div>
+      <div class="detail">
+        <table>
+          <tr><th>Método</th><th>Tipo</th><th>Características</th></tr>
+          <tr><td><strong>Balísticos</strong></td><td>Dinámico</td><td>Contracción balística; lubrica articulaciones; riesgo reflejo miotático → rotura fibrilar</td></tr>
+          <tr><td><strong>Activos libres</strong></td><td>Dinámico</td><td>Carácter fásico (contracción mantenida todo el recorrido)</td></tr>
+          <tr><td><strong>Anderson</strong></td><td>Estático</td><td>20-30'' fácil · 1' medio · 90'' avanzado. Actúa sobre órganos de Golgi</td></tr>
+          <tr><td><strong>Solverborn</strong></td><td>Estático</td><td>Tensión 10-30'' → Relajación 2-3'' → Extensión 10-30''. NO contener respiración</td></tr>
+          <tr><td><strong>FNP</strong></td><td>Combinado</td><td>10'' IC → 75'' estiramiento → 30'' IC → 1' estiramiento pasivo</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;font-size:0.8rem">Los estiramientos pasivos deben durar mínimo <strong>6 segundos</strong> para activar el reflejo de Golgi (relajación)</p>
+        <div class="alert-box" style="margin-top:0.75rem">⚠️ Solverborn: en ningún momento del proceso se debe contener la respiración</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESUMEN -->
+<div id="resumen" class="section">
+
+  <div class="summary-section">
+    <h3>🔑 Acrónimo SEIR — los 4 principios del entrenamiento</h3>
+    <div class="tag-grid" style="margin-bottom:0.75rem">
+      <span class="tag tag-purple" style="font-size:0.9rem;padding:6px 14px"><strong>S</strong>obrecarga progresiva</span>
+      <span class="tag tag-teal" style="font-size:0.9rem;padding:6px 14px"><strong>E</strong>specificidad</span>
+      <span class="tag tag-amber" style="font-size:0.9rem;padding:6px 14px"><strong>I</strong>ndividualidad</span>
+      <span class="tag tag-coral" style="font-size:0.9rem;padding:6px 14px"><strong>R</strong>eversibilidad</span>
+    </div>
+    <p style="font-size:0.85rem;color:#73726c">La reversibilidad puede ser <em>parcial</em> gracias a la memoria muscular. Las adaptaciones neurales se pierden más rápido que las estructurales.</p>
+  </div>
+
+  <div class="summary-section">
+    <h3>⚡ Adaptaciones agudas vs crónicas</h3>
+    <div class="compare-grid">
+      <div class="compare-box" style="background:#EEEDFE">
+        <h4 style="color:#3C3489">Agudas (durante la sesión)</h4>
+        <ul style="font-size:0.85rem">
+          <li>↑ FC y temperatura corporal</li>
+          <li>↑ Testosterona y GH (temporal)</li>
+          <li>↑ Adrenalina/noradrenalina</li>
+          <li>↑ Cortisol (temporal)</li>
+          <li>Activación SNC + unidades motoras</li>
+          <li>Uso sistemas energéticos según intensidad</li>
+        </ul>
+      </div>
+      <div class="compare-box" style="background:#E1F5EE">
+        <h4 style="color:#085041">Crónicas (semanas/meses)</h4>
+        <ul style="font-size:0.85rem">
+          <li>Hipertrofia muscular</li>
+          <li>↑ Densidad mineral ósea</li>
+          <li>↑ Sensibilidad insulina (IGF-1, GLUT-4)</li>
+          <li>Mejora CV y perfil lipídico</li>
+          <li>↑ BDNF → salud mental</li>
+          <li>Adaptaciones neurales y estructurales</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <h3>⚡ Sistemas energéticos — resumen rápido</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+      <tr style="background:#f5f4f0"><th style="padding:8px;text-align:left">Sistema</th><th style="padding:8px">Intensidad</th><th style="padding:8px">Duración</th><th style="padding:8px">Sustrato</th></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>ATP-PCr</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Muy alta</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">~10s</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Fosfocreatina</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Glucólisis</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Moderada-alta</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">10s–2min</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Glucógeno → ác. láctico</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Aeróbico</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Baja-moderada</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Prolongada</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">CH + grasas + O₂</td></tr>
+    </table>
+  </div>
+
+  <div class="summary-section">
+    <h3>🚨 Síntomas de sobreentrenamiento (memorizar)</h3>
+    <ul style="font-size:0.875rem;line-height:2;padding-left:1.2rem">
+      <li>Fatiga persistente y disminución del rendimiento</li>
+      <li>↑ tiempo de recuperación tras el ejercicio</li>
+      <li>Cambios en el apetito y problemas de sueño</li>
+      <li>Irritabilidad y síntomas de depresión</li>
+      <li>Disminución del sistema inmunológico</li>
+      <li>↑ riesgo de lesiones</li>
+    </ul>
+    <div class="alert-box">Causas: exceso de volumen, intensidad muy alta, falta de variación, descanso insuficiente, mala nutrición/recuperación</div>
+  </div>
+
+  <div class="summary-section">
+    <h3>📊 Tabla intensidad → repeticiones máximas (%1RM)</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;text-align:center">
+      <tr style="background:#f5f4f0"><th style="padding:8px;text-align:left">Reps</th><th style="padding:8px">1</th><th style="padding:8px">2</th><th style="padding:8px">3</th><th style="padding:8px">4</th><th style="padding:8px">5</th><th style="padding:8px">6</th><th style="padding:8px">8</th><th style="padding:8px">10</th></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:left">%1RM</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;font-weight:500;color:#534AB7">100%</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">95%</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">93%</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">90%</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">87%</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">85%</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">80%</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">75%</td></tr>
+    </table>
+  </div>
+
+  <div class="summary-section">
+    <h3>📋 Datos numéricos clave para el test</h3>
+    <ul style="font-size:0.875rem;line-height:2.2;padding-left:1.2rem">
+      <li>Más de <strong>250 repeticiones/semana</strong> → mayores ganancias de fuerza (Lyristakis et al., 2022)</li>
+      <li><strong>5-9 series</strong> o más de 10 → mayor incremento de fuerza</li>
+      <li><strong>&gt;80% 1RM</strong> → mayor ganancia de fuerza que &lt;60% 1RM (Lopez et al., 2021)</li>
+      <li><strong>2-3 sesiones/semana</strong> por grupo muscular recomendadas</li>
+      <li>Fuerza muscular ↑ rápidamente en los primeros <strong>3 meses</strong>; luego se estabiliza</li>
+      <li>Estiramiento pasivo mínimo <strong>6 segundos</strong> para activar reflejo de Golgi</li>
+      <li>Anderson: fácil <strong>20-30''</strong>, medio <strong>1'</strong>, avanzado <strong>90''</strong></li>
+      <li>Solverborn: tensión <strong>10-30''</strong> → relajación <strong>2-3''</strong> → extensión <strong>10-30''</strong></li>
+      <li>FNP: <strong>10'' IC → 75'' estiramiento → 30'' IC → 1' estiramiento pasivo</strong></li>
+    </ul>
+  </div>
+
+  <div class="summary-section">
+    <h3>🧘 Protocolos de estiramiento exactos</h3>
+    <div class="compare-grid">
+      <div class="compare-box" style="background:#EEEDFE">
+        <h4 style="color:#3C3489">Solverborn (tensión-relajación-extensión)</h4>
+        <ol style="padding-left:1.2rem;font-size:0.85rem">
+          <li>Tensión máxima estática: 10-30''</li>
+          <li>Relajación total: 2-3''</li>
+          <li>Estiramiento suave sin dolor: 10-30''</li>
+        </ol>
+        <p style="font-size:0.8rem;margin-top:0.5rem;color:#A32D2D">⚠️ NO contener la respiración</p>
+      </div>
+      <div class="compare-box" style="background:#E1F5EE">
+        <h4 style="color:#085041">FNP</h4>
+        <ol style="padding-left:1.2rem;font-size:0.85rem">
+          <li>10'' contracción isométrica</li>
+          <li>75'' estiramiento sin dolor y progresivo</li>
+          <li>30'' contracción isométrica</li>
+          <li>1' estiramiento pasivo relajado</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <h3>🏗️ Fases del sujeto y periodos de programación</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+      <tr style="background:#f5f4f0"><th style="padding:8px">Fase</th><th style="padding:8px">Experiencia</th><th style="padding:8px">Periodos aplicables</th></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Inicial</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Sin experiencia</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">ABO</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Básica</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">&lt;2-6 meses</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">ABO, OM, ON, OE, PM</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Intermedia</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">8-12 meses</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">OM, ON, OE, PM</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Avanzada I</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">12m – 1,5 años</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">ON, OE, PM</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Avanzada II</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">2+ años</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Todos</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- SIGLAS -->
+<div id="siglas" class="section">
+  <div style="margin-bottom:1rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <input type="text" id="sigla-search" placeholder="Buscar sigla o término..." oninput="filterSiglas(this.value)" style="flex:1;min-width:200px;padding:0.6rem 1rem;border:0.5px solid #d3d1c7;border-radius:8px;font-size:0.875rem;background:#fff;color:#1a1a18">
+    <div id="sigla-count" style="font-size:0.8rem;color:#73726c;white-space:nowrap"></div>
+  </div>
+  <div id="siglas-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.75rem"></div>
+</div>
+
+<!-- TEST -->
+<div id="test" class="section">
+  <div class="test-header">
+    <div>
+      <h2>Test tipo examen — Módulo 1</h2>
+      <p style="font-size:0.8rem;color:#73726c">50 preguntas · Cuatro opciones · Con explicación</p>
+    </div>
+    <div>
+      <div style="font-size:0.8rem;color:#73726c;margin-bottom:4px" id="progress-label">Pregunta 1 de 50</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:2%"></div></div>
+    </div>
+  </div>
+  <div id="question-area"></div>
+  <div id="score-area" style="display:none"></div>
+</div>
+
+<script>
+const tabs=['esquema','resumen','siglas','test'];
+function showTab(id){
+  tabs.forEach(t=>{document.getElementById(t).classList.toggle('active',t===id)});
+  document.querySelectorAll('nav button').forEach((b,i)=>{b.classList.toggle('active',tabs[i]===id)});
+  if(id==='test'&&currentQ===0)loadQuestion();
+  if(id==='siglas')renderSiglas('');
+}
+function toggle(el){el.classList.toggle('open')}
+
+const questions=[
+  {q:"¿Qué respuesta inmediata tiene el cuerpo durante una sesión de entrenamiento de fuerza?",opts:["Reducción de la activación del sistema nervioso central","Disminución de la temperatura corporal para conservar energía","Disminución de la producción de subproductos metabólicos","Aumento de la frecuencia cardíaca para mejorar el flujo sanguíneo"],correct:3,exp:"Adaptación aguda fundamental: el corazón responde aumentando la FC para mejorar el flujo sanguíneo y suministrar O₂ y nutrientes. El SNC AUMENTA su activación, la temperatura AUMENTA, y los subproductos metabólicos AUMENTAN causando fatiga."},
+  {q:"¿Cuál de las siguientes es una adaptación AGUDA durante una sesión de entrenamiento de fuerza?",opts:["Aumento de la densidad mineral ósea","Aumento temporal de los niveles de testosterona y GH","Incremento crónico en la síntesis de proteínas miofibrilares","Mejora permanente de la sensibilidad a la insulina"],correct:1,exp:"El aumento temporal de testosterona y GH es una respuesta aguda del sistema hormonal durante la sesión. Las demás opciones son adaptaciones crónicas (largo plazo)."},
+  {q:"¿Cuál de las siguientes opciones describe correctamente una adaptación AGUDA durante el entrenamiento de fuerza?",opts:["Aumento crónico de la síntesis de proteínas miofibrilares","Aumento temporal de los niveles de testosterona y GH para promover la síntesis de proteínas","Disminución de la frecuencia cardíaca para conservar energía durante el esfuerzo","Incremento a largo plazo de las reservas de fosfocreatina en el músculo"],correct:1,exp:"El aumento temporal de testosterona y GH es una adaptación aguda. La FC AUMENTA. El aumento crónico de síntesis proteica y mejora de reservas de fosfocreatina son adaptaciones crónicas."},
+  {q:"¿Qué sistema energético se activa principalmente durante esfuerzos de alta intensidad y corta duración?",opts:["Sistema aeróbico","Sistema glicolítico (glucólisis)","Sistema ATP-PCr (fosfocreatina)","Sistema oxidativo de grasas"],correct:2,exp:"El sistema ATP-PCr proporciona energía rápida a través de la fosfocreatina durante esfuerzos de muy alta intensidad y corta duración (~10 segundos). La glucólisis actúa en intensidades moderadas. El aeróbico en esfuerzos prolongados."},
+  {q:"¿Qué sistema energético actúa principalmente en ejercicios de intensidad moderada-alta, proporcionando energía a través de la descomposición de glucógeno?",opts:["Sistema ATP-PCr","Sistema glicolítico (glucólisis)","Sistema aeróbico","Sistema de oxidación de ácidos grasos"],correct:1,exp:"El sistema glicolítico (glucólisis) se activa en esfuerzos de intensidad moderada-alta (10 segundos a 2 minutos). Descompone glucógeno en ácido láctico para obtener energía."},
+  {q:"¿Qué intensidad de entrenamiento induce mayores ganancias de fuerza según Lopez et al., 2021?",opts:["Alta intensidad (>80% RM)","Baja intensidad (<40% RM)","Intensidad moderada (<60% RM)","Intensidad igual (60-80% RM)"],correct:0,exp:"Según Lopez et al. (2021), programas de entrenamiento de alta intensidad (>80% 1RM) inducen mayores ganancias de fuerza frente a programas de intensidad moderada (<60% 1RM). Esto se debe a las adaptaciones neuronales generadas."},
+  {q:"¿Cuál es la principal diferencia entre la hipertrofia convencional y la hipertrofia sarcoplásmica?",opts:["La hipertrofia convencional se caracteriza por el aumento en la cantidad y/o tamaño de las miofibrillas, mientras que la sarcoplásmica por el aumento en el volumen del sarcoplasma","La hipertrofia convencional se caracteriza por el aumento en el volumen del sarcoplasma, mientras que la sarcoplásmica por el aumento en la cantidad y/o tamaño de las miofibrillas","La hipertrofia convencional aumenta la síntesis de proteínas no contráctiles, mientras que la sarcoplásmica aumenta las proteínas contráctiles","La hipertrofia convencional aumenta la fuerza muscular, mientras que la sarcoplásmica aumenta la resistencia muscular"],correct:0,exp:"La hipertrofia convencional (miofibrilar) implica incremento en miofibrillas (unidades contráctiles), generando mayor fuerza real. La sarcoplásmica implica aumento desproporcionado del sarcoplasma (fluido intracelular), dando aspecto más 'inflado' sin necesariamente ganar fuerza."},
+  {q:"¿Cuál de las siguientes hormonas es conocida por aumentar temporalmente durante el entrenamiento de fuerza intenso y promover la síntesis de proteínas y la hipertrofia muscular?",opts:["Adrenalina","Insulina","Cortisol","Testosterona"],correct:3,exp:"La testosterona (junto con la GH) aumenta temporalmente durante el entrenamiento intenso y promueve la síntesis de proteínas y la hipertrofia muscular. El cortisol es catabólico. La adrenalina mejora la contracción pero su función principal es como estresor."},
+  {q:"¿Qué hormona catabólica se libera durante el entrenamiento intenso y puede tener efectos negativos como la degradación muscular si se eleva crónicamente?",opts:["Testosterona","GH (hormona de crecimiento)","Cortisol","IGF-1"],correct:2,exp:"El cortisol es una hormona catabólica que se libera en respuesta al estrés físico. Aumenta temporalmente para movilizar energía, pero niveles crónicos elevados provocan degradación muscular e interfieren con la recuperación."},
+  {q:"¿Qué es el IGF-1 y cuál es su relación con el entrenamiento de fuerza?",opts:["Una hormona catabólica que aumenta el estrés oxidativo","Un factor de crecimiento que regula el crecimiento y reparación muscular, aumentando su producción como respuesta a la GH","Una proteína transportadora de glucosa que mejora la sensibilidad a la insulina","Una enzima que degrada el glucógeno durante el ejercicio"],correct:1,exp:"El IGF-1 (Factor de Crecimiento Similar a la Insulina 1) regula el crecimiento y reparación muscular. El entrenamiento de fuerza estimula su producción como respuesta al aumento de los niveles de GH."},
+  {q:"¿Qué ocurre cuando una persona deja de entrenar o reduce significativamente su nivel de entrenamiento de fuerza?",opts:["Aumenta la fuerza y la masa muscular","Se mantiene la fuerza y la masa muscular","Disminuye la fuerza y la masa muscular","Aumenta la capacidad de reclutar unidades motoras"],correct:2,exp:"Principio de reversibilidad: al reducir o interrumpir el entrenamiento, los músculos pierden la fuerza ganada, disminuye el reclutamiento de unidades motoras y la síntesis de proteínas musculares. La masa muscular también disminuye (atrofia)."},
+  {q:"¿Qué es el desentrenamiento en el contexto del entrenamiento de fuerza?",opts:["El aumento del tamaño de los músculos implicados en una sentadilla","El proceso mediante el cual el músculo se ajusta y se vuelve más eficiente","Un fenómeno que solo afecta al sistema cardiovascular","La pérdida parcial o completa de las adaptaciones fisiológicas, anatómicas y del rendimiento conseguido con el entrenamiento"],correct:3,exp:"El desentrenamiento (Mujika & Padilla, 2001) es la pérdida parcial o completa de las adaptaciones fisiológicas, anatómicas y del rendimiento como consecuencia de la reducción o suspensión del entrenamiento."},
+  {q:"¿Cuál es la primera consecuencia observable del desentrenamiento sobre el rendimiento?",opts:["Pérdida de masa muscular (atrofia)","Pérdida de fuerza máxima","Pérdida de rendimiento cardiovascular y de resistencia","Pérdida de flexibilidad articular"],correct:2,exp:"Las pérdidas más rápidas en el desentrenamiento ocurren en el rendimiento cardiovascular y de resistencia, seguidas de pérdidas en la fuerza y la masa muscular."},
+  {q:"¿Cuál de los siguientes NO es un síntoma típico de sobreentrenamiento?",opts:["Fatiga persistente y disminución del rendimiento","Aumento de la densidad mineral ósea","Problemas de sueño e irritabilidad","Disminución del sistema inmunológico"],correct:1,exp:"El aumento de la densidad mineral ósea es una ADAPTACIÓN POSITIVA al entrenamiento de fuerza. Los síntomas de sobreentrenamiento incluyen: fatiga persistente, ↓ rendimiento, ↑ tiempo de recuperación, cambios en apetito, problemas de sueño, irritabilidad, ↓ inmunidad y ↑ riesgo de lesiones."},
+  {q:"Según el principio de especificidad, ¿cuál de las siguientes afirmaciones es correcta?",opts:["Las ganancias de fuerza se producen en todos los grupos musculares por igual","Las ganancias de fuerza son específicas del ángulo y la velocidad en que se ha entrenado","El entrenamiento genera las mismas adaptaciones independientemente del tipo de ejercicio","Todos los atletas deben seguir el mismo programa de entrenamiento"],correct:1,exp:"La especificidad implica que las adaptaciones son específicas para los estímulos aplicados: específicas de los grupos musculares implicados, del ángulo de entrenamiento y de la velocidad de ejecución."},
+  {q:"Un corredor de velocidad quiere mejorar su rendimiento con entrenamiento de fuerza. Según el principio de especificidad, ¿qué debería priorizar?",opts:["Ejercicios de hipertrofia con cargas moderadas y muchas repeticiones","Ejercicios que mejoren la potencia y explosividad específicos de las fases de la carrera","Ejercicios de flexibilidad y movilidad articular","Ejercicios cardiovasculares de larga duración"],correct:1,exp:"El principio de especificidad dicta que el entrenamiento debe imitar las demandas de la actividad. Un corredor de velocidad necesita potencia y explosividad en las fases de carrera, por lo que debe enfocarse en ejercicios que reproduzcan esas acciones."},
+  {q:"¿Qué implica la sobrecarga progresiva en el entrenamiento de fuerza?",opts:["Mantener siempre la misma carga para no sobrecargar el sistema muscular","Aumentar gradualmente la demanda sobre los músculos, sistema nervioso y sistema esquelético con el tiempo","Reducir el volumen de entrenamiento a medida que se progresa","Entrenar siempre al máximo esfuerzo posible en cada sesión"],correct:1,exp:"La sobrecarga progresiva implica aumentar gradualmente la demanda (carga, volumen, frecuencia, variación) para que el cuerpo continúe adaptándose. Es esencial para el desarrollo de fuerza, hipertrofia y rendimiento."},
+  {q:"¿Cuál es la fórmula básica para calcular el volumen de entrenamiento?",opts:["Volumen = Intensidad × Frecuencia","Volumen = Nº series × Nº repeticiones × Nº ejercicios","Volumen = Tiempo total de entrenamiento / Número de series","Volumen = %1RM × Número de repeticiones"],correct:1,exp:"La fórmula básica del volumen es: Nº series × Nº repeticiones × Nº ejercicios. El 'volumen total' o 'volume load' añade la carga: series × repeticiones × carga (kg)."},
+  {q:"Según los datos del metaanálisis de Lyristakis et al. (2022), ¿cuántas repeticiones semanales conducen a mayores ganancias de fuerza?",opts:["Más de 100 repeticiones","Más de 150 repeticiones","Más de 200 repeticiones","Más de 250 repeticiones"],correct:3,exp:"Según Lyristakis et al. (2022), más de 250 repeticiones a la semana conducen a mayores ganancias de fuerza. Además, entre 5-9 series o más de 10 pueden generar un mayor incremento."},
+  {q:"¿Cuántas sesiones de fuerza por semana por grupo muscular se recomiendan para maximizar el aumento de la fuerza?",opts:["1 sesión","2 a 3 sesiones","4 a 5 sesiones","Más de 6 sesiones"],correct:1,exp:"Se recomienda una frecuencia de 2 a 3 sesiones de fuerza por semana por grupo muscular para maximizar el aumento de la fuerza, permitiendo suficiente recuperación entre sesiones."},
+  {q:"Dos sujetos realizan el mismo volumen de entrenamiento (300 repeticiones). El sujeto 1 usa un tempo de 3s por fase y el sujeto 2 de 1s por fase. ¿Cuál es el tiempo bajo tensión del sujeto 1?",opts:["600 segundos","900 segundos","1800 segundos","3600 segundos"],correct:2,exp:"Sujeto 1: 300 reps × 6 segundos (3s concéntrico + 3s excéntrico) = 1800 segundos de TUT. Sujeto 2: 300 × 2s = 600 segundos. A mismo volumen, el tempo modifica significativamente el estímulo."},
+  {q:"¿Qué representa el 'carácter del esfuerzo' según González-Badillo?",opts:["El porcentaje del 1RM utilizado en el entrenamiento","El número total de repeticiones realizadas en una sesión","El grado real de exigencia que relaciona lo realizado con lo realizable","La velocidad máxima de ejecución en cada repetición"],correct:2,exp:"El carácter del esfuerzo (Badillo, 2008) supone el grado real de exigencia, ya que relaciona lo realizado con lo realizable. Une intensidad y volumen en un solo indicador."},
+  {q:"Según la tabla de intensidad-repeticiones, ¿qué porcentaje del 1RM corresponde a realizar 6 repeticiones máximas?",opts:["75%","80%","85%","90%"],correct:2,exp:"Según la tabla de Baechle & Earle (2007): 6 repeticiones máximas corresponden al 85% del 1RM. La tabla: 1rep=100%, 5rep=87%, 6rep=85%, 8rep=80%, 10rep=75%."},
+  {q:"En la periodización LINEAL, ¿cómo evolucionan el volumen y la intensidad?",opts:["Volumen e intensidad aumentan simultáneamente","Volumen e intensidad oscilan de forma ondulante","Se comienza con volumen alto e intensidad baja; luego el volumen baja y la intensidad sube","Se comienza con intensidad alta y volumen bajo; luego la intensidad baja y el volumen sube"],correct:2,exp:"La periodización lineal (Matveyev) comienza con volumen ALTO e intensidad BAJA. Progresivamente el volumen disminuye y la intensidad aumenta, culminando en una fase de tappering previa a la competición."},
+  {q:"¿En qué fase del modelo ATR se reduce el volumen y se aumenta la intensidad para alcanzar el pico de rendimiento?",opts:["Acumulación","Transformación","Realización","Tappering"],correct:2,exp:"En la fase de REALIZACIÓN se reduce el volumen y se aumenta la intensidad para alcanzar el pico de forma física en el momento óptimo (competición). La Acumulación desarrolla capacidades básicas. La Transformación convierte esas capacidades en habilidades específicas."},
+  {q:"¿Qué revelan los metaanálisis sobre la comparación entre periodización ondulante y lineal en sujetos ENTRENADOS?",opts:["La periodización lineal genera mayor ganancia de 1RM en entrenados","La periodización ondulante genera mayor ganancia de 1RM en entrenados","Ambas periodizaciones generan los mismos resultados independientemente del nivel","La periodización ondulante solo es superior en sujetos no entrenados"],correct:1,exp:"Los metaanálisis muestran que la periodización ondulante genera mayor ganancia en 1RM en comparación con la lineal, PERO esto solo ocurre en individuos ENTRENADOS. En no entrenados, no hay diferencia significativa."},
+  {q:"Según Heredia et al. (2012), ¿en qué fase se clasifica un sujeto que lleva 10 meses de entrenamiento sistemático?",opts:["Fase inicial","Fase básica","Fase intermedia","Fase avanzada I"],correct:2,exp:"Según la tabla de Heredia et al. (2012): Básica = menos de 2-6 meses, INTERMEDIA = 8-12 meses, Avanzada I = 12 meses a 1,5 años. Un sujeto con 10 meses está en fase Intermedia."},
+  {q:"¿Cuál de los siguientes representa el primer periodo de programación en la fase inicial del sujeto?",opts:["Orientación Neural (ON)","Orientación Estructural (OE)","Orientación Metabólica (OM)","Acondicionamiento Básico Orientado (ABO)"],correct:3,exp:"El ABO (Acondicionamiento Básico Orientado) es el primer periodo de programación, especialmente aplicable en la fase inicial. Desarrolla la base motriz y las adaptaciones generales previas a periodos más específicos."},
+  {q:"¿Cuál es la diferencia principal entre elasticidad y elongación?",opts:["Son sinónimos y se refieren a la misma propiedad del tejido muscular","Elasticidad se refiere a la capacidad de una articulación para moverse libremente","Elasticidad es la capacidad de un cuerpo para volver a su longitud inicial después de deformarse, mientras que elongación es la capacidad del tejido para estirarse ante una fuerza externa","Elasticidad es la capacidad del tejido para estirarse ante una fuerza externa, mientras que elongación es la capacidad de volver a la longitud inicial"],correct:2,exp:"Elasticidad = volver a la longitud inicial tras deformarse. Elongación = capacidad de estirarse ante una fuerza externa. Son conceptos distintos, no sinónimos. Ambas son capacidades musculares presentes en la ADM."},
+  {q:"¿Cuáles son los dos componentes de la Amplitud de Movimiento (ADM)?",opts:["Flexibilidad y elongación","Movilidad articular y elasticidad muscular","Elasticidad y fuerza muscular","Coordinación intramuscular e intermuscular"],correct:1,exp:"La ADM dispone de dos componentes: la movilidad articular y la elasticidad muscular. La movilidad articular se entiende a través del concepto 'Joint by Joint' de Gray Cook."},
+  {q:"¿Cuál de los siguientes componentes NO influye en la amplitud de movimiento según el temario?",opts:["La temperatura corporal","La hora del día","La frecuencia cardíaca en reposo","La genética del sujeto"],correct:2,exp:"Los factores que influyen en la ADM son: anatómicos (articulaciones, ligamentos), físicos (temperatura, viscosidad sinovial), psíquicos (estrés, cansancio, hora del día) y personales (edad, genética). La FC en reposo no influye directamente en la ADM."},
+  {q:"Según el concepto 'Joint by Joint' de Gray Cook, ¿qué articulaciones requieren principalmente ESTABILIDAD?",opts:["Tobillo y cadera","Tórax y columna lumbar","Rodilla, columna torácica y columna cervical","Cadera y tórax"],correct:2,exp:"Según Joint by Joint, las articulaciones de estabilidad son: rodillas, columna torácica y columna cervical. Las de movilidad son: tobillos, caderas, columna lumbar y tórax. Las funciones se alternan a lo largo de la cadena cinética."},
+  {q:"¿Qué ocurre si una persona tiene movilidad reducida en los tobillos, según el concepto Joint by Joint?",opts:["Solo se verá afectada la movilidad del tobillo sin compensaciones en otras articulaciones","Experimentará compensaciones y falta de estabilidad en rodillas y cadera","Mejorará automáticamente la movilidad de la cadera","No tendrá consecuencias en el resto de la cadena cinética"],correct:1,exp:"Según Joint by Joint, las deficiencias en la movilidad de una articulación provocan compensaciones y disfunciones en las articulaciones adyacentes. Movilidad reducida en tobillos → compensaciones y falta de estabilidad en rodillas y cadera."},
+  {q:"¿Cuál es la duración mínima de un estiramiento pasivo para activar el reflejo de los órganos tendinosos de Golgi?",opts:["2 segundos","4 segundos","6 segundos","10 segundos"],correct:2,exp:"Los estiramientos pasivos o estáticos deben tener una duración mínima de 6 segundos para producir el reflejo contrario de estiramiento (órganos tendinosos de Golgi), que provoca la relajación muscular."},
+  {q:"¿Cuál de los siguientes pasos NO forma parte del método de estiramiento 'tensión-relajación-extensión' (Solverborn)?",opts:["Relajar el músculo completamente durante 2 a 3 segundos","Tensar el músculo lo máximo posible durante 10 a 30 segundos","Contener la respiración durante todo el proceso","Estirar el músculo suavemente al máximo sin dolor durante 10 a 30 segundos"],correct:2,exp:"El método Solverborn incluye: tensión estática 10-30'', relajación 2-3'' y estiramiento suave 10-30''. Específicamente el temario destaca que DURANTE TODO EL PROCESO NO SE DEBE CONTENER LA RESPIRACIÓN."},
+  {q:"¿Cuál es la secuencia correcta del protocolo FNP?",opts:["Estiramiento pasivo → contracción isométrica → relajación → estiramiento activo","10'' contracción isométrica → 75'' estiramiento progresivo → 30'' contracción isométrica → 1' estiramiento pasivo","Tensión muscular 30'' → relajación 3'' → extensión 30'' → descanso 1'","30'' estiramiento activo → 10'' contracción → 75'' estiramiento pasivo → 30'' relajación"],correct:1,exp:"El protocolo FNP es: 10'' IC → 75'' estiramiento sin dolor y progresivo → 30'' contracción isométrica → 1' estiramiento pasivo relajado. La FNP tiene una parte estática y una dinámica, mejorando elasticidad y estabilidad articular."},
+  {q:"¿Cuál de los siguientes métodos de estiramiento es de tipo COMBINADO?",opts:["Estiramiento balístico","Estiramiento de Anderson","Estiramiento de Solverborn","FNP (Facilitación Neuromuscular Propioceptiva)"],correct:3,exp:"La FNP es el único método COMBINADO (parte estática + parte dinámica). Los balísticos son dinámicos. Anderson y Solverborn son estáticos."},
+  {q:"¿Qué riesgo específico presentan los estiramientos balísticos?",opts:["Excesiva relajación muscular que impide el rendimiento posterior","Al provocar el reflejo miotático, pueden producir roturas fibrilares","Reducen excesivamente la temperatura muscular","Producen sobreactivación del sistema nervioso central"],correct:1,exp:"Los estiramientos balísticos, al provocar el reflejo miotático (de estiramiento), pueden producir roturas fibrilares. A pesar de este riesgo, tienen ventajas: pueden ser específicos de las acciones deportivas y favorecen la lubricación articular."},
+  {q:"En el estiramiento de Anderson, ¿cuánto tiempo se mantiene la posición en el nivel AVANZADO?",opts:["20-30 segundos","45-60 segundos","1 minuto","90 segundos"],correct:3,exp:"En el estiramiento de Anderson: nivel fácil = 20-30'', nivel mediano = 1 minuto, nivel avanzado = 90 segundos. El tiempo depende del grado de entrenamiento del deportista."},
+  {q:"¿Qué adaptación crónica del entrenamiento de fuerza ayuda a prevenir la osteoporosis?",opts:["Aumento de la sensibilidad a la insulina","Mejora del perfil lipídico","Aumento de la densidad mineral ósea","Reducción de los niveles de cortisol"],correct:2,exp:"El entrenamiento de fuerza estimula la formación ósea al someter los huesos a cargas mecánicas, activando los osteoblastos (células de síntesis ósea). Con el tiempo aumenta la densidad mineral ósea, previniendo la osteoporosis."},
+  {q:"¿Qué proteína transportadora de glucosa se estimula mediante el entrenamiento de fuerza, mejorando la sensibilidad a la insulina?",opts:["BDNF","IGF-1","GLUT-4","GH"],correct:2,exp:"El GLUT-4 es la proteína transportadora de glucosa regulada por la insulina. El entrenamiento de fuerza estimula su expresión (junto con IGF-1), mejorando la sensibilidad a la insulina y reduciendo el riesgo de diabetes tipo 2."},
+  {q:"¿Qué factor neurotrófico aumenta con el entrenamiento de fuerza y se relaciona con la mejora de la salud mental?",opts:["IGF-1","GLUT-4","BDNF","Testosterona"],correct:2,exp:"El BDNF (Factor Neurotrófico Derivado del Cerebro) aumenta con el entrenamiento de fuerza. Ayuda a reducir el estrés, la ansiedad y la depresión, siendo clave en los beneficios cognitivos del ejercicio."},
+  {q:"¿Qué instrumento permite controlar la velocidad de cada repetición y planificar el entrenamiento según la pérdida de velocidad?",opts:["Goniómetro","Encoder lineal (ej. Vitruve)","Dinamómetro","Acelerómetro de muñeca"],correct:1,exp:"El encoder lineal (como el software Vitruve) permite controlar la velocidad de cada repetición (VMP) e incluso planificar el número total de repeticiones en función de la pérdida de velocidad, base del entrenamiento basado en la velocidad (RFD)."},
+  {q:"¿Qué test evalúa la potencia del tren inferior con contramovimiento y se usa para detectar sobreentrenamiento?",opts:["Test de Cooper","CMJ (Counter Movement Jump)","Test de Wingate","Prueba de 1RM"],correct:1,exp:"El CMJ (Counter Movement Jump) es el salto con contramovimiento. Se usa como test estándar para evaluar la potencia del tren inferior y detectar fatiga o sobreentrenamiento comparando la altura de salto entre sesiones."},
+  {q:"¿Qué indican los RIR (Repeticiones en Reserva) en el control del entrenamiento?",opts:["El número de series realizadas en total","El número de repeticiones que quedan antes de llegar al fallo muscular","El porcentaje del 1RM utilizado en la serie","El tiempo de descanso óptimo entre series"],correct:1,exp:"El RIR indica cuántas repeticiones podría hacer todavía el sujeto antes del fallo muscular. RIR 0 = fallo total; RIR 2 = podría haber hecho 2 más. Se combina con RPE para controlar la carga de forma subjetiva."},
+  {q:"¿Cuál es el valor de RPE que corresponde a esfuerzo máximo absoluto (no puede hacer más repeticiones)?",opts:["RPE 7","RPE 8","RPE 9","RPE 10"],correct:3,exp:"RPE 10 corresponde a esfuerzo máximo: no se pueden hacer más repeticiones. RPE 9,5 = no más reps pero podría incrementar algo la carga. RPE 9 = podría haber hecho 1 más."},
+  {q:"Según el perfil fuerza-velocidad, ¿qué debe priorizar un deportista con déficit de F0 (fuerza)?",opts:["Cargas bajas a máxima velocidad","Cargas altas con pocas repeticiones","Trabajo exclusivo de pliometría","Entrenamiento de resistencia aeróbica"],correct:1,exp:"Un déficit de F0 indica que el deportista tiene menor fuerza máxima de lo óptimo. Debe orientar el entrenamiento hacia cargas altas y pocas repeticiones para elevar su Pmax. El atleta con déficit de V0 necesita lo contrario: cargas bajas a máxima velocidad."},
+  {q:"¿Cuál es la diferencia entre coordinación INTRAmuscular e INTERmuscular?",opts:["Intramuscular se refiere a la coordinación entre músculos; intermuscular dentro del mismo músculo","Intramuscular es la coordinación dentro de un mismo músculo; intermuscular es la coordinación entre diferentes músculos","Ambos términos son equivalentes y se usan indistintamente","Intramuscular hace referencia a la velocidad de contracción; intermuscular a la fuerza generada"],correct:1,exp:"La coordinación INTRAmuscular ocurre dentro de un mismo músculo (regulación de la activación muscular). La INTERmuscular ocurre entre diferentes músculos (sincronización de los patrones de movimiento). Ambas son clave para generar fuerza eficientemente."},
+  {q:"¿Cuándo se recomienda aumentar la frecuencia de entrenamiento como método de sobrecarga progresiva?",opts:["Siempre, independientemente del nivel del sujeto","Cuando se quiere aumentar el volumen, equilibrándola con el descanso adecuado para evitar sobreentrenamiento","Solo en fases avanzadas de competición","Únicamente cuando la intensidad ya no puede aumentarse más"],correct:1,exp:"Aumentar la frecuencia de entrenamiento puede ser una estrategia efectiva de sobrecarga progresiva. Sin embargo, es fundamental equilibrarla con el descanso adecuado para permitir la recuperación y evitar el sobreentrenamiento."},
+  {q:"¿Por qué la fuerza muscular aumenta rápidamente en los primeros 3 meses de entrenamiento?",opts:["Principalmente por hipertrofia muscular masiva","Principalmente por mecanismos neurofisiológicos como la coordinación neuronal aumentada y la exposición al estrés metabólico","Debido al aumento de la densidad mineral ósea","Por la mejora en la sensibilidad a la insulina"],correct:1,exp:"El rápido aumento de fuerza en los primeros 3 meses se debe principalmente a mecanismos NEUROFISIOLÓGICOS: mejor coordinación neuronal, mayor reclutamiento de UM y exposición al estrés metabólico. Los cambios a largo plazo (posterior) se asocian con la hipertrofia muscular."},
+  {q:"¿Qué ventaja tiene el entrenamiento ondulante sobre el lineal para sujetos entrenados que buscan fuerza máxima?",opts:["Permite mayor volumen total de entrenamiento","Los individuos entrenados se benefician de las ondulaciones diarias o semanales de volumen e intensidad","Genera mayor hipertrofia muscular cuando el volumen está igualado","Es más seguro y reduce el riesgo de sobreentrenamiento"],correct:1,exp:"Los metaanálisis indican que la periodización ondulante genera mayor ganancia en 1RM que la lineal en individuos ENTRENADOS, ya que se benefician de las variaciones diarias o semanales de volumen e intensidad cuando el objetivo es la fuerza máxima."},
+  {q:"¿Cuál de las horas del día es más desfavorable para trabajar la amplitud de movimiento?",opts:["Por la tarde (16:00-18:00h)","Por la noche (20:00-22:00h)","Por la mañana (primeras horas)","Al mediodía"],correct:2,exp:"Las horas matutinas (primeras de la mañana) son desfavorables para una buena movilidad. El componente psíquico/físico incluye la hora del día como factor que afecta a la ADM. La temperatura corporal y el estado de alerta son menores a primera hora."},
+  {q:"¿Cuál es el objetivo de la fase de TRANSFORMACIÓN en el modelo ATR?",opts:["Desarrollar las capacidades físicas básicas con alto volumen","Convertir las capacidades físicas generales en habilidades específicas y aplicables al rendimiento deportivo","Reducir el volumen y aumentar la intensidad para alcanzar el pico de rendimiento","Mantener las adaptaciones obtenidas durante la temporada"],correct:1,exp:"La fase de TRANSFORMACIÓN en el modelo ATR convierte las capacidades físicas generales adquiridas durante la Acumulación en habilidades específicas y aplicables al rendimiento deportivo, incorporando sesiones más específicas y de mayor intensidad."},
+];
+
+let currentQ=0,score=0,answered=new Array(questions.length).fill(null);
+
+function loadQuestion(){
+  const q=questions[currentQ];
+  const pct=Math.round(((currentQ+1)/questions.length)*100);
+  document.getElementById('progress-label').textContent='Pregunta '+(currentQ+1)+' de '+questions.length;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  let html='<div class="question-card"><div class="question-num">Pregunta '+(currentQ+1)+' / '+questions.length+'</div><div class="question-text">'+q.q+'</div><div class="options">';
+  q.opts.forEach((o,i)=>{
+    let cls='';
+    if(answered[currentQ]!==null){
+      if(i===q.correct)cls=' show-correct';
+      else if(i===answered[currentQ])cls=' incorrect';
+    }
+    html+='<button class="option-btn'+cls+'" onclick="answer('+i+')" '+(answered[currentQ]!==null?'disabled':'')+'>'+o+'</button>';
+  });
+  html+='</div>';
+  if(answered[currentQ]!==null){
+    const ok=answered[currentQ]===q.correct;
+    html+='<div class="explanation visible '+(ok?'correct-exp':'incorrect-exp')+'">'+(ok?'✅ <strong>Correcto.</strong>':'❌ <strong>Incorrecto.</strong>')+' '+q.exp+'</div>';
+  }
+  html+='</div><div class="nav-btns">';
+  if(currentQ>0)html+='<button class="btn btn-secondary" onclick="prevQ()">← Anterior</button>';
+  if(answered[currentQ]!==null&&currentQ<questions.length-1)html+='<button class="btn btn-primary" onclick="nextQ()">Siguiente →</button>';
+  if(answered[currentQ]!==null&&currentQ===questions.length-1)html+='<button class="btn btn-primary" onclick="showScore()">Ver resultado</button>';
+  html+='</div>';
+  document.getElementById('question-area').innerHTML=html;
+}
+
+function answer(i){
+  if(answered[currentQ]!==null)return;
+  answered[currentQ]=i;
+  if(i===questions[currentQ].correct)score++;
+  loadQuestion();
+}
+function nextQ(){if(currentQ<questions.length-1){currentQ++;loadQuestion();}}
+function prevQ(){if(currentQ>0){currentQ--;loadQuestion();}}
+
+function showScore(){
+  document.getElementById('question-area').style.display='none';
+  const pct=Math.round((score/questions.length)*100);
+  const msg=pct>=80?'🏆 ¡Excelente dominio del módulo!':pct>=60?'👍 Buen resultado, repasa los conceptos fallados':'📚 Conviene repasar el módulo antes del examen';
+  document.getElementById('score-area').innerHTML='<div class="score-card"><div class="score-num">'+score+'/'+questions.length+'</div><div class="score-label" style="color:#73726c">'+pct+'% de respuestas correctas</div><div class="score-breakdown"><div class="score-item"><div class="num" style="color:#639922">'+score+'</div><div class="lbl">Correctas</div></div><div class="score-item"><div class="num" style="color:#E24B4A">'+(questions.length-score)+'</div><div class="lbl">Incorrectas</div></div><div class="score-item"><div class="num">'+pct+'%</div><div class="lbl">Puntuación</div></div></div><p style="font-size:0.95rem;margin-bottom:1.5rem">'+msg+'</p><button class="btn btn-primary" onclick="restart()">Volver a empezar</button></div>';
+  document.getElementById('score-area').style.display='block';
+  document.getElementById('progress-label').textContent='¡Completado!';
+  document.getElementById('progress-fill').style.width='100%';
+}
+
+function restart(){
+  currentQ=0;score=0;answered=new Array(questions.length).fill(null);
+  document.getElementById('question-area').style.display='block';
+  document.getElementById('score-area').style.display='none';
+  loadQuestion();
+}
+
+const siglas=[
+  {sigla:"1RM",termino:"Una Repetición Máxima",def:"La carga máxima que un sujeto puede levantar en una sola repetición con técnica correcta. Base para calcular la intensidad del entrenamiento.",cat:"fuerza"},
+  {sigla:"ADM",termino:"Amplitud de Movimiento",def:"Movilidad o libertad de movimiento obtenible en una articulación o conjunto de articulaciones. Integra movilidad articular y elasticidad muscular.",cat:"adm"},
+  {sigla:"ATP-PCr",termino:"Adenosín Trifosfato – Fosfocreatina",def:"Sistema energético anaeróbico aláctico. Proporciona energía rápida a través de la descomposición de fosfocreatina. Activo en esfuerzos de alta intensidad y corta duración (~10 segundos).",cat:"fisiologia"},
+  {sigla:"ATR",termino:"Acumulación, Transformación, Realización",def:"Modelo de periodización de Verjochanski. Tres fases: Acumulación (volumen alto, base), Transformación (habilidades específicas) y Realización (vol ↓, pico de rendimiento).",cat:"programacion"},
+  {sigla:"BDNF",termino:"Factor Neurotrófico Derivado del Cerebro",def:"Neurotransmisor relacionado con el bienestar mental. El entrenamiento de fuerza aumenta su liberación, ayudando a reducir estrés, ansiedad y depresión.",cat:"fisiologia"},
+  {sigla:"CE / CdE",termino:"Carácter del Esfuerzo",def:"Grado real de exigencia de una serie. Relaciona lo realizado con lo realizable. Concepto de González-Badillo (2008). Une intensidad y volumen en un solo indicador.",cat:"fuerza"},
+  {sigla:"CEA",termino:"Ciclo Estiramiento-Acortamiento",def:"Mecanismo muscular que aprovecha la energía elástica almacenada durante el estiramiento para potenciar la fase concéntrica. Fundamental en pliometría.",cat:"fuerza"},
+  {sigla:"CMJ",termino:"Counter Movement Jump",def:"Salto con contramovimiento. Test estándar para evaluar la potencia del tren inferior y detectar fatiga o sobreentrenamiento. Se compara la altura de salto entre sesiones.",cat:"evaluacion"},
+  {sigla:"FMD",termino:"Fuerza Máxima Dinámica",def:"La máxima fuerza que puede desarrollar el sistema neuromuscular en un movimiento dinámico. Equivale al 1RM.",cat:"fuerza"},
+  {sigla:"FNP",termino:"Facilitación Neuromuscular Propioceptiva",def:"Técnica de estiramiento combinada (estática + dinámica). Protocolo: 10'' IC → 75'' estiramiento → 30'' IC → 1' estiramiento pasivo. Mejora elasticidad y estabilidad articular.",cat:"adm"},
+  {sigla:"GH",termino:"Hormona de Crecimiento (Growth Hormone)",def:"Hormona anabólica que aumenta temporalmente durante el entrenamiento de fuerza intenso. Promueve la síntesis de proteínas, la hipertrofia muscular y estimula la producción de IGF-1.",cat:"fisiologia"},
+  {sigla:"GLUT-4",termino:"Proteína Transportadora de Glucosa 4",def:"Proteína regulada por la insulina que facilita la entrada de glucosa a las células musculares. El entrenamiento de fuerza aumenta su expresión, mejorando la sensibilidad a la insulina y reduciendo el riesgo de diabetes tipo 2.",cat:"fisiologia"},
+  {sigla:"IC",termino:"Contracción Isométrica",def:"Contracción muscular en la que no hay cambio de longitud del músculo. Usada en el protocolo FNP y en el método Solverborn (fase de tensión).",cat:"fuerza"},
+  {sigla:"IGF-1",termino:"Factor de Crecimiento Similar a la Insulina 1",def:"Proteína de estructura similar a la insulina. Regula el crecimiento y reparación muscular. Aumenta en respuesta al entrenamiento de fuerza como consecuencia de la elevación de GH.",cat:"fisiologia"},
+  {sigla:"ON",termino:"Orientación Neural",def:"Periodo de programación orientado a mejorar las adaptaciones del sistema nervioso: reclutamiento de unidades motoras, coordinación intermuscular, frecuencia de disparo.",cat:"programacion"},
+  {sigla:"OE",termino:"Orientación Estructural",def:"Periodo de programación orientado a la hipertrofia muscular. Busca adaptaciones estructurales: aumento de tamaño y densidad de fibras musculares.",cat:"programacion"},
+  {sigla:"OM",termino:"Orientación Metabólica",def:"Periodo de programación orientado a mejorar la capacidad metabólica: resistencia a la fuerza, capacidad glucolítica, mejora de la composición corporal.",cat:"programacion"},
+  {sigla:"ABO",termino:"Acondicionamiento Básico Orientado",def:"Primer periodo de programación. Desarrolla la base motriz y adaptaciones generales. Indicado para la fase inicial del sujeto o tras periodos de desentrenamiento.",cat:"programacion"},
+  {sigla:"PM",termino:"Periodo de Mantenimiento",def:"Fase de programación cuyo objetivo es conservar las adaptaciones obtenidas en periodos anteriores sin buscar mejora adicional.",cat:"programacion"},
+  {sigla:"PMF",termino:"Pico Máximo de Fuerza",def:"La máxima expresión de fuerza que puede generar el sistema neuromuscular. Concepto relacionado con el 1RM y la Fuerza Máxima Dinámica.",cat:"fuerza"},
+  {sigla:"RFD",termino:"Rate of Force Development",def:"Tasa de producción de fuerza. Velocidad con la que el sistema neuromuscular genera fuerza desde el inicio de la contracción. Fundamental en deportes explosivos.",cat:"fuerza"},
+  {sigla:"RIR",termino:"Repeticiones en Reserva",def:"Número de repeticiones que quedan antes del fallo muscular. RIR 0 = fallo total, RIR 2 = podrías haber hecho 2 más. Se combina con RPE para controlar la carga.",cat:"evaluacion"},
+  {sigla:"ROM",termino:"Range of Motion",def:"Rango máximo de movimiento de todos los músculos que componen una articulación. Equivalente al concepto de flexibilidad según Solas (2006).",cat:"adm"},
+  {sigla:"RPE",termino:"Rating of Perceived Exertion",def:"Escala subjetiva del esfuerzo percibido. Va de 1 a 10. RPE 10 = esfuerzo máximo (fallo). Se combina con RIR: RPE 8 ≈ RIR 2.",cat:"evaluacion"},
+  {sigla:"SJ",termino:"Squat Jump / Simple Jump",def:"Salto desde posición estática sin contramovimiento. Test para evaluar la fuerza explosiva del tren inferior. Junto al CMJ sirve para monitorizar la fatiga.",cat:"evaluacion"},
+  {sigla:"SNC",termino:"Sistema Nervioso Central",def:"Durante el entrenamiento de fuerza se activa intensamente para reclutar unidades motoras y coordinar la contracción muscular. Las adaptaciones neurales son las primeras en producirse.",cat:"fisiologia"},
+  {sigla:"TUT",termino:"Time Under Tension",def:"Tiempo bajo tensión muscular. Mismas series y repeticiones pueden generar distinto estímulo según el tempo. Ej: 3s/fase → 1800s TUT vs 1s/fase → 600s TUT (en 300 reps).",cat:"fuerza"},
+  {sigla:"VMP",termino:"Velocidad Media Propulsiva",def:"Velocidad media durante la fase propulsiva de un ejercicio. Medida con encoder lineal (ej. Vitruve). Permite controlar la intensidad y detectar fatiga en tiempo real.",cat:"evaluacion"},
+  {sigla:"F0",termino:"Fuerza teórica máxima (perfil F-V)",def:"Valor máximo del perfil fuerza-velocidad extrapolado a velocidad cero. Un déficit de F0 indica que el deportista necesita trabajar con cargas altas.",cat:"fuerza"},
+  {sigla:"V0",termino:"Velocidad teórica máxima (perfil F-V)",def:"Valor máximo del perfil fuerza-velocidad extrapolado a carga cero. Un déficit de V0 indica que el deportista necesita trabajar con cargas bajas a máxima velocidad.",cat:"fuerza"},
+  {sigla:"FLEXITEST",termino:"Test de evaluación de la flexibilidad",def:"Método desarrollado por de Araújo (2006) para medir el ROM de cada articulación de forma independiente. Permite identificar déficits de movilidad articular específicos.",cat:"evaluacion"},
+];
+
+const catColors={
+  fuerza:{bg:'#EEEDFE',color:'#3C3489',label:'Fuerza'},
+  fisiologia:{bg:'#E1F5EE',color:'#085041',label:'Fisiología'},
+  adm:{bg:'#E1F5EE',color:'#0F6E56',label:'ADM'},
+  programacion:{bg:'#FAEEDA',color:'#633806',label:'Programación'},
+  evaluacion:{bg:'#FAECE7',color:'#4A1B0C',label:'Evaluación'},
+};
+
+function renderSiglas(filter){
+  const q=filter.toLowerCase().trim();
+  const filtered=siglas.filter(s=>s.sigla.toLowerCase().includes(q)||s.termino.toLowerCase().includes(q)||s.def.toLowerCase().includes(q));
+  document.getElementById('sigla-count').textContent=filtered.length+' de '+siglas.length+' términos';
+  const grid=document.getElementById('siglas-grid');
+  if(filtered.length===0){grid.innerHTML='<p style="color:#73726c;font-size:0.875rem;grid-column:1/-1">No se encontraron términos.</p>';return;}
+  grid.innerHTML=filtered.map(s=>{
+    const c=catColors[s.cat];
+    return '<div style="background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1rem">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:0.5rem">'
+      +'<span style="font-size:1.05rem;font-weight:500;color:#1a1a18">'+s.sigla+'</span>'
+      +'<span style="font-size:0.7rem;padding:2px 8px;border-radius:20px;background:'+c.bg+';color:'+c.color+';white-space:nowrap;flex-shrink:0">'+c.label+'</span>'
+      +'</div>'
+      +'<p style="font-size:0.8rem;font-weight:500;color:#534AB7;margin-bottom:0.4rem">'+s.termino+'</p>'
+      +'<p style="font-size:0.82rem;color:#3d3d3a;line-height:1.5">'+s.def+'</p>'
+      +'</div>';
+  }).join('');
+}
+function filterSiglas(val){renderSiglas(val);}
+</script>
+</body>
+</html>

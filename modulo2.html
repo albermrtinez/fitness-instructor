@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 2 – Bases Fisiológicas del Ejercicio</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a18;line-height:1.6}
+header{background:#1a1a18;color:#fff;padding:1.5rem 2rem}
+header h1{font-size:1.4rem;font-weight:500}
+header p{font-size:0.85rem;color:#9c9a92;margin-top:0.25rem}
+nav{display:flex;background:#fff;border-bottom:0.5px solid #d3d1c7;overflow-x:auto}
+nav button{padding:0.75rem 1.1rem;font-size:0.85rem;font-weight:500;border:none;background:none;cursor:pointer;color:#73726c;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s}
+nav button.active{color:#1a1a18;border-bottom-color:#1a1a18}
+nav button:hover:not(.active){background:#f5f4f0}
+.section{display:none;padding:2rem;max-width:960px;margin:0 auto}
+.section.active{display:block}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1.5rem}
+.topic-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.2s}
+.topic-card:hover{border-color:#888780;transform:translateY(-1px)}
+.topic-card.open{border-color:#534AB7}
+.card-header{display:flex;align-items:center;gap:10px}
+.icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.topic-card h3{font-size:0.95rem;font-weight:500}
+.badge{font-size:0.7rem;padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block}
+.detail{display:none;margin-top:1rem;padding-top:1rem;border-top:0.5px solid #d3d1c7;font-size:0.85rem;color:#3d3d3a}
+.topic-card.open .detail{display:block}
+.detail ul{padding-left:1.2rem}
+.detail li{margin-bottom:0.4rem}
+.detail table{width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.8rem}
+.detail th{background:#f5f4f0;padding:6px 8px;text-align:left;font-weight:500}
+.detail td{padding:5px 8px;border-top:0.5px solid #d3d1c7}
+.tag-grid{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem}
+.tag{padding:4px 12px;border-radius:20px;font-size:0.8rem}
+.tag-purple{background:#EEEDFE;color:#3C3489}
+.tag-teal{background:#E1F5EE;color:#085041}
+.tag-amber{background:#FAEEDA;color:#633806}
+.tag-coral{background:#FAECE7;color:#4A1B0C}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.75rem}
+.compare-box{padding:0.75rem;border-radius:8px;font-size:0.85rem}
+.compare-box h4{font-size:0.85rem;font-weight:500;margin-bottom:0.5rem}
+.compare-box ul{padding-left:1.2rem}
+.compare-box li{margin-bottom:0.25rem}
+.summary-section{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.summary-section h3{font-size:0.95rem;font-weight:500;color:#534AB7;border-bottom:0.5px solid #d3d1c7;padding-bottom:0.5rem;margin-bottom:1rem}
+.alert-box{background:#FAEEDA;padding:8px 12px;border-radius:8px;font-size:0.85rem;color:#633806;margin-top:0.5rem}
+.test-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.5rem}
+.test-header h2{font-size:1.1rem;font-weight:500}
+.progress-bar{background:#d3d1c7;border-radius:4px;height:6px;width:200px}
+.progress-fill{background:#534AB7;height:6px;border-radius:4px;transition:width 0.3s}
+.question-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.question-num{font-size:0.75rem;color:#73726c;margin-bottom:0.5rem}
+.question-text{font-size:1rem;font-weight:500;margin-bottom:1.25rem;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:0.6rem}
+.option-btn{padding:0.75rem 1rem;border:0.5px solid #d3d1c7;border-radius:8px;background:#fff;text-align:left;cursor:pointer;font-size:0.875rem;transition:all 0.2s}
+.option-btn:hover:not(:disabled){border-color:#534AB7;background:#EEEDFE}
+.option-btn.correct{background:#EAF3DE;border-color:#3B6D11;color:#173404}
+.option-btn.incorrect{background:#FCEBEB;border-color:#A32D2D;color:#501313}
+.option-btn.show-correct{background:#EAF3DE;border-color:#3B6D11;color:#173404}
+.explanation{margin-top:1rem;padding:0.75rem 1rem;border-radius:8px;font-size:0.85rem;display:none}
+.explanation.visible{display:block}
+.explanation.correct-exp{background:#EAF3DE;color:#27500A;border:0.5px solid #639922}
+.explanation.incorrect-exp{background:#FCEBEB;color:#791F1F;border:0.5px solid #E24B4A}
+.nav-btns{display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap}
+.btn{padding:0.6rem 1.25rem;border-radius:8px;font-size:0.875rem;cursor:pointer;font-weight:500;transition:all 0.2s}
+.btn-primary{background:#534AB7;color:#fff;border:none}
+.btn-primary:hover{background:#3C3489}
+.btn-secondary{background:#fff;color:#1a1a18;border:0.5px solid #d3d1c7}
+.btn-secondary:hover{background:#f5f4f0}
+.score-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:2rem;text-align:center}
+.score-num{font-size:3rem;font-weight:500;color:#534AB7}
+.score-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+.score-item{background:#f5f4f0;padding:1rem;border-radius:8px}
+.score-item .num{font-size:1.5rem;font-weight:500}
+.score-item .lbl{font-size:0.75rem;color:#73726c}
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <h1>Módulo 2 — Bases Fisiológicas del Ejercicio</h1>
+  <p>Fitness Instructor · Five Stars International Graduate School</p>
+</header>
+<nav>
+  <button class="active" onclick="showTab('esquema')">📋 Esquema</button>
+  <button onclick="showTab('resumen')">📝 Resumen clave</button>
+  <button onclick="showTab('siglas')">🔤 Siglas y términos</button>
+  <button onclick="showTab('test')">🧠 Test (50 preguntas)</button>
+</nav>
+
+<!-- ESQUEMA -->
+<div id="esquema" class="section active">
+  <p style="font-size:0.85rem;color:#73726c;margin-bottom:1rem">Haz clic en cada bloque para desplegar los conceptos clave</p>
+  <div class="topic-grid">
+
+    <!-- TEMA 1: SISTEMA MUSCULAR -->
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#EEEDFE">💪</div>
+        <div><h3>Sistema muscular — funciones y estructura</h3><span class="badge" style="background:#EEEDFE;color:#3C3489">Tema 1</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Funciones generales del sistema muscular:</p>
+        <ul>
+          <li><strong>Movimiento:</strong> contracciones musculares para locomoción y movimientos específicos</li>
+          <li><strong>Producción de calor:</strong> células musculares generan calor, contribuyendo a la homeostasis</li>
+          <li><strong>Postura:</strong> contracción parcial continua para sostener la postura corporal</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Capas de tejido conectivo del músculo esquelético:</p>
+        <table>
+          <tr><th>Capa</th><th>Qué envuelve</th></tr>
+          <tr><td><strong>Epimisio</strong></td><td>Todo el músculo esquelético</td></tr>
+          <tr><td><strong>Perimisio</strong></td><td>Cada fascículo (haz de fibras)</td></tr>
+          <tr><td><strong>Endomisio</strong></td><td>Cada fibra muscular individual</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Estructura de la fibra muscular:</p>
+        <ul>
+          <li><strong>Sarcolema:</strong> membrana plasmática; regula entrada/salida de moléculas y transmite estímulos</li>
+          <li><strong>Sarcoplasma:</strong> citoplasma de la célula muscular; contiene ATP, fosfocreatina, glucógeno y grasa</li>
+          <li><strong>Mitocondrias:</strong> producción aeróbica de ATP (fundamentales para ejercicio aeróbico)</li>
+          <li><strong>Retículo sarcoplásmico:</strong> almacena calcio y regula la contracción muscular</li>
+          <li><strong>Túbulos T:</strong> canales que transmiten potencial de acción al interior de la célula</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#E1F5EE">🔬</div>
+        <div><h3>Miofibrilla, sarcómera y contracción</h3><span class="badge" style="background:#E1F5EE;color:#085041">Nivel molecular</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Miofibrilla:</p>
+        <ul>
+          <li>Formada por miofilamentos de <strong>miosina</strong> (gruesos) y <strong>actina</strong> (delgados)</li>
+          <li>Tropomiosina: cubre sitios de unión de miosina en reposo</li>
+          <li>Troponina: al unirse al calcio, desplaza la tropomiosina permitiendo la contracción</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Sarcómera (unidad contráctil fundamental):</p>
+        <table>
+          <tr><th>Región</th><th>Contenido</th></tr>
+          <tr><td><strong>Banda A</strong></td><td>Anchura del filamento de miosina; estriación oscura</td></tr>
+          <tr><td><strong>Banda H</strong></td><td>Solo miosina; contiene línea M al centro</td></tr>
+          <tr><td><strong>Banda I</strong></td><td>Solo actina; proporciona estriación clara</td></tr>
+          <tr><td><strong>Línea Z</strong></td><td>Límite entre sarcómeras</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Teoría de los filamentos deslizantes (pasos):</p>
+        <ol style="padding-left:1.2rem">
+          <li>Potencial de acción → liberación de acetilcolina (ACh) en unión neuromuscular</li>
+          <li>Potencial de acción en sarcolema → viaja por túbulos T</li>
+          <li>Retículo sarcoplásmico libera calcio</li>
+          <li>Calcio se une a troponina → troponina mueve tropomiosina → sitios de unión descubiertos</li>
+          <li>Cabezas de miosina (con energía del ATP) se unen a actina → puentes cruzados</li>
+          <li>Miosina arrastra actina hacia centro de sarcómera → músculo se acorta</li>
+          <li>Nueva molécula de ATP → cabeza de miosina se separa → nuevo ciclo</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAEEDA">🤸</div>
+        <div><h3>Tipos de contracciones y fibras musculares</h3><span class="badge" style="background:#FAEEDA;color:#633806">Clasificación</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Contracciones isotónicas (tono constante, longitud variable):</p>
+        <ul>
+          <li><strong>Concéntrica:</strong> acortamiento muscular (levantar barra en curl bíceps)</li>
+          <li><strong>Excéntrica:</strong> alargamiento muscular (bajar barra en curl bíceps)</li>
+        </ul>
+        <p style="margin-top:0.5rem"><strong>Isométrica:</strong> longitud constante, tensión variable (mantener barra a mitad del recorrido)</p>
+        <p style="margin-top:0.75rem;font-weight:500">Tipos de fibras musculares:</p>
+        <table>
+          <tr><th>Tipo</th><th>Nombre</th><th>Metabolismo</th><th>Fatiga</th><th>Uso</th></tr>
+          <tr><td><strong>I (rojas)</strong></td><td>Oxidativas lentas</td><td>Aeróbico</td><td>Resistente</td><td>Resistencia larga duración</td></tr>
+          <tr><td><strong>IIa</strong></td><td>Glucolíticas oxidativas rápidas</td><td>Mixto</td><td>Moderada</td><td>Actividades moderadas-intensas</td></tr>
+          <tr><td><strong>IIx (blancas)</strong></td><td>Glucolíticas rápidas puras</td><td>Anaeróbico</td><td>Muy alta</td><td>Actividades explosivas, corta duración</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Unidades motoras y reclutamiento:</p>
+        <ul>
+          <li>Unidad motora = 1 motoneurona + todas las fibras que inerva</li>
+          <li>Todas las fibras de una UM se contraen simultáneamente</li>
+          <li>Nunca se recluta el 100% de UM (seguridad para prevenir lesiones)</li>
+          <li>Ejercicio prolongado: fibras I → se fatigan → reclutamiento de fibras II</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TEMA 2: SISTEMA CARDIOVASCULAR -->
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAECE7">❤️</div>
+        <div><h3>Sistema cardiovascular — morfología cardíaca</h3><span class="badge" style="background:#FAECE7;color:#4A1B0C">Tema 2</span></div>
+      </div>
+      <div class="detail">
+        <ul>
+          <li>Corazón: músculo cardíaco <strong>involuntario</strong>, hueco y estriado</li>
+          <li>Cuatro cámaras: aurículas derecha e izquierda + ventrículos derecho e izquierdo</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Sistema de conducción eléctrica:</p>
+        <ul>
+          <li><strong>Nódulo SA</strong> (sinoauricular): marcapasos principal del corazón</li>
+          <li>Impulso → aurículas → <strong>nódulo AV</strong> (auriculoventricular) → <strong>haz de His</strong> → <strong>fibras de Purkinje</strong> → ventrículos</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">ECG — componentes:</p>
+        <table>
+          <tr><th>Onda/complejo</th><th>Representa</th></tr>
+          <tr><td><strong>Onda P</strong></td><td>Despolarización auricular (SA → AV)</td></tr>
+          <tr><td><strong>Complejo QRS</strong></td><td>Despolarización ventricular (AV → Purkinje)</td></tr>
+          <tr><td><strong>Onda T</strong></td><td>Repolarización ventricular</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Fórmulas clave:</p>
+        <ul>
+          <li><strong>Gasto cardíaco (GC)</strong> = VS × FC</li>
+          <li><strong>Volumen sistólico (VS)</strong> = VDF – VSF</li>
+          <li><strong>PAM</strong> = PAD + [0,333 × (PAS – PAD)]</li>
+          <li><strong>Doble producto (DP)</strong> = PAS × FC</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Circulación:</p>
+        <ul>
+          <li>Sistema <strong>cerrado</strong>; corazón = bomba principal</li>
+          <li><strong>Sistémica:</strong> VI → arterias → tejidos → venas → AD</li>
+          <li><strong>Pulmonar:</strong> VD → pulmones → AI → VI</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TEMA 3: SISTEMA RESPIRATORIO -->
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#E1F5EE">🫁</div>
+        <div><h3>Sistema respiratorio — estructura y volúmenes</h3><span class="badge" style="background:#E1F5EE;color:#085041">Tema 3</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Vías respiratorias:</p>
+        <ul>
+          <li><strong>Superiores</strong> (fosas nasales): limpian y filtran el aire inspirado</li>
+          <li><strong>Inferiores</strong> (tráquea, bronquios, bronquiolos, alvéolos): intercambio gaseoso</li>
+        </ul>
+        <p style="margin-top:0.5rem">Inspiración: proceso <strong>activo</strong> (diafragma + intercostales externos)</p>
+        <p>Espiración en reposo: proceso <strong>pasivo</strong></p>
+        <p style="margin-top:0.75rem;font-weight:500">Volúmenes pulmonares (espirometría):</p>
+        <table>
+          <tr><th>Sigla</th><th>Nombre</th><th>Definición</th></tr>
+          <tr><td><strong>VRI</strong></td><td>Vol. de reserva inspiratorio</td><td>Máximo aire inhalable tras inspiración normal</td></tr>
+          <tr><td><strong>VRE</strong></td><td>Vol. de reserva espiratorio</td><td>Máximo aire exhalable tras espiración normal</td></tr>
+          <tr><td><strong>CV</strong></td><td>Capacidad vital</td><td>Máximo aire exhalable tras inspiración máxima</td></tr>
+          <tr><td><strong>VR</strong></td><td>Volumen residual</td><td>Aire que queda tras espiración máxima (no medible por espirometría)</td></tr>
+          <tr><td><strong>CPT</strong></td><td>Capacidad pulmonar total</td><td>CV + VR</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">Intercambio gaseoso (difusión pulmonar):</p>
+        <ul>
+          <li>O₂ pasa de alvéolos (↑ presión) a sangre (↓ presión)</li>
+          <li>CO₂ pasa de sangre (↑ presión) a alvéolos (↓ presión)</li>
+          <li>PO₂ aire inspirado: ~159 mmHg → alvéolos: ~100 mmHg → sangre venosa: ~40 mmHg</li>
+          <li>PCO₂ sangre venosa: ~46 mmHg → alvéolos: menor</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TEMA 4: BIOENERGÉTICA -->
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#EEEDFE">⚡</div>
+        <div><h3>Bioenergética — ATP y sistemas energéticos</h3><span class="badge" style="background:#EEEDFE;color:#3C3489">Tema 4</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">El ATP:</p>
+        <ul>
+          <li>Adenosín Trifosfato: fuente directa de energía mecánica para actividad muscular</li>
+          <li>Hidrólisis: ATP → ADP + Pi + energía</li>
+          <li>Síntesis: Pi + ADP + energía → ATP</li>
+          <li>La miosina cataliza la hidrólisis de ATP durante la contracción muscular</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Tres sistemas energéticos:</p>
+        <table>
+          <tr><th>Sistema</th><th>Vía</th><th>Intensidad</th><th>Duración</th><th>Sustrato</th></tr>
+          <tr><td><strong>Fosfágenos</strong></td><td>Anaeróbica</td><td>Muy alta</td><td>~10s inicio</td><td>ATP + fosfocreatina (PC)</td></tr>
+          <tr><td><strong>Glucólisis</strong></td><td>Anaeróbica</td><td>Alta</td><td>Hasta ~2 min</td><td>Glucosa / glucógeno</td></tr>
+          <tr><td><strong>Oxidativo</strong></td><td>Aeróbica</td><td>Baja-moderada</td><td>Prolongada</td><td>CH + grasas + O₂</td></tr>
+        </table>
+        <div class="alert-box">⚡ El sistema de fosfágenos se activa siempre al INICIO de cualquier ejercicio, independientemente de su tipo o intensidad</div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAEEDA">🔋</div>
+        <div><h3>Sistema de fosfágenos y glucólisis</h3><span class="badge" style="background:#FAEEDA;color:#633806">Anaeróbico</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Sistema de los fosfágenos:</p>
+        <ul>
+          <li>Principal fuente de ATP en ejercicios de <strong>alta intensidad y corta duración</strong> (sprint, saltos)</li>
+          <li>Enzimas: <strong>ATPasa</strong> (descompone ATP→ADP+Pi+energía) y <strong>creatincinasa/CK</strong> (sintetiza ATP desde PC+ADP)</li>
+          <li>Fibras tipo II tienen más reservas de fosfágenos que fibras tipo I</li>
+          <li>↑ ADP → ↑ actividad CK; ↑ ATP → ↓ actividad CK</li>
+          <li>Resíntesis de ATP: 3-5 min; resíntesis de PC: &lt;8 min</li>
+          <li>PC puede disminuir ~60% en los primeros 5-30 segundos de ejercicio intenso</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Glucólisis:</p>
+        <ul>
+          <li>Degradación de glucosa/glucógeno para producir ATP (sin oxígeno)</li>
+          <li><strong>Glucólisis rápida</strong> (anaeróbica): piruvato → <strong>lactato</strong>; mayor velocidad de ATP</li>
+          <li><strong>Glucólisis lenta</strong> (aeróbica): piruvato → <strong>mitocondria</strong> → ciclo de Krebs</li>
+          <li>ATP producido: <strong>2 mol por molécula de glucosa</strong>; <strong>3 mol por molécula de glucógeno</strong></li>
+          <li>El lactato no es causa directa de fatiga, pero la acidosis (↓ pH) sí interfiere con la contracción</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">Reacciones glucólisis:</p>
+        <div class="tag-grid">
+          <span class="tag tag-coral">Rápida: GLUCOSA + 2Pi + 2ADP → 2LACTATO + 2ATP + H₂O</span>
+          <span class="tag tag-amber">Lenta: GLUCOSA + 2Pi + 2ADP + NAD⁺ → 2PIRUVATOS + 2ATP + 2NADH + 2H₂O</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#E1F5EE">🌀</div>
+        <div><h3>Metabolismo aeróbico — oxidativo</h3><span class="badge" style="background:#E1F5EE;color:#085041">Aeróbico</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Principal fuente de ATP en reposo y actividades aeróbicas.</p>
+        <p style="margin-bottom:0.5rem">Sustratos: glucosa, glucógeno, grasas (y proteínas en ayuno prolongado)</p>
+        <p style="margin-bottom:0.5rem">En reposo: 70% ATP de grasas / 30% de carbohidratos</p>
+        <p style="font-weight:500;margin-top:0.75rem">Tres fases del metabolismo aeróbico:</p>
+        <table>
+          <tr><th>Fase</th><th>Lugar</th><th>Resultado</th></tr>
+          <tr><td><strong>Glucólisis aeróbica</strong></td><td>Sarcoplasma/citoplasma</td><td>2 piruvatos (sin lactato) + 2 ATP + 2 NADH</td></tr>
+          <tr><td><strong>Ciclo de Krebs</strong></td><td>Mitocondria</td><td>CO₂ + NADH + FADH₂ (poco ATP directo)</td></tr>
+          <tr><td><strong>Cadena transporte electrónico</strong></td><td>Mitocondria</td><td>Gran producción de ATP + H₂O</td></tr>
+        </table>
+        <p style="margin-top:0.75rem;font-weight:500">ATP total por vía aeróbica:</p>
+        <ul>
+          <li><strong>38 mol de ATP</strong> por molécula de glucosa</li>
+          <li><strong>39 mol de ATP</strong> por molécula de glucógeno (1 extra al evitar fosforilación)</li>
+          <li>Hasta <strong>130 mol de ATP</strong> por 256 g de grasa</li>
+          <li>No se produce lactato (O₂ desvía piruvato al ciclo de Krebs como acetil-CoA)</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-style:italic;font-size:0.8rem">La producción aeróbica tarda 3-5 min en establecerse al inicio del ejercicio</p>
+      </div>
+    </div>
+
+    <!-- TEMA 5: ADAPTACIONES METABÓLICAS -->
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#FAECE7">📈</div>
+        <div><h3>Captación de oxígeno — VO₂ y VO₂máx</h3><span class="badge" style="background:#FAECE7;color:#4A1B0C">Tema 5</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Captación de oxígeno (VO₂):</p>
+        <ul>
+          <li>Indicador de la capacidad del cuerpo para utilizar O₂ durante actividad física</li>
+          <li><strong>Ecuación de Fick:</strong> VO₂ = GC × (a-vO₂) = (FC × VS) × (a-vO₂)</li>
+          <li>a-vO₂: diferencia arterio-venosa de O₂ (↑ con la intensidad del ejercicio)</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">VO₂máx:</p>
+        <ul>
+          <li>Máxima cantidad de O₂ que el cuerpo puede absorber, transportar y utilizar</li>
+          <li>Mejor indicador de la resistencia cardiorrespiratoria</li>
+          <li>VO₂ reposo atletas élite: <strong>3,5 ml/kg/min</strong></li>
+          <li>VO₂máx atletas élite: <strong>~80 ml/kg/min</strong></li>
+          <li>Persona sedentaria → programa 6 meses: de ~35 a ~42 ml/kg/min</li>
+          <li>Deportistas resistencia nivel mundial: 70-94 ml/kg/min</li>
+          <li>Incrementos documentados con entrenamiento: <strong>4% a 93%</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-header">
+        <div class="icon" style="background:#EEEDFE">🧪</div>
+        <div><h3>Umbral del lactato y RER</h3><span class="badge" style="background:#EEEDFE;color:#3C3489">Adaptaciones metabólicas</span></div>
+      </div>
+      <div class="detail">
+        <p style="font-weight:500;margin-bottom:0.5rem">Umbral del lactato:</p>
+        <ul>
+          <li>Punto durante el ejercicio en que el cuerpo produce lactato <strong>más rápido de lo que puede eliminarlo</strong></li>
+          <li>Se asocia a acumulación de ácido láctico en sangre</li>
+          <li>Indicador del nivel de intensidad del ejercicio</li>
+          <li>El entrenamiento eleva el umbral → atletas mantienen mayor intensidad antes de la fatiga</li>
+          <li>Lactato en sangre normal en reposo: <strong>0,6-2,3 mmol/L</strong></li>
+          <li>Concentración máxima de lactato: ~5 minutos post-ejercicio</li>
+          <li>Destino del lactato: oxidado en fibras tipo I, o transportado al hígado → glucosa (Ciclo de Cori)</li>
+        </ul>
+        <p style="margin-top:0.75rem;font-weight:500">RER (Relación de Intercambio Respiratorio):</p>
+        <ul>
+          <li><strong>RER = CO₂ producido / O₂ consumido</strong></li>
+          <li>Refleja el tipo de sustrato que se está oxidando</li>
+          <li>RER <strong>alto</strong> (cercano a 1,0) → predominio de carbohidratos (ejercicio intenso)</li>
+          <li>RER <strong>bajo</strong> (cercano a 0,7) → predominio de grasas (ejercicio ligero, reposo)</li>
+          <li>Tras entrenamiento: ↓ RER en intensidades submáximas (↑ uso de grasas)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESUMEN -->
+<div id="resumen" class="section">
+
+  <div class="summary-section">
+    <h3>🏗️ Capas del músculo esquelético — memorizar orden</h3>
+    <div class="tag-grid" style="margin-bottom:0.75rem">
+      <span class="tag tag-purple" style="font-size:0.9rem;padding:6px 14px"><strong>Epimisio</strong> → todo el músculo</span>
+      <span class="tag tag-teal" style="font-size:0.9rem;padding:6px 14px"><strong>Perimisio</strong> → cada fascículo</span>
+      <span class="tag tag-amber" style="font-size:0.9rem;padding:6px 14px"><strong>Endomisio</strong> → cada fibra</span>
+    </div>
+    <p style="font-size:0.85rem;color:#73726c">Mnemotecnia: <em>E-P-E → El Perro Es mío</em> (Epimisio-Perimisio-Endomisio, de fuera a dentro)</p>
+    <div class="alert-box">⚠️ El <strong>Epimisio</strong> envuelve todo el músculo. El <strong>Sarcolema</strong> es la membrana de CADA FIBRA (no una capa del tejido conectivo).</div>
+  </div>
+
+  <div class="summary-section">
+    <h3>⚡ Tres sistemas energéticos — tabla comparativa</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+      <tr style="background:#f5f4f0"><th style="padding:8px;text-align:left">Sistema</th><th style="padding:8px">Vía</th><th style="padding:8px">Intensidad</th><th style="padding:8px">Duración</th><th style="padding:8px">Sustrato</th><th style="padding:8px">ATP producido</th></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Fosfágenos</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Anaeróbico</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Muy alta</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Inicio / ~10s</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">ATP + PC</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Inmediato</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Glucólisis</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Anaeróbico</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Alta</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Hasta ~2 min</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Glucosa / glucógeno</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">2 (glucosa) / 3 (glucógeno)</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Oxidativo</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Aeróbico</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Baja–moderada</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">Prolongada</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">CH + grasas + O₂</td><td style="padding:8px;border-top:0.5px solid #d3d1c7;text-align:center">38 (glucosa) / 39 (glucógeno)</td></tr>
+    </table>
+  </div>
+
+  <div class="summary-section">
+    <h3>📊 Datos numéricos clave para el test</h3>
+    <ul style="font-size:0.875rem;line-height:2.2;padding-left:1.2rem">
+      <li>ATP glucólisis: <strong>2 mol/glucosa; 3 mol/glucógeno</strong></li>
+      <li>ATP aeróbico: <strong>38 mol/glucosa; 39 mol/glucógeno; 130 mol/256g grasa</strong></li>
+      <li>Lactato basal en sangre (reposo): <strong>0,6 – 2,3 mmol/L</strong></li>
+      <li>Lactato máximo aparece ~<strong>5 minutos</strong> tras el ejercicio</li>
+      <li>VO₂ en reposo (atletas élite): <strong>3,5 ml/kg/min</strong></li>
+      <li>VO₂máx atletas élite: <strong>~80 ml/kg/min</strong></li>
+      <li>VO₂máx sedentario tras 6 meses entrenamiento: <strong>35 → 42 ml/kg/min</strong> (+15–20%)</li>
+      <li>VO₂máx deportistas mundo: <strong>70–94 ml/kg/min</strong></li>
+      <li>Producción aeróbica de ATP tarda en establecerse: <strong>3–5 minutos</strong></li>
+      <li>Resíntesis completa de ATP (fosfágenos): <strong>3–5 min</strong>; resíntesis PC: <strong>&lt;8 min</strong></li>
+      <li>PC puede bajar ~<strong>60%</strong> en los primeros 5-30 s de ejercicio intenso</li>
+      <li>PO₂ aire inspirado: <strong>159 mmHg</strong> → alvéolos: <strong>100 mmHg</strong> → sangre venosa: <strong>40 mmHg</strong></li>
+      <li>PCO₂ sangre venosa: <strong>~46 mmHg</strong></li>
+    </ul>
+  </div>
+
+  <div class="summary-section">
+    <h3>🫀 Fórmulas cardiovasculares</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+      <tr style="background:#f5f4f0"><th style="padding:8px;text-align:left">Fórmula</th><th style="padding:8px">Descripción</th></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>GC = VS × FC</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Gasto cardíaco = Volumen sistólico × Frecuencia cardíaca</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>VS = VDF – VSF</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Volumen sistólico = Vol. diastólico final – Vol. sistólico final</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>PAM = PAD + [0,333 × (PAS – PAD)]</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Presión arterial media</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>DP = PAS × FC</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Doble producto (trabajo del corazón)</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>VO₂ = GC × (a-vO₂)</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Ecuación de Fick para captación de oxígeno</td></tr>
+    </table>
+  </div>
+
+  <div class="summary-section">
+    <h3>🫁 Volúmenes pulmonares — tabla de referencia</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+      <tr style="background:#f5f4f0"><th style="padding:8px">Sigla</th><th style="padding:8px">Nombre completo</th><th style="padding:8px">Definición clave</th></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>VRI</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Volumen de reserva inspiratorio</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Máx. aire inhalable TRAS inspiración normal</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>VRE</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Volumen de reserva espiratorio</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Máx. aire exhalable TRAS espiración normal</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>CV</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Capacidad vital</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Máx. aire exhalable tras inspiración MÁXIMA</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>VR</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Volumen residual</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Aire que SIEMPRE queda en pulmones (no medible por espirometría)</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>CPT</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Capacidad pulmonar total</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">CV + VR (todo el aire que contienen los pulmones)</td></tr>
+    </table>
+    <div class="alert-box">⚠️ El VR (volumen residual) NO puede medirse directamente mediante espirometría — se calcula restando.</div>
+  </div>
+
+  <div class="summary-section">
+    <h3>💪 Fibras musculares — comparativa rápida</h3>
+    <div class="compare-grid">
+      <div class="compare-box" style="background:#E1F5EE">
+        <h4 style="color:#085041">Fibras tipo I (rojas)</h4>
+        <ul style="font-size:0.85rem">
+          <li>Oxidativas lentas</li>
+          <li>Alta capacidad aeróbica</li>
+          <li>Muy resistentes a la fatiga</li>
+          <li>Pequeñas, mucho sarcoplasma</li>
+          <li>Alto contenido de mioglobina</li>
+          <li>Ideales para resistencia</li>
+        </ul>
+      </div>
+      <div class="compare-box" style="background:#FAECE7">
+        <h4 style="color:#4A1B0C">Fibras tipo II (blancas)</h4>
+        <ul style="font-size:0.85rem">
+          <li>Glucolíticas rápidas</li>
+          <li>Metabolismo anaeróbico</li>
+          <li>Fatigables (IIx: muy alta)</li>
+          <li>Grandes, más miofibrillas</li>
+          <li>Más reservas de fosfágenos</li>
+          <li>IIa: capacidad mixta oxidativa+anaeróbica</li>
+          <li>IIx: actividades explosivas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <h3>🔄 Glucólisis rápida vs glucólisis lenta</h3>
+    <div class="compare-grid">
+      <div class="compare-box" style="background:#EEEDFE">
+        <h4 style="color:#3C3489">Glucólisis rápida (anaeróbica)</h4>
+        <ul style="font-size:0.85rem">
+          <li>Piruvato → <strong>lactato</strong></li>
+          <li>Mayor velocidad de producción de ATP</li>
+          <li>Se activa cuando demanda de energía es muy alta</li>
+          <li>Ej: entrenamiento de fuerza, ejercicio intenso</li>
+        </ul>
+      </div>
+      <div class="compare-box" style="background:#E1F5EE">
+        <h4 style="color:#085041">Glucólisis lenta (aeróbica)</h4>
+        <ul style="font-size:0.85rem">
+          <li>Piruvato → <strong>mitocondria</strong> (ciclo de Krebs)</li>
+          <li>Produce NADH adicional</li>
+          <li>Se activa con suficiente O₂ disponible</li>
+          <li>Ej: actividades de intensidad moderada</li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert-box" style="margin-top:0.75rem">⚠️ Los términos "glucólisis rápida/lenta" no son completamente precisos — la glucólisis en sí no depende del oxígeno. La diferencia es el destino del piruvato.</div>
+  </div>
+
+  <div class="summary-section">
+    <h3>🫀 ECG — ondas del electrocardiograma</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+      <tr style="background:#f5f4f0"><th style="padding:8px">Componente</th><th style="padding:8px">Evento cardíaco</th><th style="padding:8px">Detalle</th></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Onda P</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Despolarización auricular</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Impulso del nódulo SA al nódulo AV</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Complejo QRS</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Despolarización ventricular</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Nódulo AV → haz de His → fibras de Purkinje</td></tr>
+      <tr><td style="padding:8px;border-top:0.5px solid #d3d1c7"><strong>Onda T</strong></td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Repolarización ventricular</td><td style="padding:8px;border-top:0.5px solid #d3d1c7">Recuperación eléctrica de los ventrículos</td></tr>
+    </table>
+    <div class="alert-box">⚠️ La repolarización auricular NO aparece en el ECG porque ocurre durante el complejo QRS y no es visible.</div>
+  </div>
+
+</div>
+
+<!-- SIGLAS -->
+<div id="siglas" class="section">
+  <div style="margin-bottom:1rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <input type="text" id="sigla-search" placeholder="Buscar sigla o término..." oninput="filterSiglas(this.value)" style="flex:1;min-width:200px;padding:0.6rem 1rem;border:0.5px solid #d3d1c7;border-radius:8px;font-size:0.875rem;background:#fff;color:#1a1a18">
+    <div id="sigla-count" style="font-size:0.8rem;color:#73726c;white-space:nowrap"></div>
+  </div>
+  <div id="siglas-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.75rem"></div>
+</div>
+
+<!-- TEST -->
+<div id="test" class="section">
+  <div class="test-header">
+    <div>
+      <h2>Test tipo examen — Módulo 2</h2>
+      <p style="font-size:0.8rem;color:#73726c">50 preguntas · Cuatro opciones · Con explicación</p>
+    </div>
+    <div>
+      <div style="font-size:0.8rem;color:#73726c;margin-bottom:4px" id="progress-label">Pregunta 1 de 50</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:2%"></div></div>
+    </div>
+  </div>
+  <div id="question-area"></div>
+  <div id="score-area" style="display:none"></div>
+</div>
+
+<script>
+const tabs=['esquema','resumen','siglas','test'];
+function showTab(id){
+  tabs.forEach(t=>{document.getElementById(t).classList.toggle('active',t===id)});
+  document.querySelectorAll('nav button').forEach((b,i)=>{b.classList.toggle('active',tabs[i]===id)});
+  if(id==='test'&&currentQ===0)loadQuestion();
+  if(id==='siglas')renderSiglas('');
+}
+function toggle(el){el.classList.toggle('open')}
+
+const questions=[
+  // PREGUNTAS DEL EXAMEN REAL (de las capturas)
+  {q:"¿Cuál es la principal diferencia entre la respiración aeróbica y anaeróbica en las células musculares?",opts:["La respiración aeróbica ocurre solo durante el ejercicio intenso","La respiración anaeróbica produce más energía que la aeróbica","La respiración aeróbica utiliza oxígeno, mientras que la anaeróbica no","La respiración anaeróbica requiere oxígeno para producir energía"],correct:2,exp:"La diferencia fundamental es el uso de oxígeno: la respiración aeróbica lo utiliza (produciendo 38-39 mol de ATP por glucosa/glucógeno), mientras que la anaeróbica no lo requiere (produciendo solo 2-3 mol de ATP). La aeróbica es más eficiente, no la anaeróbica."},
+  {q:"¿Cuál es el papel principal del ATP en las células del organismo?",opts:["Es el principal componente estructural de las membranas celulares","Es la fuente inmediata de energía para las funciones celulares","Es un tipo de ácido nucleico que almacena información genética","Es responsable de la síntesis de proteínas en el núcleo"],correct:1,exp:"El ATP (Adenosín trifosfato) es la fuente directa e inmediata de energía en todas las células del organismo. Se utiliza para contracción muscular, transporte activo, digestión, síntesis de compuestos químicos y todas las funciones celulares. No es un componente estructural de membranas, ni un ácido nucleico de información genética, ni una enzima sintetizadora de proteínas."},
+  {q:"¿Cuál es el papel principal del ATP en la contracción muscular?",opts:["Proporcionar energía para el deslizamiento de los filamentos de actina y miosina","Almacenar oxígeno en las células musculares","Transportar nutrientes a las fibras musculares","Regular la temperatura corporal durante el ejercicio"],correct:0,exp:"El ATP es esencial como fuente de energía inmediata en la contracción muscular. La miosina cataliza la hidrólisis de ATP, lo que permite que sus cabezas tiren de los filamentos de actina (teoría de los filamentos deslizantes). Sin ATP, la miosina no puede separarse de la actina (rigidez cadavérica). Las otras funciones pertenecen a la hemoglobina, el sistema circulatorio y la termorregulación respectivamente."},
+  {q:"¿Cuál de los siguientes volúmenes pulmonares representa la cantidad máxima de aire que puede ser exhalada después de una espiración normal?",opts:["Volumen de reserva espiratorio (VRE)","Volumen residual (VR)","Capacidad vital (CV)","Volumen de reserva inspiratorio (VRI)"],correct:0,exp:"El VRE (Volumen de Reserva Espiratorio) es la cantidad máxima de aire que puede ser exhalada DESPUÉS de una espiración normal. El VR es el aire que SIEMPRE queda en los pulmones tras una espiración máxima. La CV es la cantidad máxima tras una inhalación máxima. El VRI es el máximo inhalable tras una inspiración normal."},
+  {q:"¿Cuál de los siguientes sistemas energéticos opera aeróbicamente y requiere oxígeno?",opts:["La glucólisis rápida","La glucólisis lenta","El sistema de los fosfágenos","El sistema oxidativo"],correct:3,exp:"El sistema oxidativo (aeróbico) es el único que requiere oxígeno para funcionar. Opera mediante tres vías: glucólisis aeróbica, ciclo de Krebs y cadena de transporte electrónico, todas en presencia de O₂. La glucólisis rápida es anaeróbica. La glucólisis lenta también es anaeróbica en sí misma (aunque el piruvato luego entra en la mitocondria). El sistema de fosfágenos no requiere O₂."},
+  {q:"¿Cuál de las siguientes capas de tejido conectivo envuelve todo el músculo esquelético?",opts:["Endomisio","Perimisio","Sarcolema","Epimisio"],correct:3,exp:"El Epimisio es la capa de tejido conectivo que envuelve TODO el músculo esquelético. El Perimisio envuelve cada fascículo (haz de fibras). El Endomisio envuelve cada fibra muscular individual. El Sarcolema es la membrana plasmática de la fibra muscular, no una capa de tejido conectivo."},
+  {q:"¿Cuál de las siguientes funciones es desempeñada por el sistema muscular?",opts:["Respiración","Circulación de la sangre","Digestión","Producción de calor"],correct:3,exp:"El sistema muscular desempeña tres funciones principales: movimiento (locomoción), producción de calor (las células musculares generan calor en el metabolismo corporal, contribuyendo a mantener la temperatura y la homeostasis) y postura. La respiración involucra pulmones, la circulación el corazón y vasos, y la digestión el aparato digestivo."},
+  {q:"¿Cuál es la función principal de las vías respiratorias superiores?",opts:["Transportar oxígeno a los tejidos del cuerpo","Limpiar y filtrar el aire inspirado","Regular la temperatura del aire inhalado","Intercambiar gases entre el aire y la sangre"],correct:1,exp:"Las vías respiratorias superiores (fosas nasales principalmente) tienen como función principal limpiar y filtrar el aire inspirado. Transportar O₂ a los tejidos es función del sistema circulatorio. La regulación de temperatura del aire también ocurre en vías superiores pero la función PRINCIPAL es el filtrado. El intercambio gaseoso ocurre en los alvéolos (vías inferiores)."},
+  {q:"¿Qué indica el índice de intercambio respiratorio (RER) durante el metabolismo celular?",opts:["La cantidad de ácido láctico producido durante el ejercicio","La cantidad de oxígeno consumido en relación con la glucosa utilizada","La proporción de glucosa oxidada en relación con los ácidos grasos utilizados","La proporción de dióxido de carbono producido en relación con el oxígeno consumido"],correct:3,exp:"El RER (Relación de Intercambio Respiratorio) es la proporción de CO₂ producido en relación con el O₂ consumido durante el metabolismo celular. No mide ácido láctico, ni la relación O₂-glucosa, ni la proporción entre sustratos. Un RER cercano a 1,0 indica predominio de carbohidratos; cercano a 0,7 indica predominio de grasas."},
+  {q:"¿Qué es el umbral del lactato?",opts:["Es el punto durante el ejercicio en el cual el cuerpo comienza a producir lactato a una velocidad más rápida de lo que puede ser eliminado","Es el punto en el que el cuerpo alcanza su capacidad máxima de consumo de oxígeno","Es el punto en el que el cuerpo deja de producir lactato durante el ejercicio","Es el punto en el que el cuerpo comienza a utilizar lactato como fuente principal de energía"],correct:0,exp:"El umbral del lactato es el punto durante el ejercicio en que el cuerpo produce lactato MÁS RÁPIDO de lo que puede eliminarlo. No es el punto de VO₂máx (aunque ambos son indicadores de intensidad). El cuerpo nunca deja de producir lactato durante el ejercicio intenso. El lactato sí puede usarse como sustrato energético, pero eso no es la definición del umbral."},
+  {q:"¿Cuál es la función principal del sistema de los fosfágenos durante el ejercicio?",opts:["Aumentar la resistencia muscular","Proporcionar energía rápidamente","Mejorar la flexibilidad","Reducir la fatiga"],correct:1,exp:"El sistema de los fosfágenos es la principal fuente de ATP cuando se necesita energía de forma inmediata (alta intensidad, corta duración). Se activa al inicio de CUALQUIER ejercicio. Proporciona energía rápidamente gracias a la descomposición de fosfocreatina. No mejora la resistencia, la flexibilidad, ni reduce la fatiga directamente."},
+  {q:"¿Cuál es la principal diferencia entre la glucólisis rápida y la glucólisis lenta?",opts:["La glucólisis rápida produce ATP más lentamente que la glucólisis lenta","La glucólisis rápida convierte el piruvato en lactato, mientras que la glucólisis lenta transporta el piruvato a la mitocondria","La glucólisis lenta ocurre en ausencia de oxígeno, mientras que la glucólisis rápida requiere oxígeno","La glucólisis rápida solo ocurre en células musculares, mientras que la glucólisis lenta ocurre en todas las células"],correct:1,exp:"La diferencia clave es el destino del piruvato: en la glucólisis rápida, el piruvato se convierte en LACTATO (mayor velocidad de ATP). En la glucólisis lenta, el piruvato se transporta a la mitocondria para continuar la producción aeróbica de energía. La glucólisis rápida produce ATP MÁS rápido que la lenta (no más lento). Ninguna de las dos depende directamente del oxígeno."},
+  {q:"¿Cuál es la principal fuente de ATP en reposo y durante actividades aeróbicas?",opts:["Sistema oxidativo","Sistema glucolítico","Sistema de fosfágenos","Sistema de proteínas"],correct:0,exp:"El sistema oxidativo (aeróbico) es la principal fuente de ATP en reposo y durante actividades aeróbicas de intensidad baja-moderada. En reposo el 70% del ATP proviene de grasas y 30% de carbohidratos, ambos metabolizados por el sistema oxidativo. El glucolítico actúa en intensidades más altas. Los fosfágenos al inicio y en ejercicios explosivos. No existe un 'sistema de proteínas' energético significativo."},
+  // PREGUNTAS PROPIAS — SISTEMA MUSCULAR
+  {q:"¿Qué función tienen los túbulos T (túbulos transversales) en la fibra muscular?",opts:["Almacenar calcio para la contracción muscular","Producir ATP a través del metabolismo aeróbico","Transmitir el potencial de acción hacia el interior de la fibra muscular","Sintetizar proteínas contráctiles como la actina y miosina"],correct:2,exp:"Los túbulos T son canales que parten del sarcolema y transmiten el potencial de acción al INTERIOR de la célula muscular, permitiendo que el retículo sarcoplásmico libere calcio. El almacenamiento de calcio lo realiza el retículo sarcoplásmico. La producción de ATP aeróbico es función de las mitocondrias."},
+  {q:"¿Qué estructura es la unidad contráctil fundamental del músculo esquelético?",opts:["Miofibrilla","Sarcómera","Filamento de miosina","Unidad motora"],correct:1,exp:"La sarcómera es la unidad contráctil fundamental del músculo, delimitada entre dos líneas Z. Es la unidad mínima de contracción. La miofibrilla está formada por múltiples sarcómeras en serie. El filamento de miosina es un componente de la sarcómera. La unidad motora es la unidad funcional neuromuscular (motoneurona + fibras que inerva)."},
+  {q:"Según la teoría de los filamentos deslizantes, ¿qué desencadena la unión de las cabezas de miosina con la actina?",opts:["El aumento de la temperatura muscular","La unión del calcio a la troponina, que desplaza la tropomiosina","La llegada directa del impulso nervioso a los filamentos de actina","La presencia de fosfocreatina en el sarcoplasma"],correct:1,exp:"El proceso es: calcio liberado por el retículo sarcoplásmico → calcio se une a la troponina → troponina desplaza la tropomiosina → se descubren los sitios de unión de la actina → cabezas de miosina pueden unirse a la actina formando puentes cruzados. Sin calcio (o sin la cadena calcio-troponina-tropomiosina), no hay contracción muscular."},
+  {q:"¿Qué región de la sarcómera contiene ÚNICAMENTE filamentos de miosina, sin actina?",opts:["Banda I","Banda A","Banda H","Línea Z"],correct:2,exp:"La Banda H es el área central de la Banda A que contiene SOLO miosina, sin filamentos de actina. La Banda I contiene solo actina. La Banda A está determinada por la anchura del filamento de miosina (y en ella se solapan actina y miosina). La línea Z es el límite entre sarcómeras."},
+  {q:"¿Cuál de las siguientes afirmaciones sobre las unidades motoras es correcta?",opts:["Una unidad motora puede contener fibras de tipo I y tipo II mezcladas","Cuando la motoneurona envía un impulso, solo algunas fibras de la unidad se contraen","Una unidad motora se compone de una motoneurona y todas las fibras musculares que inerva","Durante el esfuerzo máximo se recluta el 100% de las unidades motoras disponibles"],correct:2,exp:"Una unidad motora = 1 motoneurona + TODAS las fibras que esa neurona inerva. Cuando la motoneurona envía un impulso, TODAS las fibras de la UM se contraen simultáneamente (principio de todo o nada). Las fibras de una UM son del mismo tipo. Nunca se recluta el 100% de las UM (margen de seguridad para prevenir lesiones)."},
+  {q:"En un curl de bíceps, ¿qué tipo de contracción muscular se produce al BAJAR controladamente la barra?",opts:["Contracción concéntrica","Contracción isométrica","Contracción excéntrica","Contracción isotónica estática"],correct:2,exp:"Al bajar la barra en el curl de bíceps, el músculo bíceps se ALARGA mientras genera tensión para controlar el descenso → contracción excéntrica. Al subir la barra, el bíceps se ACORTA → contracción concéntrica. Mantener la barra estática a mitad del recorrido → contracción isométrica. La contracción isotónica estática no es una denominación del temario."},
+  {q:"¿Qué ocurre con el patrón de reclutamiento de fibras musculares durante un ejercicio aeróbico prolongado cuando las fibras tipo I se fatigan?",opts:["El cuerpo detiene el ejercicio automáticamente","Se reclutan fibras tipo II para mantener la intensidad del ejercicio","El cuerpo reduce la producción de lactato para continuar","Se activa exclusivamente el sistema de fosfágenos"],correct:1,exp:"Cuando las fibras tipo I (resistentes a la fatiga y aeróbicas) se agotan durante el ejercicio prolongado, su eficiencia contráctil disminuye y el sistema nervioso recluta progresivamente fibras tipo II para mantener la intensidad requerida. Este reclutamiento dinámico optimiza el rendimiento y distribuye la carga entre las fibras disponibles."},
+  // SISTEMA CARDIOVASCULAR
+  {q:"¿Cuál es el marcapasos natural del corazón y dónde se origina el impulso eléctrico?",opts:["Nódulo auriculoventricular (AV), en el tabique entre aurículas y ventrículos","Haz de His, en los ventrículos","Nódulo sinoauricular (SA), en la aurícula derecha","Fibras de Purkinje, distribuidas por los ventrículos"],correct:2,exp:"El nódulo sinoauricular (SA), ubicado en la aurícula derecha, es el marcapasos natural del corazón. Es quien genera el impulso eléctrico rítmico. La secuencia de conducción es: nódulo SA → aurículas → nódulo AV → haz de His → fibras de Purkinje → ventrículos."},
+  {q:"¿Qué representa el complejo QRS en el electrocardiograma?",opts:["La despolarización auricular (contracción de las aurículas)","La repolarización ventricular (relajación de los ventrículos)","La despolarización ventricular (contracción de los ventrículos)","La activación del nódulo sinoauricular"],correct:2,exp:"El complejo QRS representa la despolarización ventricular, es decir, la propagación del impulso eléctrico que genera la CONTRACCIÓN de los ventrículos. La onda P representa la despolarización auricular. La onda T representa la repolarización ventricular. La activación del nódulo SA genera la onda P, no el QRS."},
+  {q:"Un corredor tiene una frecuencia cardíaca de 150 lpm y un volumen sistólico de 90 mL. ¿Cuál es su gasto cardíaco?",opts:["6 L/min","11 L/min","13,5 L/min","15 L/min"],correct:2,exp:"Gasto cardíaco (GC) = VS × FC = 90 mL × 150 lpm = 13.500 mL/min = 13,5 L/min. Esta fórmula es fundamental: el GC indica cuánta sangre bombea el corazón por minuto. En reposo el GC normal es ~5 L/min; durante ejercicio intenso puede superar 20 L/min en deportistas."},
+  {q:"La presión arterial sistólica es 130 mmHg y la diastólica es 80 mmHg. ¿Cuál es la presión arterial media (PAM)?",opts:["103 mmHg","96,7 mmHg","110 mmHg","90 mmHg"],correct:1,exp:"PAM = PAD + [0,333 × (PAS – PAD)] = 80 + [0,333 × (130 – 80)] = 80 + [0,333 × 50] = 80 + 16,65 = 96,65 ≈ 96,7 mmHg. La PAM representa la presión sanguínea promedio durante todo el ciclo cardíaco."},
+  {q:"¿Qué componente del ECG refleja la RECUPERACIÓN eléctrica de los ventrículos tras la contracción?",opts:["Onda P","Complejo QRS","Onda T","Intervalo PR"],correct:2,exp:"La onda T representa la repolarización ventricular, es decir, la recuperación eléctrica de los ventrículos después de haberse contraído. La onda P = despolarización auricular. El complejo QRS = despolarización ventricular. El intervalo PR es el tiempo entre la activación auricular y ventricular."},
+  {q:"¿Por qué la repolarización auricular no aparece registrada en el ECG?",opts:["Porque las aurículas no se repolan eléctricamente","Porque ocurre durante el complejo QRS y queda enmascarada","Porque la repolarización auricular es demasiado débil para detectar","Porque ocurre durante la onda T"],correct:1,exp:"La repolarización auricular NO aparece en el ECG porque ocurre durante el complejo QRS y queda enmascarada por la señal eléctrica más potente de la despolarización ventricular. Esto es un dato específico del temario que puede aparecer en el test."},
+  // SISTEMA RESPIRATORIO
+  {q:"¿Qué volumen pulmonar NO puede medirse directamente mediante espirometría y debe calcularse?",opts:["Volumen de reserva inspiratorio (VRI)","Capacidad vital (CV)","Volumen residual (VR)","Volumen de reserva espiratorio (VRE)"],correct:2,exp:"El Volumen Residual (VR) es el aire que permanece en los pulmones tras una espiración máxima y NO puede medirse directamente por espirometría. Se calcula restando el volumen espirado en la CV del volumen total movilizado. Los otros parámetros sí se miden directamente con la espirometría."},
+  {q:"¿Cuál es la Capacidad Pulmonar Total (CPT) y cómo se calcula?",opts:["CV + VRI","VRI + VRE","CV + VR","VRE + VR"],correct:2,exp:"La Capacidad Pulmonar Total (CPT) es la cantidad total de aire que los pulmones pueden contener = Capacidad Vital (CV) + Volumen Residual (VR). Es decir, todo el aire movilizable más el que siempre queda en los pulmones."},
+  {q:"Durante el intercambio gaseoso en los alvéolos, ¿en qué dirección se difunde el oxígeno y por qué?",opts:["De la sangre a los alvéolos, porque la PO₂ sanguínea es mayor","De los alvéolos a la sangre, porque la PO₂ alveolar es mayor que la sanguínea","De los alvéolos a la sangre, porque el O₂ es más pesado que el CO₂","De la sangre a los alvéolos, porque la sangre contiene más CO₂ que O₂"],correct:1,exp:"El O₂ difunde de los alvéolos (~100 mmHg) a la sangre venosa (~40 mmHg) siguiendo el gradiente de presión parcial (de mayor a menor concentración). Simultáneamente, el CO₂ difunde de la sangre (~46 mmHg) a los alvéolos (menor presión). La difusión siempre sigue el gradiente de concentración."},
+  {q:"¿Qué músculos son los principales responsables de la inspiración en reposo?",opts:["Intercostales internos y abdominales","Diafragma e intercostales externos","Pectorales y esternocleidomastoideo","Escalenos y abdominales"],correct:1,exp:"La inspiración es un proceso ACTIVO en el que el diafragma y los músculos intercostales externos se contraen para expandir el tórax, disminuir la presión pulmonar y permitir la entrada de aire. Durante el ejercicio intenso se suman otros músculos accesorios (escaleno, esternocleidomastoideo, pectorales). La espiración en reposo es PASIVA."},
+  // BIOENERGÉTICA
+  {q:"¿Por qué el sistema de fosfágenos no puede mantener el aporte de energía en actividades de larga duración?",opts:["Porque genera demasiado lactato que acidifica el músculo","Porque el ATP y la fosfocreatina se almacenan en cantidades pequeñas en el músculo","Porque requiere oxígeno que no está disponible en ejercicios prolongados","Porque las enzimas que lo regulan se inactivan a los 30 segundos"],correct:1,exp:"El sistema de fosfágenos tiene una capacidad limitada porque el ATP y la fosfocreatina (PC) se almacenan en CANTIDADES PEQUEÑAS en el músculo. Por eso proporciona energía muy rápida pero solo durante segundos. No genera lactato directamente. No requiere oxígeno. Las enzimas no se inactivan, sino que la regulación cambia cuando ↑ ATP."},
+  {q:"¿Cuál es la diferencia en la producción de ATP entre utilizar glucosa o glucógeno en la glucólisis anaeróbica?",opts:["Ambos producen la misma cantidad de ATP (2 mol)","La glucosa produce 3 mol y el glucógeno produce 2 mol de ATP","La glucosa produce 2 mol y el glucógeno produce 3 mol de ATP","Ambos producen 3 mol de ATP en condiciones anaeróbicas"],correct:2,exp:"La glucosa produce 2 mol de ATP por molécula mediante glucólisis anaeróbica. El glucógeno produce 3 mol de ATP por unidad de glucosa, porque al usar glucógeno muscular se evita la reacción de fosforilación inicial de la glucosa (que cuesta 1 ATP), resultando en 1 ATP extra neto."},
+  {q:"¿Qué enzima cataliza la hidrólisis del ATP durante la contracción muscular?",opts:["Creatincinasa (CK)","Fosforilasa","ATPasa (trifosfatasa de adenosina)","Fosfofructocinasa (PFK)"],correct:2,exp:"La ATPasa (también llamada miosina-ATPasa cuando es la cabeza de la miosina) cataliza la hidrólisis del ATP: ATP → ADP + Pi + energía. La creatincinasa sintetiza ATP a partir de PC+ADP. La fosforilasa controla la descomposición del glucógeno. La fosfofructocinasa (PFK) regula la velocidad de la glucólisis."},
+  {q:"¿Dónde tiene lugar el ciclo de Krebs y la cadena de transporte electrónico?",opts:["En el retículo sarcoplásmico","En el citoplasma/sarcoplasma","En las mitocondrias","En el sarcolema"],correct:2,exp:"El ciclo de Krebs y la cadena de transporte electrónico tienen lugar en las MITOCONDRIAS. La glucólisis, en cambio, ocurre en el citoplasma/sarcoplasma. Las mitocondrias son los orgánulos especializados en la producción aeróbica de ATP y son fundamentales para el ejercicio aeróbico prolongado."},
+  {q:"¿Cuántas moléculas de ATP se producen por vía aeróbica a partir de una molécula de glucosa (incluyendo la glucólisis aeróbica)?",opts:["2 moléculas de ATP","12 moléculas de ATP","38 moléculas de ATP","39 moléculas de ATP"],correct:2,exp:"La degradación completa de una molécula de GLUCOSA por vía aeróbica (glucólisis aeróbica + ciclo de Krebs + cadena de transporte electrónico) produce 38 moléculas de ATP. Si se parte de glucógeno, se producen 39 moléculas de ATP (1 ATP extra por no necesitar la fosforilación inicial de la glucosa)."},
+  {q:"¿Por qué no se forma lactato en la vía aeróbica?",opts:["Porque la glucólisis aeróbica no produce piruvato","Porque el oxígeno desvía el piruvato hacia el ciclo de Krebs como acetil-CoA","Porque el lactato se transforma directamente en CO₂ en presencia de oxígeno","Porque la glucólisis aeróbica produce directamente acetil-CoA sin pasar por piruvato"],correct:1,exp:"En presencia de oxígeno, el piruvato generado en la glucólisis aeróbica se convierte en acetil-CoA y entra en el ciclo de Krebs dentro de la mitocondria. El O₂ inhibe la acumulación de lactato al desviar la mayoría del piruvato hacia la vía aeróbica. Solo cuando el O₂ escasea (glucólisis rápida) el piruvato se convierte en lactato."},
+  {q:"¿Cuál es el destino del lactato producido durante la glucólisis anaeróbica?",opts:["Se elimina directamente por la orina","Se oxida en fibras tipo I, o se transporta al hígado para convertirse en glucosa (Ciclo de Cori)","Se convierte en CO₂ y agua en los alvéolos","Se almacena en el hígado como glucógeno de forma directa"],correct:1,exp:"El lactato tiene varios destinos: puede ser oxidado en fibras tipo I (oxidativas lentas) y células cardíacas como sustrato energético, o transportado por la sangre al hígado donde se convierte en glucosa mediante gluconeogénesis (Ciclo de Cori). La concentración máxima de lactato en sangre ocurre ~5 minutos post-ejercicio."},
+  // ADAPTACIONES METABÓLICAS
+  {q:"¿Cuál es la fórmula de la ecuación de Fick para la captación de oxígeno?",opts:["VO₂ = FC × VRI","VO₂ = GC × (a-vO₂)","VO₂ = PAM × FC","VO₂ = VS × (PO₂ alveolar)"],correct:1,exp:"La ecuación de Fick establece: VO₂ = GC × (a-vO₂), donde GC es el gasto cardíaco (sangre bombeada por minuto) y a-vO₂ es la diferencia arterio-venosa de oxígeno (cantidad de O₂ extraída de la sangre por los tejidos). También puede expresarse como: VO₂ = (FC × VS) × (a-vO₂)."},
+  {q:"¿Cuál es el VO₂ en reposo estimado habitualmente en atletas de resistencia de élite?",opts:["1,5 ml/kg/min","3,5 ml/kg/min","5,0 ml/kg/min","8,0 ml/kg/min"],correct:1,exp:"En atletas de resistencia de élite, el VO₂ en reposo se estima habitualmente en 3,5 ml/kg/min. Su VO₂máx ronda los 80 ml/kg/min. Los deportistas de resistencia de nivel mundial tienen valores de VO₂máx entre 70-94 ml/kg/min."},
+  {q:"¿Qué cambio se produce en el RER (Relación de Intercambio Respiratorio) durante un ejercicio de ALTA intensidad como el sprint?",opts:["El RER disminuye hacia 0,7 indicando mayor uso de grasas","El RER se mantiene constante en 0,85 independientemente de la intensidad","El RER aumenta acercándose a 1,0 o superior, indicando mayor uso de glucosa","El RER desaparece porque el sistema anaeróbico no produce CO₂"],correct:2,exp:"Durante ejercicios de alta intensidad como el sprint, el RER AUMENTA acercándose a 1,0 o incluso superándolo (por la producción extra de CO₂ del sistema tampón). Esto refleja la mayor utilización de glucosa/glucógeno. En ejercicios ligeros (caminar, reposo), el RER es más bajo (~0,7-0,8) porque se prefiere la oxidación de ácidos grasos."},
+  {q:"¿Qué concentración de lactato en sangre es normal en reposo?",opts:["0,1 - 0,5 mmol/L","0,6 - 2,3 mmol/L","3,0 - 5,0 mmol/L","5,5 - 8,0 mmol/L"],correct:1,exp:"En condiciones normales de reposo, la concentración de lactato en sangre es baja: entre 0,6 y 2,3 mmol/L. Estos valores aumentan con la intensidad del ejercicio físico y parecen depender del tipo de fibra muscular utilizada. La concentración máxima post-ejercicio se alcanza aproximadamente 5 minutos después de cesar el esfuerzo."},
+  {q:"¿Cómo afecta el entrenamiento de resistencia al umbral del lactato?",opts:["Lo reduce, permitiendo acumular menos lactato en general","Lo eleva, permitiendo mantener mayor intensidad antes de que se acumule lactato","No modifica el umbral, solo mejora la capacidad de eliminar lactato una vez acumulado","Lo mantiene igual pero aumenta la velocidad de eliminación del lactato"],correct:1,exp:"El entrenamiento de resistencia ELEVA el umbral del lactato: los atletas pueden mantener esfuerzos de mayor intensidad durante más tiempo sin experimentar un aumento significativo de lactato en sangre. Esto se debe a mayor capacidad de eliminar lactato, más enzimas musculares, y mayor eficiencia metabólica. El umbral se alcanza a un mayor % del VO₂máx tras el entrenamiento."},
+  {q:"¿Cuál de las siguientes afirmaciones sobre el VO₂máx es correcta?",opts:["Solo puede mejorar en personas sedentarias, no en atletas ya entrenados","Está influenciado por el gasto cardíaco y la diferencia arterio-venosa de O₂","Es independiente del nivel de entrenamiento una vez alcanzada la madurez","Solo varía con la edad, no con el entrenamiento"],correct:1,exp:"El VO₂máx está determinado principalmente por dos factores: la capacidad del corazón y sistema circulatorio para transportar O₂ (gasto cardíaco) y la capacidad de los tejidos para extraer O₂ de la sangre (diferencia a-vO₂). Ambos factores mejoran con el entrenamiento, por lo que el VO₂máx puede incrementarse entre un 4% y un 93% con entrenamiento adecuado."},
+  // PREGUNTAS INTEGRADORAS
+  {q:"¿Qué sustrato energético predomina durante el ejercicio aeróbico de ALTA intensidad?",opts:["Grasas","Proteínas","Hidratos de carbono (glucosa/glucógeno)","Fosfocreatina"],correct:2,exp:"Aunque el sistema oxidativo puede usar grasas y carbohidratos, a alta intensidad aeróbica (>60% VO₂máx) los hidratos de carbono (glucosa/glucógeno) son el sustrato predominante. En reposo: 70% grasas / 30% CH. A mayor intensidad, mayor proporción de CH. Solo los hidratos de carbono pueden metabolizarse sin la intervención directa del oxígeno."},
+  {q:"¿Cuánto tiempo tarda en establecerse la producción aeróbica de ATP al inicio del ejercicio?",opts:["Inmediatamente, desde el primer segundo","30-60 segundos","3-5 minutos","10-15 minutos"],correct:2,exp:"La producción aeróbica de ATP NO ocurre instantáneamente. Tarda entre 3 y 5 minutos en establecerse porque el O₂ debe recorrer pulmones → sangre → corazón → capilares musculares → células. Por eso, al inicio de cualquier ejercicio, los fosfágenos y la glucólisis cubren la demanda energética hasta que el sistema oxidativo se pone en marcha."},
+  {q:"¿Qué relación existe entre la Banda H y la Banda A de la sarcómera?",opts:["La Banda H contiene actina y miosina solapadas; la Banda A solo actina","La Banda H es parte de la Banda A, pero contiene solo miosina (sin actina)","La Banda H y la Banda A son regiones independientes sin relación entre sí","La Banda A está dentro de la Banda H y contiene principalmente actina"],correct:1,exp:"La Banda A está determinada por la anchura del filamento de miosina. La Banda H es la REGIÓN CENTRAL de la Banda A que contiene SOLO miosina, sin solapamiento con la actina. En el centro de la Banda H se encuentra la línea M. La Banda I, en cambio, solo contiene actina y se sitúa entre los extremos de los filamentos de miosina de dos sarcómeras adyacentes."},
+  {q:"¿Qué ocurre con la concentración de fosfatos de creatina (PC) durante los primeros 5-30 segundos de un ejercicio de alta intensidad?",opts:["Aumenta para proporcionar más energía","Se mantiene estable gracias a la actividad de la creatincinasa","Puede disminuir alrededor de un 60%","Desaparece completamente en los primeros 10 segundos"],correct:2,exp:"La fosfocreatina (PC) puede disminuir alrededor de un 60% en los primeros 5-30 segundos de ejercicio de alta intensidad, y puede eliminarse casi por completo en ejercicios máximos hasta el agotamiento. El ATP muscular, sin embargo, no baja de un 60% respecto a valores iniciales incluso con ejercicios intensos. La resíntesis de PC tarda menos de 8 minutos."},
+  {q:"¿Cuál de las siguientes opciones describe correctamente la diferencia entre la circulación sistémica y la pulmonar?",opts:["La circulación sistémica lleva sangre desoxigenada; la pulmonar lleva sangre oxigenada","La circulación sistémica va del VI a los tejidos del cuerpo; la pulmonar va del VD a los pulmones","Ambas circulaciones parten del ventrículo izquierdo en diferentes direcciones","La circulación pulmonar transporta CO₂ directamente al exterior del organismo"],correct:1,exp:"La circulación sistémica va del ventrículo IZQUIERDO (VI) → arterias → tejidos/órganos → venas → aurícula derecha, llevando sangre oxigenada a los tejidos. La circulación pulmonar va del ventrículo DERECHO (VD) → arteria pulmonar → pulmones (oxigenación) → venas pulmonares → aurícula izquierda."},
+  {q:"¿Qué representa la diferencia arterio-venosa de oxígeno (a-vO₂) en la ecuación de Fick?",opts:["La diferencia de presión entre las arterias coronarias y las venas pulmonares","La cantidad de oxígeno que se ha extraído de la sangre por los tejidos durante el ejercicio","La velocidad de transporte de oxígeno desde los alvéolos a la sangre","La diferencia entre el VO₂máx y el VO₂ en reposo"],correct:1,exp:"La diferencia a-vO₂ es la diferencia en la concentración de oxígeno entre la sangre arterial (que llega a los tejidos) y la sangre venosa (que sale de los tejidos). Indica cuánto O₂ han extraído los tejidos. Esta diferencia AUMENTA con la intensidad del ejercicio, ya que los tejidos necesitan más O₂ para satisfacer la demanda metabólica."},
+  {q:"¿Qué diferencia existe entre una contracción isométrica y una contracción isotónica excéntrica?",opts:["En la isométrica el músculo se alarga; en la excéntrica no cambia de longitud","En la isométrica la longitud del músculo no varía; en la excéntrica el músculo se alarga bajo tensión","Ambas contracciones son idénticas en cuanto a la variación de longitud muscular","En la isométrica el músculo se acorta; en la excéntrica se alarga"],correct:1,exp:"Contracción ISOMÉTRICA: longitud constante, tensión variable (el músculo genera fuerza sin cambiar de longitud). Contracción EXCÉNTRICA: el músculo se ALARGA mientras genera tensión (contracción dinámica isotónica en la que el movimiento determina alargamiento, p.ej. bajar una barra controladamente). Ambas generan tensión pero la longitud es diferente."},
+  {q:"¿Por qué las fibras tipo II (blancas) contienen más reservas de fosfágenos que las fibras tipo I (rojas)?",opts:["Porque las fibras tipo II tienen mayor densidad de mitocondrias","Porque las fibras tipo II están especializadas en actividades de alta intensidad que requieren energía inmediata","Porque las fibras tipo I consumen los fosfágenos más rápidamente","Porque las fibras tipo II tienen menor capacidad para producir ATP aeróbicamente"],correct:1,exp:"Las fibras tipo II están especializadas en contracciones rápidas y potentes de alta intensidad. Para suministrar energía de forma INMEDIATA en estos esfuerzos, necesitan mayores reservas de fosfágenos (ATP y fosfocreatina). Las fibras tipo I, en cambio, dependen principalmente del metabolismo aeróbico (mayor densidad mitocondrial) y no necesitan tantas reservas de fosfágenos."},
+];
+
+let currentQ=0,score=0,answered=new Array(questions.length).fill(null);
+
+function loadQuestion(){
+  const q=questions[currentQ];
+  const pct=Math.round(((currentQ+1)/questions.length)*100);
+  document.getElementById('progress-label').textContent='Pregunta '+(currentQ+1)+' de '+questions.length;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  let html='<div class="question-card"><div class="question-num">Pregunta '+(currentQ+1)+' / '+questions.length+'</div><div class="question-text">'+q.q+'</div><div class="options">';
+  q.opts.forEach((o,i)=>{
+    let cls='';
+    if(answered[currentQ]!==null){
+      if(i===q.correct)cls=' show-correct';
+      else if(i===answered[currentQ])cls=' incorrect';
+    }
+    html+='<button class="option-btn'+cls+'" onclick="answer('+i+')" '+(answered[currentQ]!==null?'disabled':'')+'>'+o+'</button>';
+  });
+  html+='</div>';
+  if(answered[currentQ]!==null){
+    const ok=answered[currentQ]===q.correct;
+    html+='<div class="explanation visible '+(ok?'correct-exp':'incorrect-exp')+'">'+(ok?'✅ <strong>Correcto.</strong>':'❌ <strong>Incorrecto.</strong>')+' '+q.exp+'</div>';
+  }
+  html+='</div><div class="nav-btns">';
+  if(currentQ>0)html+='<button class="btn btn-secondary" onclick="prevQ()">← Anterior</button>';
+  if(answered[currentQ]!==null&&currentQ<questions.length-1)html+='<button class="btn btn-primary" onclick="nextQ()">Siguiente →</button>';
+  if(answered[currentQ]!==null&&currentQ===questions.length-1)html+='<button class="btn btn-primary" onclick="showScore()">Ver resultado</button>';
+  html+='</div>';
+  document.getElementById('question-area').innerHTML=html;
+}
+
+function answer(i){
+  if(answered[currentQ]!==null)return;
+  answered[currentQ]=i;
+  if(i===questions[currentQ].correct)score++;
+  loadQuestion();
+}
+function nextQ(){if(currentQ<questions.length-1){currentQ++;loadQuestion();}}
+function prevQ(){if(currentQ>0){currentQ--;loadQuestion();}}
+
+function showScore(){
+  document.getElementById('question-area').style.display='none';
+  const pct=Math.round((score/questions.length)*100);
+  const msg=pct>=80?'🏆 ¡Excelente dominio del módulo!':pct>=60?'👍 Buen resultado, repasa los conceptos fallados':'📚 Conviene repasar el módulo antes del examen';
+  document.getElementById('score-area').innerHTML='<div class="score-card"><div class="score-num">'+score+'/'+questions.length+'</div><div class="score-label" style="color:#73726c">'+pct+'% de respuestas correctas</div><div class="score-breakdown"><div class="score-item"><div class="num" style="color:#639922">'+score+'</div><div class="lbl">Correctas</div></div><div class="score-item"><div class="num" style="color:#E24B4A">'+(questions.length-score)+'</div><div class="lbl">Incorrectas</div></div><div class="score-item"><div class="num">'+pct+'%</div><div class="lbl">Puntuación</div></div></div><p style="font-size:0.95rem;margin-bottom:1.5rem">'+msg+'</p><button class="btn btn-primary" onclick="restart()">Volver a empezar</button></div>';
+  document.getElementById('score-area').style.display='block';
+  document.getElementById('progress-label').textContent='¡Completado!';
+  document.getElementById('progress-fill').style.width='100%';
+}
+
+function restart(){
+  currentQ=0;score=0;answered=new Array(questions.length).fill(null);
+  document.getElementById('question-area').style.display='block';
+  document.getElementById('score-area').style.display='none';
+  loadQuestion();
+}
+
+const siglas=[
+  {sigla:"ATP",termino:"Adenosín Trifosfato",def:"Molécula de alta energía que actúa como fuente directa de energía mecánica para la actividad muscular y todas las funciones celulares. Se produce a partir de nutrientes y se hidroliza liberando energía: ATP → ADP + Pi + energía.",cat:"bioenergetica"},
+  {sigla:"ADP",termino:"Adenosín Difosfato",def:"Producto de la hidrólisis del ATP. Puede resintentizarse en ATP mediante el suministro de energía proveniente del catabolismo de nutrientes o de la fosfocreatina.",cat:"bioenergetica"},
+  {sigla:"PC / PCr",termino:"Fosfocreatina (Phosphocreatine)",def:"Fosfágeno almacenado en el músculo en pequeñas cantidades. Cede su grupo fosfato al ADP para resintetizar ATP rápidamente a través de la enzima creatincinasa. Las fibras tipo II contienen más PC que las tipo I.",cat:"bioenergetica"},
+  {sigla:"CK",termino:"Creatincinasa (Creatinkinasa)",def:"Enzima que cataliza la síntesis de ATP a partir de fosfocreatina (PC) y ADP. Su actividad aumenta cuando ↑ ADP (inicio del ejercicio) y disminuye cuando ↑ ATP. Regula la descomposición de la fosfocreatina.",cat:"bioenergetica"},
+  {sigla:"ATPasa",termino:"Trifosfatasa de Adenosina",def:"Enzima que cataliza la hidrólisis del ATP: ATP → ADP + Pi + energía. La miosina-ATPasa es la que descompone el ATP durante la contracción muscular. Aumenta la velocidad de descomposición del ATP en ejercicio intenso.",cat:"bioenergetica"},
+  {sigla:"RER",termino:"Relación de Intercambio Respiratorio (Respiratory Exchange Ratio)",def:"Proporción de CO₂ producido en relación con el O₂ consumido durante el metabolismo celular. RER cercano a 1,0 = predominio de carbohidratos; cercano a 0,7 = predominio de grasas. Se usa para determinar los sustratos oxidados.",cat:"adaptaciones"},
+  {sigla:"VO₂",termino:"Captación de Oxígeno (Consumo de Oxígeno)",def:"Indicador de la capacidad del cuerpo para utilizar O₂ durante la actividad física. Se calcula mediante la ecuación de Fick: VO₂ = GC × (a-vO₂). Se expresa en ml/min o ml/kg/min.",cat:"adaptaciones"},
+  {sigla:"VO₂máx",termino:"Consumo Máximo de Oxígeno",def:"Máxima cantidad de O₂ que el cuerpo puede absorber, transportar y utilizar durante ejercicio intenso. Mejor indicador de la resistencia cardiorrespiratoria. En atletas élite: ~80 ml/kg/min; en sedentarios: ~35 ml/kg/min.",cat:"adaptaciones"},
+  {sigla:"GC",termino:"Gasto Cardíaco",def:"Cantidad de sangre bombeada por el corazón por minuto. Fórmula: GC = VS × FC. Puede variar desde ~5 L/min en reposo hasta >20 L/min durante ejercicio intenso en deportistas.",cat:"cardiovascular"},
+  {sigla:"VS",termino:"Volumen Sistólico",def:"Cantidad de sangre eyectada por el corazón en cada latido. Se calcula: VS = VDF – VSF (Volumen Diastólico Final menos Volumen Sistólico Final).",cat:"cardiovascular"},
+  {sigla:"FC",termino:"Frecuencia Cardíaca",def:"Número de latidos del corazón por minuto (lpm). Componente del gasto cardíaco (GC = VS × FC). Aumenta con la intensidad del ejercicio.",cat:"cardiovascular"},
+  {sigla:"VDF",termino:"Volumen Diastólico Final",def:"Volumen de sangre en los ventrículos al final del llenado (diástole). Se usa junto al VSF para calcular el volumen sistólico: VS = VDF – VSF.",cat:"cardiovascular"},
+  {sigla:"VSF",termino:"Volumen Sistólico Final",def:"Volumen de sangre que permanece en los ventrículos después de la contracción (sístole). Se usa para calcular el volumen sistólico: VS = VDF – VSF.",cat:"cardiovascular"},
+  {sigla:"PAS",termino:"Presión Arterial Sistólica",def:"Presión máxima ejercida sobre las paredes arteriales durante la contracción ventricular (sístole). Se usa en las fórmulas de PAM y DP.",cat:"cardiovascular"},
+  {sigla:"PAD",termino:"Presión Arterial Diastólica",def:"Presión mínima en las arterias cuando el corazón está en reposo (diástole). Se usa en la fórmula de la PAM.",cat:"cardiovascular"},
+  {sigla:"PAM",termino:"Presión Arterial Media",def:"Presión sanguínea promedio durante todo el ciclo cardíaco. Fórmula: PAM = PAD + [0,333 × (PAS – PAD)].",cat:"cardiovascular"},
+  {sigla:"DP",termino:"Doble Producto",def:"Indicador del trabajo del corazón. Fórmula: DP = PAS × FC. Proporciona una estimación indirecta de la demanda de oxígeno del corazón durante el ejercicio.",cat:"cardiovascular"},
+  {sigla:"ECG",termino:"Electrocardiograma",def:"Herramienta que registra la actividad eléctrica del corazón mediante electrodos. Consta de tres componentes: onda P (despolarización auricular), complejo QRS (despolarización ventricular) y onda T (repolarización ventricular).",cat:"cardiovascular"},
+  {sigla:"SA",termino:"Nódulo Sinoauricular",def:"Marcapasos natural del corazón, ubicado en la aurícula derecha. Genera el impulso eléctrico rítmico que inicia cada latido. El impulso viaja: SA → aurículas → nódulo AV → haz de His → fibras de Purkinje.",cat:"cardiovascular"},
+  {sigla:"AV",termino:"Nódulo Auriculoventricular",def:"Nódulo que recibe el impulso eléctrico de las aurículas y lo transmite a los ventrículos a través del haz de His. Actúa como filtro y regulador de la frecuencia ventricular.",cat:"cardiovascular"},
+  {sigla:"VRI",termino:"Volumen de Reserva Inspiratorio",def:"Cantidad máxima de aire que puede ser inhalada después de una inspiración normal. Representa la capacidad adicional de inhalación.",cat:"respiratorio"},
+  {sigla:"VRE",termino:"Volumen de Reserva Espiratorio",def:"Cantidad máxima de aire que puede ser exhalada después de una espiración normal. Indica la capacidad adicional de exhalación.",cat:"respiratorio"},
+  {sigla:"CV",termino:"Capacidad Vital",def:"Cantidad máxima de aire que puede ser exhalada después de una inhalación máxima. Representa el volumen total de aire movilizable en los pulmones (no incluye el volumen residual).",cat:"respiratorio"},
+  {sigla:"VR",termino:"Volumen Residual",def:"Cantidad de aire que permanece en los pulmones después de una espiración máxima. NO puede medirse directamente mediante espirometría; se calcula indirectamente.",cat:"respiratorio"},
+  {sigla:"CPT",termino:"Capacidad Pulmonar Total",def:"Suma de la capacidad vital (CV) y el volumen residual (VR). Representa la cantidad total de aire que los pulmones pueden contener.",cat:"respiratorio"},
+  {sigla:"PFK",termino:"Fosfofructocinasa",def:"Enzima que regula la velocidad de la glucólisis. Factor esencial en la regulación de la glucólisis. Se inhibe por bajo pH y altas concentraciones de ATP, PC, citrato y ácidos grasos libres.",cat:"bioenergetica"},
+  {sigla:"NADH",termino:"Dinucleótido de Nicotinamida y Adenina (forma reducida)",def:"Subproducto de la glucólisis y del ciclo de Krebs. Entra en la cadena de transporte electrónico para producir más ATP. Es un portador de electrones fundamental en el metabolismo aeróbico.",cat:"bioenergetica"},
+  {sigla:"a-vO₂",termino:"Diferencia Arterio-Venosa de Oxígeno",def:"Diferencia en la concentración de O₂ entre la sangre arterial y la sangre venosa. Indica cuánto oxígeno han extraído los tejidos. Aumenta con la intensidad del ejercicio. Parte de la ecuación de Fick: VO₂ = GC × (a-vO₂).",cat:"adaptaciones"},
+  {sigla:"SNC",termino:"Sistema Nervioso Central",def:"Regula el reclutamiento de unidades motoras durante el ejercicio. El sistema nervioso envía el impulso desde la neurona motora hasta la unión neuromuscular, iniciando la cadena de eventos que lleva a la contracción muscular.",cat:"muscular"},
+  {sigla:"ACh",termino:"Acetilcolina",def:"Neurotransmisor excitador liberado en la unión neuromuscular. Se une a los receptores de la placa motora de la fibra muscular, desencadenando un potencial de acción en el sarcolema que inicia la contracción muscular.",cat:"muscular"},
+  {sigla:"UM",termino:"Unidad Motora",def:"Unidad funcional básica del sistema neuromuscular. Formada por una motoneurona y todas las fibras musculares que inerva. Cuando la motoneurona envía un impulso, todas las fibras de la UM se contraen simultáneamente.",cat:"muscular"},
+];
+
+const catColors={
+  bioenergetica:{bg:'#EEEDFE',color:'#3C3489',label:'Bioenergética'},
+  cardiovascular:{bg:'#FAECE7',color:'#4A1B0C',label:'Cardiovascular'},
+  respiratorio:{bg:'#E1F5EE',color:'#085041',label:'Respiratorio'},
+  adaptaciones:{bg:'#FAEEDA',color:'#633806',label:'Adaptaciones'},
+  muscular:{bg:'#E1F5EE',color:'#0F6E56',label:'Muscular'},
+};
+
+function renderSiglas(filter){
+  const q=filter.toLowerCase().trim();
+  const filtered=siglas.filter(s=>s.sigla.toLowerCase().includes(q)||s.termino.toLowerCase().includes(q)||s.def.toLowerCase().includes(q));
+  document.getElementById('sigla-count').textContent=filtered.length+' de '+siglas.length+' términos';
+  const grid=document.getElementById('siglas-grid');
+  if(filtered.length===0){grid.innerHTML='<p style="color:#73726c;font-size:0.875rem;grid-column:1/-1">No se encontraron términos.</p>';return;}
+  grid.innerHTML=filtered.map(s=>{
+    const c=catColors[s.cat];
+    return '<div style="background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1rem">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:0.5rem">'
+      +'<span style="font-size:1.05rem;font-weight:500;color:#1a1a18">'+s.sigla+'</span>'
+      +'<span style="font-size:0.7rem;padding:2px 8px;border-radius:20px;background:'+c.bg+';color:'+c.color+';white-space:nowrap;flex-shrink:0">'+c.label+'</span>'
+      +'</div>'
+      +'<p style="font-size:0.8rem;font-weight:500;color:#534AB7;margin-bottom:0.4rem">'+s.termino+'</p>'
+      +'<p style="font-size:0.82rem;color:#3d3d3a;line-height:1.5">'+s.def+'</p>'
+      +'</div>';
+  }).join('');
+}
+function filterSiglas(val){renderSiglas(val);}
+</script>
+</body>
+</html>

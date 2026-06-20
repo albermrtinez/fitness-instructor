@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 7 · Poblaciones Especiales I</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --header-bg: #1a1a18;
+    --accent: #534AB7;
+    --accent-light: #EEEDFE;
+    --teal: #E1F5EE;
+    --amber: #FAEEDA;
+    --coral: #FAECE7;
+    --card-border: 0.5px solid #d3d1c7;
+    --radius: 12px;
+    --yellow: #FFD700;
+    --text: #1a1a18;
+    --text-muted: #666;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--header-bg);
+    color: white;
+    padding: 28px 32px 22px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  header .breadcrumb { font-size: 11px; color: #999; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  header .subtitle { font-size: 13px; color: #aaa; margin-top: 4px; }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px;
+    padding: 16px 32px 0;
+    border-bottom: 1px solid #d3d1c7;
+    background: var(--bg);
+    position: sticky; top: 80px; z-index: 90;
+  }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 10px 18px; border-radius: 8px 8px 0 0;
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    border: var(--card-border); border-bottom: none;
+    background: #ebe9e3;
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    background: var(--white); color: var(--accent);
+    font-weight: 700; border-color: #d3d1c7;
+  }
+  .tab-btn:hover:not(.active) { background: #e0deda; }
+
+  /* CONTENT */
+  .tab-content { display: none; padding: 28px 32px 60px; max-width: 1000px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--white);
+    border: var(--card-border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-purple { background: var(--accent-light); }
+  .card-teal { background: var(--teal); }
+  .card-amber { background: var(--amber); }
+  .card-coral { background: var(--coral); }
+
+  /* ACCORDION */
+  .accordion { margin-bottom: 10px; }
+  .accordion-header {
+    background: var(--white);
+    border: var(--card-border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: 600; font-size: 14px;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .accordion-header:hover { background: #f0efe9; }
+  .accordion-header.open { border-radius: var(--radius) var(--radius) 0 0; border-bottom: none; }
+  .accordion-body {
+    background: var(--white);
+    border: var(--card-border); border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 0 20px;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.2s;
+  }
+  .accordion-body.open { max-height: 3000px; padding: 16px 20px 20px; }
+  .accordion-arrow { font-size: 18px; transition: transform 0.2s; color: var(--accent); }
+  .accordion-header.open .accordion-arrow { transform: rotate(180deg); }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th { background: var(--accent); color: white; padding: 8px 12px; text-align: left; font-weight: 600; }
+  td { padding: 8px 12px; border-bottom: 0.5px solid #e8e6e0; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fafaf8; }
+
+  /* BADGES */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.03em;
+    margin: 2px;
+  }
+  .badge-purple { background: var(--accent-light); color: var(--accent); }
+  .badge-teal { background: var(--teal); color: #1a7a56; }
+  .badge-amber { background: var(--amber); color: #a06b00; }
+  .badge-coral { background: var(--coral); color: #a04030; }
+
+  /* KEY BOXES */
+  .key-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 16px 0; }
+  .key-box {
+    padding: 16px 18px;
+    border-radius: var(--radius);
+    border: var(--card-border);
+    font-size: 13px; line-height: 1.6;
+  }
+  .key-box .kb-title { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+  .key-box ul { padding-left: 16px; }
+  .key-box li { margin-bottom: 3px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 17px; font-weight: 700; color: var(--accent);
+    margin: 24px 0 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent-light);
+  }
+  .section-title:first-child { margin-top: 0; }
+
+  /* CHIPS */
+  .chips-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .chip {
+    display: inline-block;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip-purple { background: var(--accent-light); color: var(--accent); border-color: #c9c6f5; }
+  .chip-teal { background: var(--teal); color: #1a7a56; border-color: #b0e0cc; }
+  .chip-amber { background: var(--amber); color: #a06b00; border-color: #e8cc9a; }
+  .chip-coral { background: var(--coral); color: #a04030; border-color: #e8b8ae; }
+  .chip:hover { opacity: 0.8; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .chip.selected { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .def-box {
+    background: var(--white); border: var(--card-border); border-radius: var(--radius);
+    padding: 16px 20px; margin-top: 12px; font-size: 13px; line-height: 1.7;
+    display: none; animation: fadeIn 0.2s ease;
+  }
+  .def-box.visible { display: block; }
+  .def-box .def-term { font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 6px; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* TEST */
+  .test-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
+  .filter-btn {
+    padding: 7px 14px; border-radius: 20px; border: 1.5px solid #d3d1c7;
+    background: white; cursor: pointer; font-size: 12px; font-weight: 600;
+    transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .filter-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+
+  .progress-bar-wrap { background: #e8e6e0; border-radius: 10px; height: 8px; margin: 0 0 20px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 10px; transition: width 0.4s; }
+  .progress-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+
+  .question-card {
+    background: var(--white);
+    border: var(--card-border); border-radius: var(--radius);
+    padding: 24px 28px; margin-bottom: 18px;
+  }
+  .q-number { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .q-category { display: inline-block; margin-bottom: 12px; }
+  .q-text { font-size: 15px; font-weight: 600; line-height: 1.5; margin-bottom: 18px; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-label {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px; border-radius: 10px;
+    border: 1.5px solid #e0deda; background: #fafaf8;
+    cursor: pointer; font-size: 13px; line-height: 1.5;
+    transition: all 0.15s;
+  }
+  .option-label:hover { border-color: var(--accent); background: var(--accent-light); }
+  .option-label input[type=radio] { display: none; }
+  .option-radio {
+    width: 18px; height: 18px; min-width: 18px;
+    border-radius: 50%; border: 2px solid #ccc;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px; transition: all 0.15s;
+  }
+  .option-label:hover .option-radio { border-color: var(--accent); }
+  .option-label.selected .option-radio { border-color: var(--accent); background: var(--accent); }
+  .option-label.selected .option-radio::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: white; display: block; }
+  .option-label.correct { border-color: #2da868; background: #e8f8f0; }
+  .option-label.correct .option-radio { border-color: #2da868; background: #2da868; }
+  .option-label.wrong { border-color: #e05c3a; background: #fdf0ed; }
+  .option-label.wrong .option-radio { border-color: #e05c3a; background: #e05c3a; }
+  .option-label.show-correct { border-color: #2da868; background: #e8f8f0; }
+
+  .submit-btn {
+    background: var(--yellow); color: var(--text);
+    border: none; padding: 12px 32px; border-radius: 30px;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    letter-spacing: 0.04em; transition: all 0.15s;
+    display: block; margin: 16px auto 0;
+  }
+  .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .feedback-box {
+    margin-top: 14px; padding: 12px 16px; border-radius: 10px;
+    font-size: 13px; line-height: 1.5; display: none;
+    align-items: flex-start; gap: 12px;
+    border: 1.5px solid transparent;
+  }
+  .feedback-box.visible { display: flex; }
+  .feedback-icon {
+    width: 28px; height: 28px; min-width: 28px;
+    border-radius: 50%; background: var(--header-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+  }
+  .feedback-box.correct-fb { background: #e8f8f0; border-color: #2da868; }
+  .feedback-box.correct-fb .feedback-icon::after { content: '✓'; color: #4cd98a; }
+  .feedback-box.wrong-fb { background: #fdf0ed; border-color: #e05c3a; }
+  .feedback-box.wrong-fb .feedback-icon::after { content: '✕'; color: var(--yellow); }
+
+  /* RESULT PANEL */
+  .result-panel {
+    background: var(--white); border: var(--card-border); border-radius: var(--radius);
+    padding: 32px 36px; text-align: center; display: none;
+  }
+  .result-panel.visible { display: block; }
+  .result-score { font-size: 56px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .result-label { font-size: 16px; color: var(--text-muted); margin: 8px 0 20px; }
+  .result-stats { display: flex; justify-content: center; gap: 32px; margin: 20px 0; }
+  .result-stat { text-align: center; }
+  .result-stat .rs-num { font-size: 24px; font-weight: 700; }
+  .result-stat .rs-lbl { font-size: 12px; color: var(--text-muted); }
+  .restart-btn {
+    background: var(--accent); color: white;
+    border: none; padding: 12px 32px; border-radius: 30px;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    margin: 8px 6px 0; transition: all 0.15s;
+  }
+  .restart-btn:hover { opacity: 0.85; }
+
+  /* LISTS */
+  .styled-list { list-style: none; padding: 0; }
+  .styled-list li {
+    padding: 6px 0 6px 20px; position: relative; font-size: 13px; line-height: 1.6;
+    border-bottom: 0.5px solid #eee;
+  }
+  .styled-list li:last-child { border-bottom: none; }
+  .styled-list li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 12px; }
+
+  .highlight { background: var(--accent-light); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .tabs { padding: 12px 16px 0; gap: 2px; }
+    .tab-btn { padding: 8px 10px; font-size: 11px; }
+    .tab-content { padding: 16px 16px 40px; }
+    .key-grid { grid-template-columns: 1fr; }
+  }
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <div class="breadcrumb">Five Stars IGS · Fitness Instructor</div>
+  <h1>Módulo 7 · Poblaciones Especiales I</h1>
+  <div class="subtitle">Sobrepeso &amp; Obesidad · Adultos Mayores · Problemas de Espalda</div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('esquema')">📋 Esquema</button>
+  <button class="tab-btn" onclick="switchTab('resumen')">💡 Resumen clave</button>
+  <button class="tab-btn" onclick="switchTab('siglas')">🔤 Siglas y términos</button>
+  <button class="tab-btn" onclick="switchTab('test')">✏️ Test</button>
+</div>
+
+<!-- ===== TAB 1: ESQUEMA ===== -->
+<div id="tab-esquema" class="tab-content active">
+
+  <div class="section-title">Tema 1 · Prescripciones en el sobrepeso y la obesidad</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      1.1 · Información relevante <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <table>
+        <tr><th>Dato</th><th>Fuente</th></tr>
+        <tr><td>7 millones de personas morirán por enfermedades no transmisibles en 15 años</td><td>OMS</td></tr>
+        <tr><td>2 de cada 3 personas serán obesas</td><td>OCDE</td></tr>
+        <tr><td>Las personas severamente obesas viven 10 años menos</td><td>R. Bravo / IMEO</td></tr>
+        <tr><td>Cada 15 kg extras aumentan el riesgo de muerte temprana en un 30%</td><td>R. Bravo / IMEO</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      1.2 · Prevención de la obesidad <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <table>
+        <tr><th>Etapa</th><th>Mecanismo dominante</th><th>Implicación</th></tr>
+        <tr><td>Niñez / adolescencia</td><td><strong>Hiperplasia</strong> adipocitaria</td><td>Aumento del número de adipocitos</td></tr>
+        <tr><td>Edad adulta</td><td><strong>Hipertrofia</strong> adipocitaria</td><td>Aumento del tamaño sin aumentar número</td></tr>
+      </table>
+      <ul class="styled-list" style="margin-top:10px">
+        <li>En adultos el número de adipocitos permanece prácticamente estable desde la adolescencia.</li>
+        <li>La pérdida de peso reduce el <strong>volumen</strong>, no el <strong>número</strong> de adipocitos (Suárez-Carmona, 2017).</li>
+        <li>Por eso la prevención en la infancia es crucial.</li>
+        <li>Hipotálamo lateral: centro del hambre. El hipotálamo ventromedial: centro de la saciedad.</li>
+        <li>La hormona <strong>grelina</strong> (producida en el estómago) activa el hipotálamo lateral.</li>
+        <li>Según Fung (2017), el control del peso es un problema <strong>hormonal</strong> (insulina), no solo calórico.</li>
+        <li>95% del control del peso depende de la alimentación; 5% del ejercicio físico.</li>
+        <li>Los adipocitos hipertrofiados se asfixian → inflamación tisular → resistencia a la insulina.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      1.3 · Prescripción de ejercicio en obesidad / sobrepeso <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <ul class="styled-list">
+        <li>Actividad física + nutrición adecuada = herramientas de incuestionable valor (Heredia, 2008).</li>
+        <li>Cualquier ejercicio tendrá efectos positivos inicialmente: influencia directa sobre metabolismo energético, EPOC, y trastornos asociados (HTA, sarcopenia, arteriosclerosis).</li>
+        <li><strong>Fuerza</strong> y <strong>fitness cardiorrespiratorio</strong> son los mejores predictores de mortalidad (Parr, Coffey &amp; Hawley, 2013).</li>
+        <li>El EF previene casi al 100% la pérdida de masa muscular durante restricción calórica (Sardeli, 2018).</li>
+        <li>El ejercicio aeróbico solo no muestra gran eficacia para perder grasa corporal.</li>
+        <li>Entrenamiento concurrente aeróbico-fuerza = óptimo para perder grasa (Sardeli, 2018).</li>
+        <li>El ejercicio físico es la mejor herramienta para incrementar la <strong>vascularización</strong> del tejido adiposo.</li>
+        <li>Los ejercicios <strong>interválicos intensivos</strong> son los que mejor vascularizan.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      1.4 · HIIT en pacientes con diabetes <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <ul class="styled-list">
+        <li>El HIIT muestra mayores efectos sobre marcadores cardiometabólicos vs. entrenamiento continuo moderado.</li>
+        <li>Ningún tipo de entrenamiento es eficaz para perder grasa sin medidas nutricionales adecuadas (De Strijcker, 2018).</li>
+      </ul>
+      <table style="margin-top:10px">
+        <tr><th>Riesgo en paciente diabético</th><th>Detalle</th></tr>
+        <tr><td>Control glucémico</td><td>Hipoglucemia (durante/post-ejercicio), Hiperglucemia y cetosis</td></tr>
+        <tr><td>Cardiovascular</td><td>Agravamiento de patología previa, aumento PA, hipotensión ortostática</td></tr>
+        <tr><td>Específico diabetes</td><td>Retinopatía, nefropatía, neuropatía periférica y autonómica</td></tr>
+      </table>
+      <div style="margin-top:12px"><strong>Recomendaciones ACSM Diabetes I:</strong>
+        <ul class="styled-list">
+          <li>3 días/semana · ~60 minutos</li>
+          <li>Fuerza resistencia (grandes grupos musculares) + cardiovascular aeróbico sin impactos</li>
+        </ul>
+      </div>
+      <div style="margin-top:10px"><strong>Recomendaciones ACSM Diabetes II:</strong>
+        <ul class="styled-list">
+          <li>7 días/semana · ~90 minutos</li>
+          <li>Fuerza hipertrofia (grandes grupos musculares) + cardiovascular aeróbico con componente anaeróbico</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 2 · Adultos mayores y ejercicio físico</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      2.1 · Aspectos generales y principios básicos <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <ul class="styled-list">
+        <li>El <strong>síndrome de fragilidad</strong> define a los ancianos vulnerables con alto riesgo de eventos adversos (Izquierdo y Cadore, 2014).</li>
+        <li>El ejercicio físico es la intervención más eficaz en el anciano frágil.</li>
+        <li>El ejercicio reduce riesgo de: mortalidad, enfermedades crónicas, caídas, institucionalización, deterioro físico y funcional.</li>
+        <li>El programa más efectivo es el <strong>multicomponente</strong>: fuerza + resistencia + equilibrio + marcha.</li>
+        <li>Objetivo clave: incrementar capacidad funcional e independencia en <strong>ABVD</strong>.</li>
+      </ul>
+      <table style="margin-top:12px">
+        <tr><th>Principio</th><th>Especificidad en el mayor</th></tr>
+        <tr><td>Sobrecarga</td><td>Progresión más cautelosa por vulnerabilidad</td></tr>
+        <tr><td>Progresión</td><td>Gradual, individualizada</td></tr>
+        <tr><td>Especificidad e individualización</td><td>Adaptar ejercicios a cotidianidad (ABVD)</td></tr>
+        <tr><td>Reversibilidad / Desentrenamiento</td><td>Mantener frecuencia mínima</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      2.2 · Entrenamiento de fuerza y fuerza-potencia <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <ul class="styled-list">
+        <li>El entrenamiento de fuerza máxima puede incrementar la producción de fuerza entre un <strong>10–30%</strong> en 1–2 meses.</li>
+        <li>Aumenta fuerza, potencia y masa muscular incluso en los mayores más frágiles (Izquierdo y Cadore, 2014).</li>
+        <li>Mejora velocidad de marcha y levantarse de la silla (Liu y cols. 2013).</li>
+        <li>La <strong>potencia</strong> se deteriora más rápido y más precozmente que la fuerza (Hakkinen, 2001).</li>
+        <li>La potencia tiene mayor relación con la capacidad funcional que la fuerza (Knauff, 2001).</li>
+        <li>El entrenamiento combinado fuerza+potencia puede mejorar la <strong>edad funcional hasta 20 años</strong>.</li>
+      </ul>
+      <table style="margin-top:12px">
+        <tr><th colspan="2">Prescripción inicial (frágiles sedentarios)</th></tr>
+        <tr><td>Series</td><td>2–3</td></tr>
+        <tr><td>Repeticiones</td><td>8–10 rep a 20RM / 4–6 rep a 15RM</td></tr>
+        <tr><td>Frecuencia</td><td>2–3 días/semana</td></tr>
+        <tr><td>Ejercicios</td><td>Funcionales que imiten la cotidianidad</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      2.3 · Entrenamiento de resistencia cardiovascular y concurrente <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;margin-bottom:8px">Cambios del envejecimiento en el sistema cardiovascular:</p>
+      <ul class="styled-list">
+        <li>Función diastólica disminuida hasta un <strong>50%</strong></li>
+        <li>Llenado del ventrículo izquierdo alterado</li>
+        <li>Reducción de VO₂Max, frecuencia y contractilidad</li>
+      </ul>
+      <p style="font-size:13px;margin-top:10px;margin-bottom:6px"><strong>Entrenamiento concurrente (fuerza + aeróbico):</strong></p>
+      <ul class="styled-list">
+        <li>Existe un <strong>efecto interferencia</strong> al combinar ambos entrenamientos (Leveritt, 1999).</li>
+        <li>Se acentúa si el trabajo de resistencia precede al de fuerza en la misma sesión.</li>
+        <li>En adultos mayores frágiles ambos son necesarios y el efecto interferencia es menor.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      2.4 · Ejercicio multicomponente: prescripción <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <ul class="styled-list">
+        <li>Incluye más de un tipo de actividad física: aeróbica + fortalecimiento + equilibrio.</li>
+        <li>Actividades recreativas (baile, yoga, taichi) también se consideran multicomponentes (ACSM, 2019).</li>
+      </ul>
+      <table style="margin-top:10px">
+        <tr><th>Componente</th><th>% recomendado</th></tr>
+        <tr><td>Movilidad articular</td><td>15%</td></tr>
+        <tr><td>Equilibrio-coordinación</td><td>20%</td></tr>
+        <tr><td>Fuerza</td><td>30%</td></tr>
+        <tr><td>Aeróbico</td><td>30%</td></tr>
+      </table>
+      <table style="margin-top:10px">
+        <tr><th>Parámetro</th><th>Prescripción</th></tr>
+        <tr><td>Frecuencia</td><td>≥3 veces/semana</td></tr>
+        <tr><td>Duración</td><td>30–45 minutos/sesión</td></tr>
+        <tr><td>Duración mínima del programa</td><td>3–5 meses</td></tr>
+        <tr><td>Intensidad</td><td>Moderada</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 3 · Prescripción en problemas de espalda</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      3.1 · Cervicalgia: concepto, factores de riesgo <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <ul class="styled-list">
+        <li>Dolor aislado en el raquis cervical o irradiado a cabeza y miembro superior.</li>
+        <li>Más frecuente en mujeres cuando el dolor supera 1 mes.</li>
+        <li>Pico de afectación: <strong>45–64 años</strong>.</li>
+        <li>Los cambios degenerativos cervicales NO son factor de riesgo demostrado (Meseguer, 2000).</li>
+        <li>Factores de riesgo: posturas inadecuadas, debilidad funcional, flexión repetida del cuello.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      3.2 · Fases de recuperación cervicalgia y lumbalgia <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <table>
+        <tr><th>Fase</th><th>Temporalización</th><th>Objetivo principal</th></tr>
+        <tr><td><strong>Aguda</strong></td><td>Semanas 1–3</td><td>Disminuir dolor y agente causal, recuperar movilidad</td></tr>
+        <tr><td><strong>Rehabilitación</strong></td><td>Semanas 4–6</td><td>Recuperar mecanismos motrices, estabilizar, tonificar</td></tr>
+        <tr><td><strong>Adaptación motriz general</strong></td><td>Semanas 6–8</td><td>Tonificar musculatura estabilizadora, trabajo de core</td></tr>
+        <tr><td><strong>Readaptación físico-deportiva</strong></td><td>Semana 8</td><td>Fuerza en todos los rangos, gestos deportivos específicos</td></tr>
+      </table>
+      <p style="font-size:12px;color:#666;margin-top:8px">* Las mismas 4 fases aplican tanto para cervicalgia como para lumbalgia.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      3.3 · Lumbalgia: concepto y epidemiología <span class="accordion-arrow">▾</span>
+    </div>
+    <div class="accordion-body">
+      <ul class="styled-list">
+        <li>Dolor entre el margen costal y los pliegues glúteos inferiores, con o sin dolor referido a pierna.</li>
+        <li>Lumbalgia crónica: dolor ≥ 12 semanas.</li>
+        <li><strong>Primera causa de incapacidad</strong> en países industrializados.</li>
+        <li>Causa generalmente <strong>inespecífica</strong>: espasmo o contractura muscular.</li>
+        <li>Coste en Europa: 1,7–2,1% del PIB anual.</li>
+        <li>~15 millones de consultas médicas anuales en EE.UU.</li>
+        <li>Segunda causa de consulta en atención primaria (tras procesos respiratorios).</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /tab-esquema -->
+
+<!-- ===== TAB 2: RESUMEN CLAVE ===== -->
+<div id="tab-resumen" class="tab-content">
+
+  <div class="section-title">Tema 1 · Obesidad y Sobrepeso</div>
+  <div class="key-grid">
+    <div class="key-box card-purple">
+      <div class="kb-title">🧬 Fisiopatología</div>
+      <ul>
+        <li>Niñez → <strong>hiperplasia</strong> (más adipocitos)</li>
+        <li>Adultos → <strong>hipertrofia</strong> (adipocitos más grandes)</li>
+        <li>La pérdida de peso reduce el volumen, NO el número</li>
+        <li>La hormona <strong>insulina</strong> regula el "termostato" del peso</li>
+      </ul>
+    </div>
+    <div class="key-box card-teal">
+      <div class="kb-title">🏋️ Ejercicio en obesidad</div>
+      <ul>
+        <li>Actividad física + nutrición = tratamiento ideal</li>
+        <li>Cualquier ejercicio tiene efectos positivos iniciales</li>
+        <li>EF previene ~100% pérdida muscular en dieta hipocalórica</li>
+        <li>Entrenamiento <strong>concurrente</strong> (fuerza+aeróbico) es óptimo</li>
+      </ul>
+    </div>
+    <div class="key-box card-amber">
+      <div class="kb-title">💡 Vascularización</div>
+      <ul>
+        <li>El ejercicio es la mejor herramienta para vascularizar tejidos</li>
+        <li>Los ejercicios <strong>interválicos intensivos</strong> vascularizan mejor</li>
+        <li>Adipocitos crecidos → hipoxia → inflamación → resistencia insulínica</li>
+      </ul>
+    </div>
+    <div class="key-box card-coral">
+      <div class="kb-title">🔬 HIIT vs. continuo</div>
+      <ul>
+        <li>HIIT &gt; efectos cardiometabólicos que continuo moderado</li>
+        <li>Ningún ejercicio pierde grasa sin dieta adecuada</li>
+        <li>95% control peso = alimentación; 5% = ejercicio</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 2 · Adultos Mayores</div>
+  <div class="key-grid">
+    <div class="key-box card-purple">
+      <div class="kb-title">🧓 Fragilidad</div>
+      <ul>
+        <li>Síndrome que define ancianos vulnerables con alto riesgo</li>
+        <li>La mejor intervención es el <strong>ejercicio físico</strong></li>
+        <li>Objetivo: mantener independencia en las ABVD</li>
+      </ul>
+    </div>
+    <div class="key-box card-teal">
+      <div class="kb-title">💪 Fuerza y potencia</div>
+      <ul>
+        <li>Fuerza máx: +10–30% en 1–2 meses</li>
+        <li>La potencia se deteriora <strong>antes</strong> que la fuerza</li>
+        <li>Fuerza+potencia puede mejorar edad funcional <strong>20 años</strong></li>
+        <li>Inicio: 2–3 series · 8–10 rep · 2–3 días/sem</li>
+      </ul>
+    </div>
+    <div class="key-box card-amber">
+      <div class="kb-title">🫀 Resistencia cardiovascular</div>
+      <ul>
+        <li>Función diastólica disminuida hasta 50% con el envejecimiento</li>
+        <li>VO₂Max reducido</li>
+        <li>Parte esencial del programa multicomponente</li>
+      </ul>
+    </div>
+    <div class="key-box card-coral">
+      <div class="kb-title">🔄 Programa multicomponente</div>
+      <ul>
+        <li>≥3 días/sem · 30–45 min · ≥3–5 meses</li>
+        <li>Fuerza 30% + Aeróbico 30% + Equilibrio 20% + Movilidad 15%</li>
+        <li>Baile, yoga, taichi = también multicomponente</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Tema 3 · Problemas de Espalda</div>
+  <div class="key-grid">
+    <div class="key-box card-purple">
+      <div class="kb-title">🦴 Cervicalgia</div>
+      <ul>
+        <li>Más prevalente en mujeres (dolor &gt;1 mes)</li>
+        <li>Pico: 45–64 años</li>
+        <li>Fase aguda: semanas 1–3 → reducir dolor y espasmos</li>
+        <li>4 fases progresivas hasta readaptación</li>
+      </ul>
+    </div>
+    <div class="key-box card-teal">
+      <div class="kb-title">🔩 Lumbalgia</div>
+      <ul>
+        <li>1.ª causa de incapacidad en países industrializados</li>
+        <li>Crónica si dura ≥12 semanas</li>
+        <li>Causa inespecífica: espasmo/contractura muscular</li>
+        <li>Mismas 4 fases de recuperación que cervicalgia</li>
+      </ul>
+    </div>
+    <div class="key-box card-amber">
+      <div class="kb-title">📅 Fases de recuperación</div>
+      <ul>
+        <li><strong>Aguda</strong> (1–3ª sem): dolor y movilidad</li>
+        <li><strong>Rehabilitación</strong> (4–6ª sem): mecanismos motrices</li>
+        <li><strong>Adapt. motriz gral</strong> (6–8ª sem): core, propiocepción</li>
+        <li><strong>Readaptación</strong> (8ª sem): fuerza y gesto deportivo</li>
+      </ul>
+    </div>
+    <div class="key-box card-coral">
+      <div class="kb-title">⚠️ Ejercicios desaconsejados</div>
+      <ul>
+        <li>Cervical: hiperflexión, hiperextensión, circunducción</li>
+        <li>Lumbar: hiperextensión, hiperflexión lumbar</li>
+        <li>Evitar grandes sobrecargas ECC al inicio</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Autores y referencias clave</div>
+  <div class="card">
+    <table>
+      <tr><th>Autor(es)</th><th>Año</th><th>Aportación principal</th></tr>
+      <tr><td>Suárez-Carmona, Sánchez-Oliver &amp; González-Jurado</td><td>2017</td><td>Fisiopatología de la obesidad (hiperplasia/hipertrofia)</td></tr>
+      <tr><td>Fung y cols.</td><td>2017</td><td>Control de peso = problema hormonal (insulina)</td></tr>
+      <tr><td>Parr, Coffey &amp; Hawley</td><td>2013</td><td>Fuerza y fitness cardiorrespiratorio = mejores predictores de mortalidad</td></tr>
+      <tr><td>Sardeli y cols.</td><td>2018</td><td>EF previene 100% pérdida muscular en restricción calórica</td></tr>
+      <tr><td>De Strijcker y cols.</td><td>2018</td><td>HIIT &gt; entrenamiento continuo en marcadores cardiometabólicos</td></tr>
+      <tr><td>Carrasco y cols.</td><td>2009</td><td>Tratamiento farmacológico/quirúrgico del sobrepeso u obesidad</td></tr>
+      <tr><td>Izquierdo y Cadore</td><td>2014</td><td>Ejercicio en el anciano frágil: prevención de dependencia</td></tr>
+      <tr><td>Leveritt y cols.</td><td>1999</td><td>Efecto interferencia en entrenamiento concurrente</td></tr>
+      <tr><td>Hakkinen y cols.</td><td>2001</td><td>Deterioro precoz de la potencia vs. fuerza en mayores</td></tr>
+      <tr><td>Meseguer y cols.</td><td>2000</td><td>Prevalencia y factores de riesgo de la cervicalgia</td></tr>
+    </table>
+  </div>
+
+</div><!-- /tab-resumen -->
+
+<!-- ===== TAB 3: SIGLAS Y TÉRMINOS ===== -->
+<div id="tab-siglas" class="tab-content">
+  <p style="font-size:13px;color:#666;margin-bottom:16px">Pulsa sobre cualquier chip para ver la definición.</p>
+
+  <div class="section-title">Siglas</div>
+  <div class="chips-grid" id="chips-siglas"></div>
+  <div class="def-box" id="def-box-siglas">
+    <div class="def-term" id="def-term-siglas"></div>
+    <div id="def-text-siglas"></div>
+  </div>
+
+  <div class="section-title" style="margin-top:28px">Términos clave</div>
+  <div class="chips-grid" id="chips-terms"></div>
+  <div class="def-box" id="def-box-terms">
+    <div class="def-term" id="def-term-terms"></div>
+    <div id="def-text-terms"></div>
+  </div>
+</div>
+
+<!-- ===== TAB 4: TEST ===== -->
+<div id="tab-test" class="tab-content">
+  <div class="test-controls">
+    <button class="filter-btn active" onclick="filterTest('all',this)">Todas</button>
+    <button class="filter-btn" onclick="filterTest('Obesidad',this)">Obesidad</button>
+    <button class="filter-btn" onclick="filterTest('Adultos Mayores',this)">Adultos Mayores</button>
+    <button class="filter-btn" onclick="filterTest('Espalda',this)">Espalda</button>
+    <button class="filter-btn" onclick="filterTest('Autores',this)">Autores</button>
+    <button class="filter-btn" style="margin-left:auto" onclick="restartTest()">↺ Reiniciar</button>
+  </div>
+  <div class="progress-label" id="progress-label">Pregunta 0 de 0</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+
+  <div id="questions-container"></div>
+  <div class="result-panel" id="result-panel">
+    <div class="result-score" id="result-score">0/0</div>
+    <div class="result-label">Resultado final</div>
+    <div class="result-stats">
+      <div class="result-stat"><div class="rs-num" id="res-correct" style="color:#2da868">0</div><div class="rs-lbl">Correctas</div></div>
+      <div class="result-stat"><div class="rs-num" id="res-wrong" style="color:#e05c3a">0</div><div class="rs-lbl">Incorrectas</div></div>
+      <div class="result-stat"><div class="rs-num" id="res-pct">0%</div><div class="rs-lbl">Puntuación</div></div>
+    </div>
+    <button class="restart-btn" onclick="restartTest()">Volver a intentar</button>
+    <button class="restart-btn" style="background:#333" onclick="filterTest('all',document.querySelector('.filter-btn'))">Nuevo orden</button>
+  </div>
+</div>
+
+<script>
+// ---- TAB SWITCH ----
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ---- ACCORDION ----
+function toggleAcc(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  header.closest('.tab-content').querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
+  header.closest('.tab-content').querySelectorAll('.accordion-header').forEach(h => h.classList.remove('open'));
+  if (!isOpen) { body.classList.add('open'); header.classList.add('open'); }
+}
+
+// ---- SIGLAS / TÉRMINOS ----
+const siglas = [
+  { term: 'OMS', def: 'Organización Mundial de la Salud. Prevé que 7 millones de personas morirán por enfermedades no transmisibles en los próximos 15 años.', cat: 'purple' },
+  { term: 'OCDE', def: 'Organización para la Cooperación y el Desarrollo Económico. Estima que 2 de cada 3 personas serán obesas.', cat: 'purple' },
+  { term: 'IMEO', def: 'Instituto Médico Europeo de la Obesidad. Institución experta citada en las estadísticas del módulo.', cat: 'purple' },
+  { term: 'HIIT', def: 'High Intensity Interval Training (Entrenamiento Interválico de Alta Intensidad). Muestra mayores beneficios cardiometabólicos que el entrenamiento continuo moderado.', cat: 'teal' },
+  { term: 'CAT', def: 'Continuous Aerobic Training (Entrenamiento Aeróbico Continuo). Modalidad comparada con el HIIT en estudios de obesidad.', cat: 'teal' },
+  { term: 'EPOC', def: 'Excess Post-exercise Oxygen Consumption. Deuda de oxígeno postejercicio; uno de los efectos indirectos del entrenamiento en la obesidad.', cat: 'teal' },
+  { term: 'AIT', def: 'Entrenamiento Interválico Aeróbico de alta intensidad (en español). Sus efectos sobre aspectos hemodinámicos fueron estudiados en obesos con síndrome metabólico.', cat: 'teal' },
+  { term: 'HTA', def: 'Hipertensión Arterial. Trastorno asociado a la obesidad que se beneficia del ejercicio físico.', cat: 'amber' },
+  { term: 'EF', def: 'Entrenamiento de Fuerza. En el contexto del módulo, previene casi al 100% la pérdida de masa muscular durante restricción calórica.', cat: 'amber' },
+  { term: 'RC', def: 'Restricción Calórica. Dieta hipocalórica en la que el EF previene la pérdida de masa muscular.', cat: 'amber' },
+  { term: 'MeTs', def: 'Síndrome Metabólico. Conjunto de factores de riesgo cardiovascular y metabólico muy prevalente en obesos.', cat: 'amber' },
+  { term: 'PA', def: 'Presión Arterial. Se mide antes y después de cada sesión de ejercicio en pacientes con riesgo cardiovascular.', cat: 'amber' },
+  { term: 'RM', def: 'Repetición Máxima. Unidad de medida de la carga de entrenamiento. 20RM = carga que permita 20 repeticiones como máximo.', cat: 'coral' },
+  { term: 'VO₂Max', def: 'Consumo máximo de oxígeno. Disminuye con el envejecimiento; uno de los objetivos del entrenamiento de resistencia en adultos mayores.', cat: 'coral' },
+  { term: 'ABVD', def: 'Actividades Básicas de la Vida Diaria. Objetivo clave del entrenamiento en adultos mayores: mantener la independencia para realizarlas.', cat: 'coral' },
+  { term: 'FC', def: 'Frecuencia Cardíaca. Se monitoriza antes y después de cada sesión en pacientes con diabetes u obesidad.', cat: 'coral' },
+  { term: 'RPE', def: 'Rate of Perceived Exertion (Escala de Esfuerzo Percibido). Se evalúa al inicio y al final de cada sesión.', cat: 'coral' },
+  { term: 'ACSM', def: 'American College of Sports Medicine. Emite recomendaciones de ejercicio para diabetes, adultos mayores y otras poblaciones especiales.', cat: 'purple' },
+  { term: 'AU', def: 'Ácido Úrico. Parámetro analítico que se mide en pacientes con diabetes antes y después de la sesión de ejercicio.', cat: 'amber' },
+  { term: 'ECC', def: 'Ejercicio en Cadena Cinética Cerrada. Al inicio del tratamiento en obesidad se evitan grandes sobrecargas de este tipo.', cat: 'amber' },
+];
+
+const terms = [
+  { term: 'Hiperplasia adipocitaria', def: 'Aumento del número de adipocitos. Proceso dominante en la niñez y adolescencia.', cat: 'purple' },
+  { term: 'Hipertrofia adipocitaria', def: 'Aumento del tamaño de los adipocitos sin incrementar su número. Mecanismo normativo en la ganancia de peso adulta.', cat: 'purple' },
+  { term: 'Adipogénesis', def: 'Proceso de formación y diferenciación de adipocitos. Más fácil de estimular una vez alcanzado cierto tamaño crítico.', cat: 'purple' },
+  { term: 'Grelina', def: 'Hormona producida en el estómago que activa el hipotálamo lateral (centro del hambre). También estimula partes del cerebro implicadas en el aprendizaje.', cat: 'teal' },
+  { term: 'Resistencia a la insulina', def: 'Estado en que las células musculares necesitan cada vez más insulina para captar la misma cantidad de glucosa. Originada en parte por la inflamación del tejido adiposo hipertrofiado.', cat: 'teal' },
+  { term: 'Sarcobesidad', def: 'Coexistencia de obesidad y pérdida de masa muscular (sarcopenia). Situación que hace prioritaria la recuperación funcional y metabólica del músculo.', cat: 'amber' },
+  { term: 'Sarcopenia', def: 'Pérdida de masa muscular asociada al envejecimiento o enfermedades crónicas. Factor de riesgo en el tratamiento de la obesidad.', cat: 'amber' },
+  { term: 'Dinapenia', def: 'Pérdida de fuerza muscular sin pérdida necesaria de masa. Afecta a la funcionalidad en la obesidad.', cat: 'amber' },
+  { term: 'Síndrome de fragilidad', def: 'Estado clínico en el anciano vulnerable que conlleva alto riesgo de eventos adversos (caídas, institucionalización, muerte). El ejercicio es la intervención más eficaz.', cat: 'coral' },
+  { term: 'Entrenamiento multicomponente', def: 'Programa que combina aeróbico + fuerza + equilibrio + marcha. Considerado el más efectivo para adultos mayores.', cat: 'coral' },
+  { term: 'Efecto interferencia', def: 'Reducción de las ganancias de fuerza y potencia cuando se combina entrenamiento de fuerza y aeróbico en la misma sesión (sobre todo si la resistencia precede a la fuerza).', cat: 'coral' },
+  { term: 'Cervicalgia', def: 'Dolor en la región cervical, aislado o irradiado a cabeza y miembro superior. Primera causa de consulta en fisioterapia, más frecuente en mujeres de 45–64 años.', cat: 'purple' },
+  { term: 'Lumbalgia', def: 'Dolor entre el margen costal y los pliegues glúteos. Primera causa de incapacidad en países industrializados. Causa generalmente inespecífica.', cat: 'teal' },
+  { term: 'Propiocepción', def: 'Habilidad del cuerpo para percibir su posición y movimiento en el espacio. Componente clave en las fases de rehabilitación de la espalda.', cat: 'amber' },
+  { term: 'Hipotálamo lateral', def: 'Centro del hambre en el cerebro. Si se activa, inicia la conducta alimentaria. La grelina es uno de sus activadores.', cat: 'purple' },
+  { term: 'Hipotálamo ventromedial', def: 'Centro de la saciedad. Su destrucción provoca hiperfagia.', cat: 'purple' },
+  { term: 'Potencia muscular', def: 'Producto de fuerza × velocidad. Se deteriora antes y más rápido que la fuerza con el envejecimiento. Mayor relación con la capacidad funcional en ancianos.', cat: 'coral' },
+];
+
+function buildChips(data, containerId, defBoxId, defTermId, defTextId) {
+  const container = document.getElementById(containerId);
+  let activeChip = null;
+  data.forEach((item, idx) => {
+    const chip = document.createElement('span');
+    chip.className = `chip chip-${item.cat}`;
+    chip.textContent = item.term;
+    chip.onclick = () => {
+      const defBox = document.getElementById(defBoxId);
+      if (activeChip === chip && defBox.classList.contains('visible')) {
+        defBox.classList.remove('visible');
+        chip.classList.remove('selected');
+        activeChip = null;
+        return;
+      }
+      document.querySelectorAll(`#${containerId} .chip`).forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      document.getElementById(defTermId).textContent = item.term;
+      document.getElementById(defTextId).textContent = item.def;
+      defBox.classList.add('visible');
+      activeChip = chip;
+    };
+    container.appendChild(chip);
+  });
+}
+
+buildChips(siglas, 'chips-siglas', 'def-box-siglas', 'def-term-siglas', 'def-text-siglas');
+buildChips(terms, 'chips-terms', 'def-box-terms', 'def-term-terms', 'def-text-terms');
+
+// ---- TEST DATA ----
+const ALL_QUESTIONS = [
+  // OBESIDAD
+  {cat:"Obesidad", q:"Según la OMS, ¿cuántas personas morirán por enfermedades no transmisibles en los próximos 15 años?", opts:["3 millones","5 millones","7 millones","10 millones"], correct:2, exp:"La OMS prevé 7 millones de muertes por enfermedades no transmisibles en 15 años."},
+  {cat:"Obesidad", q:"Según la OCDE, ¿cuántas personas serán obesas en el futuro próximo?", opts:["1 de cada 3","2 de cada 3","1 de cada 2","3 de cada 4"], correct:1, exp:"Según la OCDE, 2 de cada 3 personas serán obesas."},
+  {cat:"Obesidad", q:"¿Cuántos años menos viven las personas severamente obesas respecto a las de peso normal?", opts:["5 años","7 años","10 años","15 años"], correct:2, exp:"Las personas severamente obesas viven 10 años menos que las de peso normal."},
+  {cat:"Obesidad", q:"¿En qué porcentaje aumenta el riesgo de muerte temprana por cada 15 kg extras?", opts:["10%","20%","30%","40%"], correct:2, exp:"Cada 15 kg extras aumentan el riesgo de muerte temprana en un 30%."},
+  {cat:"Obesidad", q:"¿Cuál es el mecanismo dominante de ganancia de peso en la niñez y adolescencia?", opts:["Hipertrofia adipocitaria","Hiperplasia adipocitaria","Resistencia a la insulina","Lipólisis"], correct:1, exp:"En la niñez y adolescencia el proceso dominante es la hiperplasia adipocitaria."},
+  {cat:"Obesidad", q:"¿Cuál es el mecanismo normativo de desarrollo del tejido adiposo en la ganancia de peso adulta?", opts:["Hiperplasia","Hipertrofia","Adipogénesis","Lipólisis"], correct:1, exp:"En la edad adulta el mecanismo normativo de desarrollo del tejido adiposo es la hipertrofia."},
+  {cat:"Obesidad", q:"¿Qué reduce significativamente la pérdida de peso en términos de los adipocitos?", opts:["El número de adipocitos","El volumen de los adipocitos","Ambos por igual","Ninguno de los dos"], correct:1, exp:"La pérdida de peso disminuye el volumen y NO el número de adipocitos."},
+  {cat:"Obesidad", q:"¿Qué hormona activa el hipotálamo lateral produciendo sensación de hambre?", opts:["Leptina","Insulina","Grelina","Cortisol"], correct:2, exp:"La grelina, producida en las paredes del estómago, activa el hipotálamo lateral."},
+  {cat:"Obesidad", q:"¿Dónde está regulado el control del peso según Fung y cols. (2017)?", opts:["En el hipocampo","En el hipotálamo","En el núcleo caudado","En la amígdala"], correct:1, exp:"Según Fung (2017), el control del peso está regulado en el hipotálamo, que funciona como un termostato."},
+  {cat:"Obesidad", q:"¿Qué hormona determina el 'termostato' del peso corporal según Fung (2017)?", opts:["Leptina","Cortisol","Insulina","Grelina"], correct:2, exp:"La hormona insulina determina el peso de referencia que el hipotálamo indica mantener."},
+  {cat:"Obesidad", q:"¿Cuál es el porcentaje aproximado del control del peso que depende de la alimentación?", opts:["50%","75%","90%","95%"], correct:3, exp:"El 95% del control del peso depende de lo que comemos; solo el 5% del ejercicio físico."},
+  {cat:"Obesidad", q:"¿Qué produce la inflamación del tejido muscular en el tejido adiposo hipertrofiado?", opts:["Más adipogénesis","Aumento de leptina","Resistencia a la insulina","Hipoglucemia"], correct:2, exp:"La inflamación generada por la hipoxia del tejido adiposo hipertrofiado causa resistencia a la insulina en las células musculares."},
+  {cat:"Obesidad", q:"¿Qué tipo de ejercicio es el mejor para incrementar la vascularización de los tejidos?", opts:["Yoga","Estiramientos","Ejercicio físico (en general)","Caminata suave"], correct:2, exp:"El ejercicio físico es la mejor herramienta para incrementar la vascularización de un tejido."},
+  {cat:"Obesidad", q:"¿Qué tipo específico de ejercicios vascularizan mejor según la ciencia?", opts:["Aeróbico continuo de baja intensidad","Interválicos intensivos","Yoga y pilates","Isométricos"], correct:1, exp:"Los ejercicios interválicos intensivos son los que mejor vascularizan según la evidencia científica."},
+  {cat:"Obesidad", q:"¿Qué son los mejores predictores de mortalidad más allá del porcentaje graso?", opts:["IMC y perímetro abdominal","Fuerza y fitness cardiorrespiratorio","Edad y sexo","Niveles de colesterol"], correct:1, exp:"La fuerza y el fitness cardiorrespiratorio son los mejores predictores de mortalidad (Parr, Coffey & Hawley, 2013)."},
+  {cat:"Obesidad", q:"¿En qué porcentaje reduce el EF la pérdida de masa muscular durante restricción calórica según Sardeli (2018)?", opts:["50%","75%","93,5%","Casi 100%"], correct:3, exp:"El EF previno casi en un 100% la pérdida de masa muscular inducida por la restricción calórica."},
+  {cat:"Obesidad", q:"¿Qué combinación de entrenamiento es óptima para la pérdida de grasa corporal?", opts:["Solo aeróbico","Solo fuerza","Entrenamiento concurrente aeróbico-fuerza","HIIT exclusivo"], correct:2, exp:"El entrenamiento concurrente aeróbico-fuerza potencia globalmente los efectos beneficiosos del ejercicio cuando el objetivo es perder grasa corporal."},
+  {cat:"Obesidad", q:"¿Cuál es la frecuencia recomendada por el ACSM para pacientes con Diabetes I?", opts:["1 día/semana","3 días/semana","5 días/semana","7 días/semana"], correct:1, exp:"Recomendaciones ACSM Diabetes I: 3 días por semana alrededor de 60 minutos."},
+  {cat:"Obesidad", q:"¿Cuál es la frecuencia recomendada por el ACSM para pacientes con Diabetes II?", opts:["3 días/semana","5 días/semana","7 días/semana","2 días/semana"], correct:2, exp:"Recomendaciones ACSM Diabetes II: 7 días por semana alrededor de 90 minutos."},
+  {cat:"Obesidad", q:"¿Qué tipo de trabajo es adecuado para pacientes con Diabetes I según el ACSM?", opts:["Fuerza explosiva y sprints","Fuerza resistencia + cardiovascular aeróbico sin impactos","Solo estiramientos","Fuerza máxima con altas cargas"], correct:1, exp:"Para Diabetes I: fuerza resistencia con grandes grupos musculares y trabajo cardiovascular aeróbico sin impactos."},
+  {cat:"Obesidad", q:"¿Qué produce el HIIT en comparación con el entrenamiento continuo moderado según la evidencia?", opts:["Menores beneficios cardiometabólicos","Mayores efectos sobre marcadores de salud cardiometabólica","Iguales resultados","Mayores pérdidas musculares"], correct:1, exp:"El HIIT muestra mayores efectos sobre marcadores de salud cardiometabólica que los entrenamientos continuos de intensidad moderada."},
+  {cat:"Obesidad", q:"¿Qué conclusión extrae De Strijcker (2018) sobre el ejercicio y la pérdida de grasa?", opts:["El HIIT es suficiente sin dieta","El entrenamiento aeróbico es superior al HIIT","Ningún entrenamiento es eficaz sin medidas nutricionales adecuadas","La fuerza sola es suficiente"], correct:2, exp:"Ningún tipo de entrenamiento ha mostrado eficacia para perder grasa corporal si no se acompaña de medidas nutricionales adecuadas (De Strijcker, 2018)."},
+  {cat:"Obesidad", q:"¿Qué es la sarcobesidad?", opts:["Obesidad sin sarcopenia","Coexistencia de obesidad y pérdida de masa muscular","Solo pérdida de fuerza","Hipotiroidismo con obesidad"], correct:1, exp:"La sarcobesidad es la coexistencia de obesidad y sarcopenia (pérdida de masa muscular)."},
+  {cat:"Obesidad", q:"¿Cuál es el autor que estudió la fisiopatología de la obesidad desde una perspectiva actual en 2017?", opts:["Carrasco y cols.","De Strijcker","Suárez-Carmona, Sánchez-Oliver y González-Jurado","Sardeli y cols."], correct:2, exp:"Suárez-Carmona, Sánchez-Oliver y González-Jurado (2017) estudiaron la fisiopatología de la obesidad."},
+  {cat:"Obesidad", q:"¿Qué función tenía el hipotálamo lateral si se destruyera?", opts:["El animal comería en exceso","El animal dejaría de comer","El animal dormiría más","No habría cambios"], correct:1, exp:"Si el hipotálamo lateral se destruyera, el animal podría no volver a comer nunca más."},
+
+  // ADULTOS MAYORES
+  {cat:"Adultos Mayores", q:"¿Qué define el síndrome de fragilidad en el anciano?", opts:["Pérdida de peso","Estado de vulnerabilidad con alto riesgo de eventos adversos","Deterioro cognitivo exclusivamente","Hospitalización frecuente"], correct:1, exp:"El síndrome de fragilidad define a los ancianos vulnerables con alto riesgo de sufrir eventos adversos (Izquierdo y Cadore, 2014)."},
+  {cat:"Adultos Mayores", q:"¿Cuál es la intervención que ha mostrado mejores resultados en el anciano frágil?", opts:["Suplementación proteínica","Tratamiento farmacológico","Ejercicio físico","Vitamina D"], correct:2, exp:"Sin duda lo que mejor resultado ha mostrado es el ejercicio físico (Izquierdo y Casas, 2012)."},
+  {cat:"Adultos Mayores", q:"¿Qué programa de ejercicio ha demostrado ser el más efectivo para adultos mayores?", opts:["Entrenamiento de fuerza exclusivo","Programa aeróbico continuo","Programa multicomponente","Yoga y meditación"], correct:2, exp:"El programa multicomponente (fuerza + resistencia + equilibrio + marcha) es el más efectivo."},
+  {cat:"Adultos Mayores", q:"¿Cuáles son los componentes del programa multicomponente?", opts:["Fuerza, flexibilidad, velocidad","Fuerza, resistencia, equilibrio y marcha","Solo aeróbico y fuerza","Estiramientos, propiocepción y marcha"], correct:1, exp:"El programa multicomponente combina fuerza, resistencia, equilibrio y marcha."},
+  {cat:"Adultos Mayores", q:"¿Cuál es el objetivo clave del entrenamiento en adultos mayores?", opts:["Maximizar el VO₂Max","Incrementar la masa muscular","Incrementar capacidad funcional e independencia en las ABVD","Reducir el porcentaje graso"], correct:2, exp:"El objetivo clave es incrementar la capacidad funcional e independencia en las ABVD."},
+  {cat:"Adultos Mayores", q:"¿En qué porcentaje puede aumentar la producción de fuerza el entrenamiento de fuerza máxima en ancianos?", opts:["5–10%","10–30%","30–50%","50–70%"], correct:1, exp:"El entrenamiento de fuerza máxima puede incrementar la producción de fuerza entre un 10 y 30%, tras 1 a 2 meses."},
+  {cat:"Adultos Mayores", q:"¿En cuánto tiempo se consiguen las mejoras de fuerza máxima en adultos mayores?", opts:["1–2 semanas","1–2 meses","3–6 meses","1 año"], correct:1, exp:"Las mejoras de fuerza se consiguen tras 1 a 2 meses de entrenamiento."},
+  {cat:"Adultos Mayores", q:"¿Qué capacidad se deteriora más rápido y antes que la fuerza con el envejecimiento?", opts:["Flexibilidad","Resistencia cardiovascular","Potencia","Equilibrio"], correct:2, exp:"La potencia sufre un deterioro más rápido y precoz que la fuerza (Hakkinen, 2001)."},
+  {cat:"Adultos Mayores", q:"¿Qué tiene mayor relación con la capacidad funcional en el anciano, la potencia o la fuerza?", opts:["La fuerza máxima","La potencia","Ambas por igual","Ninguna"], correct:1, exp:"La potencia tiene una relación más significativa con la capacidad funcional que la fuerza (Knauff, 2001)."},
+  {cat:"Adultos Mayores", q:"¿Cuántos años de edad funcional puede mejorar el entrenamiento combinado de fuerza y potencia?", opts:["5 años","10 años","20 años","30 años"], correct:2, exp:"El entrenamiento combinado de fuerza y potencia puede conseguir mejorar la edad funcional hasta en 20 años."},
+  {cat:"Adultos Mayores", q:"¿Qué intensidad y velocidad se recomienda para entrenar potencia en frágiles?", opts:["60% 1RM a velocidad máxima","80% 1RM a velocidad moderada","40% 1RM a velocidad lenta","100% 1RM con asistencia"], correct:0, exp:"Se puede mejorar la potencia con un entrenamiento al 60% y con la máxima velocidad (33–60% de la velocidad máxima sin resistencia)."},
+  {cat:"Adultos Mayores", q:"¿Cuántas series se recomiendan al inicio para personas frágiles sedentarias?", opts:["1 serie","2–3 series","4–5 series","5–6 series"], correct:1, exp:"En personas frágiles sedentarias debe comenzar por 2–3 series."},
+  {cat:"Adultos Mayores", q:"¿Cuántos días por semana se recomienda el entrenamiento inicial en frágiles sedentarios?", opts:["1 día","2–3 días","4–5 días","6–7 días"], correct:1, exp:"Se recomienda 2 a 3 días por semana."},
+  {cat:"Adultos Mayores", q:"¿Cuánto puede disminuir la función diastólica con el envejecimiento?", opts:["Hasta un 20%","Hasta un 30%","Hasta un 50%","Hasta un 70%"], correct:2, exp:"La función diastólica puede estar disminuida hasta un 50% con el envejecimiento."},
+  {cat:"Adultos Mayores", q:"¿Qué describe el efecto interferencia en el entrenamiento concurrente?", opts:["Mayor ganancia de fuerza","Menor ganancia de fuerza y potencia al combinar fuerza y aeróbico","Mejor recuperación muscular","Aumento del VO₂Max"], correct:1, exp:"El efecto interferencia produce menores ganancias de fuerza y potencia que con entrenamiento de fuerza aislado."},
+  {cat:"Adultos Mayores", q:"¿Cuándo se acentúa más el efecto interferencia en el entrenamiento concurrente?", opts:["Cuando la fuerza precede al aeróbico","Cuando el aeróbico precede a la fuerza","Con días de descanso entre sesiones","Con alta frecuencia semanal"], correct:1, exp:"El efecto interferencia se acentúa cuando el trabajo de resistencia precede al de fuerza en la misma sesión."},
+  {cat:"Adultos Mayores", q:"¿Qué porcentaje del programa multicomponente debe dedicarse al entrenamiento de fuerza?", opts:["15%","20%","25%","30%"], correct:3, exp:"Según la propuesta de Cargas Multicomponentes, la fuerza ocupa el 30%."},
+  {cat:"Adultos Mayores", q:"¿Qué porcentaje ocupa el equilibrio-coordinación en el programa multicomponente?", opts:["10%","15%","20%","30%"], correct:2, exp:"El equilibrio-coordinación ocupa el 20% del programa multicomponente."},
+  {cat:"Adultos Mayores", q:"¿Cuántas veces por semana debe realizarse el ejercicio multicomponente?", opts:["1 vez","2 veces","3 o más veces","5 o más veces"], correct:2, exp:"Se recomienda actividad física multicomponente 3 o más veces por semana."},
+  {cat:"Adultos Mayores", q:"¿Cuánto dura cada sesión de ejercicio multicomponente según la prescripción?", opts:["15–20 min","30–45 min","60–90 min","más de 90 min"], correct:1, exp:"Se recomiendan 30 a 45 minutos por sesión."},
+  {cat:"Adultos Mayores", q:"¿Cuánto tiempo como mínimo debe durar el programa multicomponente para obtener resultados?", opts:["1–2 semanas","1 mes","3–5 meses","6–12 meses"], correct:2, exp:"El programa debe durar al menos 3 a 5 meses para ver beneficios."},
+  {cat:"Adultos Mayores", q:"¿Cuál de las siguientes es una actividad recreativa considerada multicomponente?", opts:["Carrera de velocidad","Levantamiento de pesas","Baile y yoga","Remo indoor"], correct:2, exp:"El baile, el yoga y el taichi se consideran multicomponentes (ACSM, 2019)."},
+  {cat:"Adultos Mayores", q:"¿Cuál es el principio básico de entrenamiento especialmente relevante en el adulto mayor frágil?", opts:["Especificidad extrema","Mayor cautela en la progresión","Maximizar el volumen rápidamente","Entrenamiento diario"], correct:1, exp:"La clave con el adulto mayor, sobre todo en el caso de fragilidad, será una mayor cautela en la progresión en atención a su vulnerabilidad."},
+  {cat:"Adultos Mayores", q:"¿Qué autores publicaron el trabajo sobre ejercicio en el anciano frágil y prevención de dependencia (2014)?", opts:["Sardeli y cols.","Izquierdo, Cadore y Casas","Leveritt y cols.","De Strijcker y cols."], correct:1, exp:"Izquierdo, Cadore y Casas (2014) publicaron sobre ejercicio en el anciano frágil."},
+  {cat:"Adultos Mayores", q:"¿Qué factores de fragilidad mejoran también con el entrenamiento de fuerza?", opts:["Solo masa muscular","Velocidad de marcha y levantarse de una silla","Mejoras cognitivas exclusivamente","Solo equilibrio estático"], correct:1, exp:"También aumentan factores objetivos de fragilidad como velocidad de la marcha o sentarse y levantarse de una silla (Liu y cols. 2013)."},
+  {cat:"Adultos Mayores", q:"¿Cuál es uno de los 4 principios básicos del entrenamiento que se aplican igual en adultos y mayores?", opts:["Adaptación","Sobrecarga","Periodización","Potenciación"], correct:1, exp:"Los principios básicos son: sobrecarga, progresión, especificidad e individualización, y reversibilidad."},
+
+  // ESPALDA
+  {cat:"Espalda", q:"¿Cuáles son las dos patologías más frecuentes de la columna vertebral que causan dolor y limitación funcional?", opts:["Escoliosis y cifosis","Hernia discal y espondilitis","Cervicalgia y lumbalgia","Artritis y osteoporosis"], correct:2, exp:"La cervicalgia y la lumbalgia son las causas más frecuentes de dolor y limitación funcional."},
+  {cat:"Espalda", q:"¿En qué género es más frecuente la cervicalgia cuando el dolor supera un mes?", opts:["Igual en ambos","Más frecuente en hombres","Más frecuente en mujeres","Exclusiva de la tercera edad"], correct:2, exp:"El dolor cervical es más frecuente en mujeres que en hombres, fundamentalmente cuando la duración supera un mes."},
+  {cat:"Espalda", q:"¿En qué rango de edad se encuentra el pico de afectación de la cervicalgia?", opts:["15–30 años","30–45 años","45–64 años","65–80 años"], correct:2, exp:"Se encuentra un pico de afectación en la edad media (45–64 años)."},
+  {cat:"Espalda", q:"¿Los cambios degenerativos cervicales son factor de riesgo demostrado de cervicalgia?", opts:["Sí, siempre","Sí, solo en mayores","No existe evidencia de ello","Solo en mujeres"], correct:2, exp:"No existe evidencia de que los cambios degenerativos comunes de la columna cervical sean un factor de riesgo de la cervicalgia (Meseguer, 2000)."},
+  {cat:"Espalda", q:"¿Cuál es el objetivo principal de la fase aguda del tratamiento de la cervicalgia?", opts:["Tonificar la musculatura estabilizadora","Trabajar el gesto deportivo","Disminuir el dolor y el agente causal","Reeducar el reflejo óculo-céfalo-giro"], correct:2, exp:"El objetivo principal de la fase aguda es disminuir el dolor y el agente causal."},
+  {cat:"Espalda", q:"¿Qué temporalización corresponde a la fase aguda de la cervicalgia?", opts:["Semanas 1–3","Semanas 4–6","Semanas 6–8","Semana 8 en adelante"], correct:0, exp:"La fase aguda corresponde a las semanas 1–3."},
+  {cat:"Espalda", q:"¿Qué temporalización tiene la fase de rehabilitación de la cervicalgia?", opts:["Semanas 1–3","Semanas 4–6","Semanas 6–8","Semana 8"], correct:1, exp:"La fase de recuperación funcional / rehabilitación transcurre en las semanas 4–6."},
+  {cat:"Espalda", q:"¿Qué objetivo tiene la fase de adaptación motriz general en la cervicalgia?", opts:["Disminuir el dolor","Tonificar musculatura estabilizadora lumbo-pélvica y trabajo de core","Recuperar la lesión anatómica","Solo estiramientos pasivos"], correct:1, exp:"En la fase de adaptación motriz general se tonifica la musculatura estabilizadora y se trabaja el core."},
+  {cat:"Espalda", q:"¿En qué semana se sitúa la fase de readaptación físico-deportiva específica?", opts:["Semana 2","Semana 4","Semana 6","Semana 8"], correct:3, exp:"La fase de readaptación físico-deportiva corresponde a la semana 8."},
+  {cat:"Espalda", q:"¿Cuál es la primera causa de incapacidad en países industrializados?", opts:["Cardiopatías","Lumbalgia","Cervicalgia","Depresión"], correct:1, exp:"La lumbalgia es la primera causa de incapacidad en los países industrializados."},
+  {cat:"Espalda", q:"¿Dónde se localiza el dolor en la lumbalgia?", opts:["Región cervical","Zona torácica","Entre el margen costal y los pliegues glúteos","Solo en la pierna"], correct:2, exp:"El dolor de la lumbalgia se localiza entre el margen costal y los pliegues glúteos inferiores."},
+  {cat:"Espalda", q:"¿Cuánto tiempo de dolor es necesario para que se considere lumbalgia crónica?", opts:["2 semanas","4 semanas","8 semanas","12 semanas"], correct:3, exp:"La lumbalgia crónica es dolor en esa localización al menos durante 12 semanas."},
+  {cat:"Espalda", q:"¿Cuál es la causa más frecuentemente atribuida a la lumbalgia?", opts:["Hernia discal","Fracturas vertebrales","Espasmo o contractura muscular (causa inespecífica)","Osteoporosis"], correct:2, exp:"La causa es inespecífica, aunque se cree que el espasmo o la contractura muscular es el origen de la patología."},
+  {cat:"Espalda", q:"¿Cuántas consultas médicas anuales genera el dolor lumbar en EE.UU.?", opts:["5 millones","10 millones","15 millones","20 millones"], correct:2, exp:"En EE.UU. se producen aproximadamente 15 millones de consultas médicas por el dolor lumbar."},
+  {cat:"Espalda", q:"¿Qué coste supone la lumbalgia anualmente en países europeos como % del PIB?", opts:["0,5–1%","1,7–2,1%","3–5%","5–7%"], correct:1, exp:"Cada año supone en países europeos un coste entre el 1,7 y el 2,1 de su PIB."},
+  {cat:"Espalda", q:"¿Qué ejercicios están desaconsejados para la columna cervical?", opts:["Plancha abdominal y sentadilla","Hiperflexión, hiperextensión y circunducción cervical","Press de banca y dominadas","Caminar y nadar"], correct:1, exp:"Los ejercicios desaconsejados para la columna cervical son la hiperflexión, la hiperextensión y la circunducción cervical."},
+  {cat:"Espalda", q:"¿Qué objetivo pertenece a la fase de rehabilitación (4–6ª semana) de la cervicalgia?", opts:["Disminuir el dolor agudo","Reeducar el reflejo óculo-céfalo-giro","Recuperar los mecanismos motrices de base","Trabajo del gesto deportivo"], correct:2, exp:"En la fase de rehabilitación se trabaja recuperar los mecanismos motrices de base."},
+  {cat:"Espalda", q:"¿Qué músculo se trabaja preferentemente en la fase de rehabilitación de la lumbalgia junto al diafragma?", opts:["Trapecio y romboides","Transverso y glúteo medio y mayor","Cuádriceps y gemelos","Deltoides y pectoral"], correct:1, exp:"En la fase de rehabilitación de la lumbalgia se trabajan diafragma, transverso, glúteo medio y mayor."},
+  {cat:"Espalda", q:"¿Qué es la segunda causa más frecuente de consulta en atención primaria tras los procesos respiratorios?", opts:["Las cardiopatías","La cervicalgia","La lumbalgia","La diabetes"], correct:2, exp:"La lumbalgia es la segunda causa más frecuente de consulta en atención primaria, tras los procesos respiratorios."},
+  {cat:"Espalda", q:"¿Cuántas fases tiene la recuperación tanto de cervicalgia como de lumbalgia?", opts:["2 fases","3 fases","4 fases","5 fases"], correct:2, exp:"Ambas patologías comparten 4 fases: aguda, rehabilitación, adaptación motriz general y readaptación físico-deportiva."},
+  {cat:"Espalda", q:"¿Qué tipo de trabajo se incluye en la fase de readaptación físico-deportiva?", opts:["Solo reposo activo","Estiramientos pasivos","Fuerza en todos los rangos y gesto deportivo a baja intensidad","Solo natación"], correct:2, exp:"En la fase de readaptación se trabaja la fuerza en todos los rangos sin dolor y el gesto deportivo a baja intensidad."},
+
+  // AUTORES
+  {cat:"Autores", q:"¿Qué autores estudiaron el efecto del entrenamiento interválico de alta intensidad (HIIT) comparado con entrenamiento continuo en obesos (2018)?", opts:["Sardeli y cols.","De Strijcker y cols.","Izquierdo y Cadore","Heredia"], correct:1, exp:"De Strijcker y cols. (2018) estudiaron los efectos del HIIT vs. entrenamiento continuo en hombres con obesidad/sobrepeso."},
+  {cat:"Autores", q:"¿Qué metaanálisis concluyó que el EF previene casi el 100% de la pérdida muscular en restricción calórica?", opts:["De Strijcker (2018)","Sardeli y cols. (2018)","Parr, Coffey & Hawley (2013)","Leveritt y cols. (1999)"], correct:1, exp:"Sardeli y cols. (2018) publicaron el metaanálisis que concluyó que el EF previene casi al 100% la pérdida de masa muscular."},
+  {cat:"Autores", q:"¿Qué autores demostraron que la fuerza y el fitness cardiorrespiratorio son los mejores predictores de mortalidad?", opts:["Fung y cols. (2017)","Izquierdo y Cadore (2014)","Parr, Coffey & Hawley (2013)","Heredia (2008)"], correct:2, exp:"Parr, Coffey & Hawley (2013) demostraron que la fuerza y el fitness cardiorrespiratorio son los mejores predictores de mortalidad."},
+  {cat:"Autores", q:"¿Qué autor describió el control del peso como un problema hormonal relacionado con la insulina?", opts:["Heredia","Suárez-Carmona","Fung y cols.","Leveritt"], correct:2, exp:"Fung y cols. (2017) describieron el control del peso como directamente relacionado con los niveles de insulina."},
+  {cat:"Autores", q:"¿Quiénes publicaron el estudio de fisiopatología de la obesidad: Perspectiva actual (2017)?", opts:["Sardeli, Komatsu y Chacon-Mikahil","Parr, Coffey y Hawley","Suárez-Carmona, Sánchez-Oliver y González-Jurado","Izquierdo, Cadore y Casas"], correct:2, exp:"Suárez-Carmona, Sánchez-Oliver y González-Jurado (2017) publicaron 'Fisiopatología de la obesidad: Perspectiva actual'."},
+  {cat:"Autores", q:"¿Qué autores publicaron sobre el tratamiento farmacológico o quirúrgico del paciente con sobrepeso u obesidad (2009)?", opts:["Heredia y cols.","Carrasco y cols.","Fung y cols.","Sardeli y cols."], correct:1, exp:"Carrasco y cols. (2009) publicaron sobre el tratamiento farmacológico o quirúrgico en pacientes con sobrepeso u obesidad."},
+  {cat:"Autores", q:"¿Quiénes estudiaron el efecto interferencia en el entrenamiento concurrente?", opts:["Hakkinen y cols.","Liu y cols.","Leveritt y cols. (1999)","Izquierdo y Cadore"], correct:2, exp:"Leveritt y cols. (1999) señalaron el efecto interferencia al combinar entrenamiento de fuerza y aeróbico."},
+  {cat:"Autores", q:"¿Qué autores demostraron que la potencia se deteriora antes que la fuerza?", opts:["Liu y cols. (2013)","Hakkinen y cols. (2001)","Leveritt y cols. (1999)","Sardeli y cols. (2018)"], correct:1, exp:"Hakkinen y cols. (2001) demostraron que la potencia sufre un deterioro más rápido y precoz que la fuerza."},
+  {cat:"Autores", q:"¿Qué autores demostraron que la potencia tiene mayor relación con la capacidad funcional que la fuerza?", opts:["Hakkinen y cols.","Liu y cols.","Knauff y cols. (2001)","Izquierdo y Casas"], correct:2, exp:"Knauff y cols. (2001) demostraron la mayor relación de la potencia con la capacidad funcional."},
+  {cat:"Autores", q:"¿Qué autores estudiaron la prevalencia, consecuencias y factores de riesgo de la cervicalgia?", opts:["Bot y cols. (2005)","Meseguer y cols. (2000)","Mirapeix y cols. (2007)","Calvo-Muñoz y cols. (2012)"], correct:1, exp:"Meseguer y cols. (2000) estudiaron la prevalencia, consecuencias y factores de riesgo de la cervicalgia."},
+  {cat:"Autores", q:"¿Qué autores publicaron sobre los predictores de resultado en síntomas de cuello y hombro (2005)?", opts:["Meseguer y cols.","Mirapeix y cols.","Bot y cols.","Calvo-Muñoz y cols."], correct:2, exp:"Bot y cols. (2005) publicaron sobre predictores de resultado en síntomas de cuello y hombro."},
+  {cat:"Autores", q:"¿Quiénes publicaron sobre variabilidad en la valoración del paciente con cervicalgia mecánica (2007)?", opts:["Meseguer y cols.","Mirapeix y cols.","Bot y cols.","Calvo-Muñoz y cols."], correct:1, exp:"Mirapeix y cols. (2007) publicaron sobre variabilidad en la valoración del paciente con cervicalgia mecánica."},
+  {cat:"Autores", q:"¿Quiénes realizaron la revisión sistemática sobre eficacia de fisioterapia para el dolor lumbar (2012)?", opts:["Meseguer y cols.","Bot y cols.","Mirapeix y cols.","Calvo-Muñoz, Gómez-Conesa y Sánchez-Meca"], correct:3, exp:"Calvo-Muñoz, Gómez-Conesa y Sánchez-Meca (2012) publicaron la revisión sistemática sobre eficacia de fisioterapia para dolor lumbar."},
+  {cat:"Autores", q:"¿Qué autores publicaron sobre el ejercicio físico como intervención eficaz en el anciano frágil (2012)?", opts:["Izquierdo y Cadore","Casas Herrero e Izquierdo","Sardeli y cols.","Liu y cols."], correct:1, exp:"Casas Herrero e Izquierdo (2012) publicaron sobre el ejercicio físico como intervención eficaz en el anciano frágil."},
+  {cat:"Autores", q:"¿Qué estudio asoció el entrenamiento de fuerza a la mejora de la velocidad de marcha y el levantarse de una silla en ancianos?", opts:["Hakkinen y cols. (2001)","Liu y cols. (2013)","Knauff y cols. (2001)","Leveritt y cols. (1999)"], correct:1, exp:"Liu y cols. (2013) describieron que el entrenamiento de fuerza mejora factores objetivos de fragilidad como la velocidad de marcha."},
+  {cat:"Autores", q:"¿Qué autor publicó sobre sobrepeso/obesidad, ejercicio físico y salud en 2008?", opts:["Sardeli","Fung","Heredia","Parr"], correct:2, exp:"Heredia, J. R. (2008) publicó 'Sobrepeso/obesidad, ejercicio físico y salud'."},
+];
+
+// ---- TEST ENGINE ----
+let activeFilter = 'all';
+let questions = [];
+let answered = 0;
+let correct = 0;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function filterTest(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  restartTest();
+}
+
+function restartTest() {
+  answered = 0;
+  correct = 0;
+  questions = shuffle(activeFilter === 'all' ? ALL_QUESTIONS : ALL_QUESTIONS.filter(q => q.cat === activeFilter));
+  document.getElementById('result-panel').classList.remove('visible');
+  renderQuestions();
+}
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  updateProgress();
+
+  questions.forEach((q, idx) => {
+    const catColors = {'Obesidad':'purple','Adultos Mayores':'teal','Espalda':'amber','Autores':'coral'};
+    const color = catColors[q.cat] || 'purple';
+
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `qcard-${idx}`;
+
+    const shuffledOpts = q.opts.map((o, i) => ({text: o, origIdx: i}));
+    // Store shuffled mapping per question
+    card.dataset.qidx = idx;
+
+    let optsHTML = shuffledOpts.map((o, si) => `
+      <label class="option-label" id="opt-${idx}-${si}" onclick="selectOption(${idx},${si},${o.origIdx})">
+        <input type="radio" name="q${idx}">
+        <span class="option-radio"></span>
+        <span>${o.text}</span>
+      </label>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="q-number">Pregunta ${idx + 1} de ${questions.length}</div>
+      <span class="q-category badge badge-${color}">${q.cat}</span>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts-${idx}">${optsHTML}</div>
+      <button class="submit-btn" id="submit-${idx}" onclick="submitAnswer(${idx})" disabled>ENVIAR</button>
+      <div class="feedback-box" id="fb-${idx}">
+        <div class="feedback-icon"></div>
+        <div id="fb-text-${idx}"></div>
+      </div>
+    `;
+
+    // Store mapping on the card
+    card._optMap = shuffledOpts;
+    container.appendChild(card);
+  });
+}
+
+let selectedAnswers = {};
+
+function selectOption(qidx, sIdx, origIdx) {
+  if (document.getElementById(`submit-${qidx}`).disabled === false && document.getElementById(`fb-${qidx}`).classList.contains('visible')) return;
+  selectedAnswers[qidx] = {sIdx, origIdx};
+  const opts = document.querySelectorAll(`#opts-${qidx} .option-label`);
+  opts.forEach(o => o.classList.remove('selected'));
+  document.getElementById(`opt-${qidx}-${sIdx}`).classList.add('selected');
+  document.getElementById(`submit-${qidx}`).disabled = false;
+}
+
+function submitAnswer(qidx) {
+  const btn = document.getElementById(`submit-${qidx}`);
+  if (!selectedAnswers[qidx]) return;
+  btn.disabled = true;
+  const q = questions[qidx];
+  const {sIdx, origIdx} = selectedAnswers[qidx];
+  const isCorrect = origIdx === q.correct;
+  const opts = document.querySelectorAll(`#opts-${qidx} .option-label`);
+  opts.forEach((o, si) => {
+    o.style.pointerEvents = 'none';
+    // Find original index for this rendered option
+    const card = document.getElementById(`qcard-${qidx}`);
+    // We stored the map in the rendered HTML via origIdx in the onclick
+  });
+  // Find which sIdx maps to the correct origIdx
+  const optsArr = [...document.querySelectorAll(`#opts-${qidx} .option-label`)];
+  optsArr.forEach((o, si) => {
+    o.style.pointerEvents = 'none';
+  });
+  const clickedLabel = document.getElementById(`opt-${qidx}-${sIdx}`);
+  // find the correct sIdx by scanning onclick attributes
+  const allLabels = document.querySelectorAll(`#opts-${qidx} .option-label`);
+  allLabels.forEach(l => {
+    const onclick = l.getAttribute('onclick');
+    const match = onclick.match(/selectOption\(\d+,(\d+),(\d+)\)/);
+    if (match) {
+      const si2 = parseInt(match[1]);
+      const oi2 = parseInt(match[2]);
+      if (oi2 === q.correct) {
+        l.classList.add('show-correct');
+      }
+    }
+  });
+
+  if (isCorrect) {
+    clickedLabel.classList.remove('selected');
+    clickedLabel.classList.add('correct');
+    correct++;
+  } else {
+    clickedLabel.classList.remove('selected');
+    clickedLabel.classList.add('wrong');
+  }
+
+  const fb = document.getElementById(`fb-${qidx}`);
+  const fbText = document.getElementById(`fb-text-${qidx}`);
+  fb.classList.add('visible');
+  fb.classList.add(isCorrect ? 'correct-fb' : 'wrong-fb');
+  fbText.textContent = q.exp;
+
+  answered++;
+  updateProgress();
+
+  if (answered === questions.length) {
+    setTimeout(showResult, 600);
+  }
+}
+
+function updateProgress() {
+  const total = questions.length;
+  const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Pregunta ${answered} de ${total} respondidas`;
+}
+
+function showResult() {
+  const total = questions.length;
+  const wrong = answered - correct;
+  const pct = Math.round((correct / total) * 100);
+  document.getElementById('result-score').textContent = `${correct}/${total}`;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = wrong;
+  document.getElementById('res-pct').textContent = pct + '%';
+  document.getElementById('result-panel').classList.add('visible');
+  document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
+}
+
+// Init
+restartTest();
+</script>
+</body>
+</html>

@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 6 · Planificación y Programación del Entrenamiento</title>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --header-bg: #1a1a18;
+    --accent: #534AB7;
+    --accent-light: #EEEDFE;
+    --yellow: #FFD700;
+    --yellow-dark: #e6c200;
+    --card-border: 0.5px solid #d3d1c7;
+    --radius: 12px;
+    --teal: #E1F5EE;
+    --amber: #FAEEDA;
+    --coral: #FAECE7;
+    --purple: #EEEDFE;
+    --text: #1a1a18;
+    --text-muted: #6b6a63;
+    --correct: #22c55e;
+    --incorrect: #FFD700;
+    --white: #ffffff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+
+  /* HEADER */
+  header { background: var(--header-bg); color: #fff; padding: 28px 32px 24px; }
+  header .mod-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); margin-bottom: 6px; }
+  header h1 { font-size: clamp(20px, 3vw, 28px); font-weight: 700; line-height: 1.2; }
+  header p { color: #aaa9a2; font-size: 13px; margin-top: 6px; }
+
+  /* TABS */
+  .tabs-bar { background: var(--header-bg); border-bottom: 1px solid #333; padding: 0 32px; display: flex; gap: 4px; }
+  .tab-btn { background: none; border: none; color: #aaa9a2; padding: 12px 18px; cursor: pointer; font-size: 13px; font-weight: 500; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .tab-btn:hover { color: #fff; }
+  .tab-btn.active { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+  /* MAIN */
+  main { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-title { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; margin-top: 32px; }
+  .section-title:first-child { margin-top: 0; }
+
+  /* ACCORDION */
+  .accordion { border: var(--card-border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; background: #fff; }
+  .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; cursor: pointer; font-weight: 600; font-size: 14px; user-select: none; gap: 12px; }
+  .accordion-header:hover { background: #faf9f6; }
+  .accordion-header .topic-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .tag-purple { background: var(--purple); color: var(--accent); }
+  .tag-teal { background: var(--teal); color: #1a7a55; }
+  .tag-amber { background: var(--amber); color: #9a6c1a; }
+  .tag-coral { background: var(--coral); color: #a63b2a; }
+  .accordion-arrow { font-size: 12px; color: var(--text-muted); transition: transform 0.2s; flex-shrink: 0; }
+  .accordion.open .accordion-arrow { transform: rotate(180deg); }
+  .accordion-body { display: none; padding: 0 20px 20px; border-top: var(--card-border); }
+  .accordion.open .accordion-body { display: block; }
+  .accordion-body p { color: #3a3933; font-size: 14px; margin-top: 12px; line-height: 1.65; }
+  .accordion-body ul { margin: 10px 0 0 18px; }
+  .accordion-body li { font-size: 14px; margin-bottom: 6px; color: #3a3933; }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+  .data-table th { background: var(--header-bg); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+  .data-table td { padding: 8px 12px; border-bottom: var(--card-border); vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: #faf9f6; }
+
+  /* KEY BOXES */
+  .key-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .key-box { border: var(--card-border); border-radius: var(--radius); padding: 18px; background: #fff; }
+  .key-box .kb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .key-box .kb-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .key-box .kb-desc { font-size: 13px; color: #5a5951; line-height: 1.5; }
+  .key-box.purple { border-left: 4px solid var(--accent); background: var(--purple); }
+  .key-box.teal { border-left: 4px solid #1a7a55; background: var(--teal); }
+  .key-box.amber { border-left: 4px solid #c97d1a; background: var(--amber); }
+  .key-box.coral { border-left: 4px solid #c0432c; background: var(--coral); }
+  .key-box.purple .kb-label { color: var(--accent); }
+  .key-box.teal .kb-label { color: #1a7a55; }
+  .key-box.amber .kb-label { color: #9a6c1a; }
+  .key-box.coral .kb-label { color: #a63b2a; }
+
+  /* CHIPS */
+  .chips-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+  .chip { display: inline-block; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: var(--card-border); background: #fff; transition: all 0.18s; user-select: none; }
+  .chip:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip-def { margin-top: 14px; padding: 16px 20px; border-radius: var(--radius); background: #fff; border: var(--card-border); font-size: 14px; display: none; }
+  .chip-def.visible { display: block; }
+  .chip-def strong { display: block; font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--accent); }
+
+  /* TEST */
+  .test-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; align-items: center; }
+  .filter-btn { padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: var(--card-border); background: #fff; transition: all 0.18s; }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .test-meta { display: flex; gap: 16px; align-items: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; flex-wrap: wrap; }
+  .test-meta span strong { color: var(--text); }
+  .shuffle-btn { margin-left: auto; padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: var(--card-border); background: #fff; transition: all 0.18s; }
+  .shuffle-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* PROGRESS */
+  .progress-bar-wrap { background: #e5e4df; border-radius: 20px; height: 8px; margin-bottom: 28px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.4s ease; }
+
+  /* QUESTION CARD */
+  .q-card { border: var(--card-border); border-radius: var(--radius); padding: 24px; background: #fff; margin-bottom: 18px; }
+  .q-number { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+  .q-cat-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .q-text { font-size: 15px; font-weight: 600; margin-bottom: 18px; line-height: 1.5; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-label { display: flex; align-items: flex-start; gap: 12px; padding: 11px 15px; border: var(--card-border); border-radius: 10px; cursor: pointer; font-size: 14px; transition: background 0.15s, border-color 0.15s; }
+  .opt-label:hover { background: #faf9f6; border-color: #b0afaa; }
+  .opt-label input[type="radio"] { display: none; }
+  .opt-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d3d1c7; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .opt-label.selected .opt-circle { border-color: var(--accent); background: var(--accent); }
+  .opt-label.selected { border-color: var(--accent); background: var(--purple); }
+  .opt-label.correct-ans { border-color: var(--correct); background: #f0fdf4; }
+  .opt-label.correct-ans .opt-circle { border-color: var(--correct); background: var(--correct); }
+  .opt-label.wrong-ans { border-color: var(--incorrect); background: #fffbea; }
+  .opt-label.wrong-ans .opt-circle { border-color: #b8860b; background: var(--incorrect); }
+  .feedback-row { display: none; margin-top: 16px; align-items: flex-start; gap: 12px; }
+  .feedback-row.visible { display: flex; }
+  .feedback-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--header-bg); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .feedback-icon.correct-icon { color: var(--correct); }
+  .feedback-icon.wrong-icon { color: var(--incorrect); }
+  .feedback-text { font-size: 13px; color: #4a4940; line-height: 1.5; }
+
+  /* SUBMIT BTN */
+  .submit-btn { display: block; width: 100%; padding: 14px; background: var(--yellow); color: var(--header-bg); border: none; border-radius: 30px; font-size: 14px; font-weight: 800; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 18px; transition: background 0.18s; }
+  .submit-btn:hover { background: var(--yellow-dark); }
+  .submit-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* RESULT PANEL */
+  .result-panel { display: none; border: var(--card-border); border-radius: var(--radius); padding: 28px; background: #fff; text-align: center; margin-top: 32px; }
+  .result-panel.visible { display: block; }
+  .result-panel h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .result-score { font-size: 48px; font-weight: 900; color: var(--accent); margin: 12px 0; }
+  .result-panel p { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+  .retry-btn { display: inline-block; padding: 12px 32px; background: var(--accent); color: #fff; border: none; border-radius: 30px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.18s; }
+  .retry-btn:hover { opacity: 0.85; }
+
+  /* CALLOUT */
+  .callout { padding: 14px 18px; border-radius: 10px; font-size: 13px; margin: 16px 0; line-height: 1.55; }
+  .callout.purple { background: var(--purple); border-left: 4px solid var(--accent); }
+  .callout.teal { background: var(--teal); border-left: 4px solid #1a7a55; }
+  .callout.amber { background: var(--amber); border-left: 4px solid #c97d1a; }
+  .callout.coral { background: var(--coral); border-left: 4px solid #c0432c; }
+  .callout strong { font-weight: 700; }
+
+  /* SUMMARY LIST */
+  .summary-list { list-style: none; padding: 0; }
+  .summary-list li { padding: 8px 0 8px 22px; border-bottom: var(--card-border); font-size: 14px; position: relative; }
+  .summary-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .summary-list li:last-child { border-bottom: none; }
+
+  @media (max-width: 600px) {
+    main { padding: 20px 14px 50px; }
+    .tabs-bar { padding: 0 14px; overflow-x: auto; }
+    .key-grid { grid-template-columns: 1fr; }
+    header { padding: 20px 16px; }
+  }
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <div class="mod-label">Five Stars IGS · Fitness Instructor</div>
+  <h1>Módulo 6: Planificación y Programación del Entrenamiento</h1>
+  <p>Periodización · Macrociclo · Mesociclo · Microciclo · Entrenamiento Concurrente</p>
+</header>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('esquema', this)">📋 Esquema</button>
+  <button class="tab-btn" onclick="switchTab('resumen', this)">💡 Resumen clave</button>
+  <button class="tab-btn" onclick="switchTab('terminos', this)">🔤 Siglas y términos</button>
+  <button class="tab-btn" onclick="switchTab('test', this)">✏️ Test</button>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════ ESQUEMA ═══ -->
+<div id="tab-esquema" class="tab-panel active">
+
+  <p class="section-title">Tema 1 · Fundamentos del proceso de periodización</p>
+
+  <div class="accordion open">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>1.1 Historia y modelos de planificación</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-purple">T1</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p>La planificación estructurada del entrenamiento se formaliza con <strong>Matveiev en 1983</strong> ("Preparación del deportista"). Existían indicios previos como las <strong>Tetradas</strong>.</p>
+      <p>Los cuatro modelos clásicos y contemporáneos más relevantes para la planificación en salud:</p>
+      <table class="data-table">
+        <tr><th>Modelo</th><th>Autor</th><th>Característica principal</th></tr>
+        <tr><td>Planificación clásica</td><td>Matveiev (1983)</td><td>Primera propuesta estructurada, base de la periodización tradicional</td></tr>
+        <tr><td>Modelo de bloques</td><td>Verjoshanski (1990)</td><td>Bloques concentrados de carga; modelo contemporáneo</td></tr>
+        <tr><td>Modelo ATR</td><td>—</td><td>Acumulación, Transformación, Realización</td></tr>
+        <tr><td>Estructura individualizadora</td><td>Bondartchurk (1989)</td><td>Máxima individualización según el deportista</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>1.2 Conceptos clave: planificación, programación, periodización</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-purple">T1</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <table class="data-table">
+        <tr><th>Concepto</th><th>Definición</th></tr>
+        <tr><td><strong>Planificación</strong></td><td>Proceso global y previo que prevé actuaciones a corto, medio y largo plazo de forma organizada, estructurada y flexible</td></tr>
+        <tr><td><strong>Programación</strong></td><td>Concreción detallada de la planificación: organiza objetivos, actividades y controles en el tiempo. Materializa cada acción</td></tr>
+        <tr><td><strong>Periodización</strong></td><td>Aspectos dedicados a secuenciar y temporalizar las actividades; es un elemento dentro de la planificación</td></tr>
+      </table>
+      <p>La <strong>planificación en salud</strong> es más frecuente a corto plazo (6–12 meses) dada la concienciación poblacional actual.</p>
+      <table class="data-table" style="margin-top:12px">
+        <tr><th>Plazo</th><th>Duración</th></tr>
+        <tr><td>Corto plazo</td><td>10–12 meses (temporada deportiva)</td></tr>
+        <tr><td>Medio plazo</td><td>≥ 2 años hasta el ciclo olímpico</td></tr>
+        <tr><td>Largo plazo</td><td>Mínimo ciclo olímpico (4 años) o superior</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <p class="section-title">Tema 2 · Programas periodizados vs no periodizados</p>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>2.1 ¿Es necesaria la periodización en salud?</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-teal">T2</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p><strong>Rhea et al. (2004):</strong> el entrenamiento periodizado es <em>más efectivo</em> que el no periodizado para mejorar fuerza y potencia en hombres y mujeres con distintos niveles de experiencia.</p>
+      <p><strong>ACSM (2009):</strong> apoya la periodización también en adultos sanos (no solo deportistas), en línea con los principios de adaptación orgánica de Selye. La variación del volumen e intensidad es clave para progresiones a largo plazo.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>2.2 Tipos de periodización</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-teal">T2</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <table class="data-table">
+        <tr><th>Tipo</th><th>Descripción</th></tr>
+        <tr><td><strong>Lineal (clásica)</strong></td><td>Incremento progresivo y continuo del volumen/intensidad a lo largo del tiempo</td></tr>
+        <tr><td><strong>Ondulatoria (no lineal)</strong></td><td>Variaciones de intensidad y volumen de forma ondulante; puede ser semanal o diaria</td></tr>
+        <tr><td><strong>Flexible (no lineal flexible)</strong></td><td>Propuesta por Fleck (2011); permite cambiar la zona de entrenamiento según el estado físico y psicológico actual del sujeto</td></tr>
+      </table>
+      <p><strong>Harries et al. (2015):</strong> no existen diferencias relevantes entre periodización lineal y ondulatoria. El nivel de experiencia y la variedad son factores clave.</p>
+      <p>La <strong>periodización selectiva</strong> del modelo de salud combina los tres tipos según la fase y el estado del individuo.</p>
+    </div>
+  </div>
+
+  <p class="section-title">Tema 3 · Estructuración: Macrociclo · Mesociclo · Microciclo</p>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>3.1 Macrociclo y sus períodos</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-amber">T3</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p>Estructura de mayor duración; puede ser anual, bianual u olímpico. Engloba los objetivos principales de la temporada competitiva.</p>
+      <table class="data-table">
+        <tr><th>Período</th><th>Objetivo principal</th><th>Características</th></tr>
+        <tr><td><strong>Preparatorio</strong></td><td>Preparación física general</td><td>Alto volumen, baja intensidad; se divide en fase general y fase especial; ~1 mes en deportes colectivos</td></tr>
+        <tr><td><strong>Competición</strong></td><td>Mejora del rendimiento competitivo</td><td>Descenso del volumen, mantenimiento progresivo de la intensidad; subfases pre-competitiva y competición principal</td></tr>
+        <tr><td><strong>Transitorio</strong></td><td>Recuperar funciones orgánicas (esp. psicológicas)</td><td>Descanso activo; ~1 mes en deportes colectivos</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>3.2 Mesociclo</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-amber">T3</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p>Estructura global para desarrollar una cualidad operativa. Nunca tiene menos de <strong>2 microciclos</strong> ni más de <strong>8–10</strong>. Varios mesociclos forman un macrociclo.</p>
+      <table class="data-table">
+        <tr><th>Tipo</th><th>Objetivo</th></tr>
+        <tr><td><strong>Introductorio</strong></td><td>Trabaja las bases de las cualidades; cargas bajas; inicia con 2–3 microciclos de ajuste y termina con 1 de recuperación</td></tr>
+        <tr><td><strong>Básico (desarrollo)</strong></td><td>Aumentar el rendimiento en los objetivos; cargas globales crecientes</td></tr>
+        <tr><td><strong>Básico (estabilización)</strong></td><td>Consolidar el rendimiento alcanzado</td></tr>
+        <tr><td><strong>Precompetitivo</strong></td><td>Transformar bases al nivel específico de competición</td></tr>
+        <tr><td><strong>Competitivo</strong></td><td>Mantener la forma y optimizarla para las competiciones principales</td></tr>
+        <tr><td><strong>Transición</strong></td><td>Reestructurar el organismo; estabilizar el rendimiento sin aumentar cargas</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>3.3 Microciclo</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-amber">T3</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p>Unidad básica de planificación. Duración: <strong>2–14 días</strong> (habitualmente 7 días). Se compone de <strong>estimulación + recuperación</strong>.</p>
+      <p>Relaciones Estimulación:Recuperación más utilizadas: <strong>6:1 · 5:2 · 3:1 · 2:1</strong></p>
+      <table class="data-table">
+        <tr><th>Tipo</th><th>Carga</th><th>Objetivo / Cuándo</th></tr>
+        <tr><td><strong>Ajuste / Introductorio</strong></td><td>Baja</td><td>Preparar para entrenamientos más intensos; inicio de periodos, tras descanso</td></tr>
+        <tr><td><strong>Carga</strong></td><td>Media</td><td>Mejorar el rendimiento; el más frecuente en la temporada</td></tr>
+        <tr><td><strong>Choque / Impacto</strong></td><td>Alta</td><td>Estimular al máximo los procesos de adaptación; altos volúmenes en preparatorio, alta intensidad en competitivo</td></tr>
+        <tr><td><strong>Aproximación</strong></td><td>Competición-like</td><td>Preparar al deportista para la competición; mucho trabajo específico</td></tr>
+        <tr><td><strong>Competición</strong></td><td>Variable</td><td>Organiza competiciones importantes; fundamental la recuperación y supercompensación</td></tr>
+        <tr><td><strong>Recuperación</strong></td><td>Muy baja</td><td>Desarrollo óptimo de la recuperación; recuperación activa, ejercicios de contraste</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <p class="section-title">Tema 4 · Fases de planificación: trabajo y recuperación</p>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>4.1 Adaptación y factores que influyen</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-coral">T4</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p><strong>Adaptación:</strong> proceso a través del cual el organismo se adecúa a las condiciones de entrenamiento, llevando a una mejora morfológico-funcional y al aumento de la potencialidad vital.</p>
+      <ul>
+        <li><strong>Factores que influyen:</strong> nivel de estrés · tendencia a la homeostasis · efecto del entrenamiento</li>
+        <li><strong>Efectos del entrenamiento:</strong> inmediato (respuesta aguda) · resultante (supercompensación) · acumulativo (adaptación crónica)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>4.2 La Fatiga: tipos y clasificación</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-coral">T4</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p><strong>Definición:</strong> disminución de la capacidad de generar fuerza. Produce bajada de ATP en células nerviosas, acumulación de metabolitos e inhibición de la ATP-asa miofibrilar.</p>
+      <table class="data-table">
+        <tr><th>Clasificación</th><th>Tipos</th></tr>
+        <tr><td>Según zona afectada</td><td><strong>Periférica</strong> (orgánica/muscular) · <strong>Central</strong> (recepción/control)</td></tr>
+        <tr><td>Según tiempo de aparición</td><td><strong>Aguda</strong> · <strong>Subaguda</strong> (= sobrecarga) · <strong>Crónica</strong> (= sobreentrenamiento)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>4.3 Recuperación: tipos y tiempos</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-coral">T4</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <table class="data-table">
+        <tr><th>Tipo</th><th>Cuándo</th><th>Qué ocurre</th></tr>
+        <tr><td><strong>Inmediata</strong></td><td>½ – 1½ hora tras el esfuerzo</td><td>Eliminación de metabolitos acumulados; pago de deuda de O₂</td></tr>
+        <tr><td><strong>Aplazada</strong></td><td>Horas después del esfuerzo</td><td>Anabolismo intenso, restauración iónica, restablecimiento de reservas energéticas, síntesis proteica</td></tr>
+      </table>
+      <p style="margin-top:14px;font-weight:700;font-size:13px;">Tiempos de recuperación en deporte de elite:</p>
+      <table class="data-table">
+        <tr><th>Capacidad</th><th>Tiempo</th></tr>
+        <tr><td>Velocidad</td><td>60–70 horas</td></tr>
+        <tr><td>Aeróbica</td><td>26–28 horas</td></tr>
+        <tr><td>Anaeróbica</td><td>10–14 horas</td></tr>
+        <tr><td>Fuerza máxima</td><td>48–60 horas</td></tr>
+        <tr><td>Fuerza explosiva</td><td>48–60 horas</td></tr>
+        <tr><td>Fuerza hipertrofia / resistencia</td><td>24–48 horas</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <p class="section-title">Tema 5 · Entrenamiento concurrente (fuerza-resistencia)</p>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>5.1 Fenómeno de interferencia</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-purple">T5</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <p><strong>Entrenamiento concurrente:</strong> combinación de ejercicios para mejorar la capacidad aeróbica y la fuerza en un mismo programa. Descubierto por <strong>Hickson (1980)</strong>.</p>
+      <p><strong>Fenómeno de interferencia:</strong> limitaciones que surgen al entrenar fuerza y resistencia en el mismo programa.</p>
+      <p>Causas de la interferencia:</p>
+      <ul>
+        <li>Adaptaciones celulares opuestas en ambas modalidades (excepto fibras tipo I)</li>
+        <li>Acumulación de fatiga: frecuencia, volumen e intensidad excesivos</li>
+        <li>Períodos de descanso insuficientes entre sesiones</li>
+        <li>Fatiga residual que impide la generación óptima de tensión muscular</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <span>5.2 Variables del entrenamiento concurrente y conclusiones</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="topic-tag tag-purple">T5</span><span class="accordion-arrow">▼</span></div>
+    </div>
+    <div class="accordion-body">
+      <table class="data-table">
+        <tr><th>Variable</th><th>Recomendación</th></tr>
+        <tr><td>Orden de ejercicios</td><td>En no entrenados, el orden no influye si la frecuencia/volumen son moderados</td></tr>
+        <tr><td>Frecuencia</td><td>Sin efectos negativos si las sesiones son &lt; 3 por semana</td></tr>
+        <tr><td>Intensidad (fuerza)</td><td>No más de 6 repeticiones para centrarse en adaptaciones neurales</td></tr>
+        <tr><td>Intensidad (cardiorrespiratoria)</td><td>Trabajar a más del 90% del PAN para adaptaciones centrales</td></tr>
+        <tr><td>Grupos musculares</td><td>Evitar sobrecargar los mismos grupos musculares en sesiones consecutivas</td></tr>
+      </table>
+      <div class="callout purple" style="margin-top:14px">
+        <strong>Conclusión:</strong> para minimizar la interferencia hay que controlar el <strong>volumen total, la frecuencia, la intensidad, el orden de ejecución</strong> y los <strong>grupos musculares involucrados</strong>. Este control es más crítico cuanto más alto sea el nivel de rendimiento.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end esquema -->
+
+<!-- ═══════════════════════════════════════════════ RESUMEN ═══ -->
+<div id="tab-resumen" class="tab-panel">
+
+  <p class="section-title">Ideas nucleares del módulo</p>
+  <div class="key-grid">
+    <div class="key-box purple">
+      <div class="kb-label">Origen</div>
+      <div class="kb-title">Matveiev, 1983</div>
+      <div class="kb-desc">Primera propuesta estructurada de planificación del entrenamiento deportivo. Libro: "Preparación del deportista".</div>
+    </div>
+    <div class="key-box teal">
+      <div class="kb-label">Concepto clave</div>
+      <div class="kb-title">Planificación ≠ Programación ≠ Periodización</div>
+      <div class="kb-desc">Planificar = prever (general). Programar = concretar (específico). Periodizar = secuenciar y temporalizar (elemento dentro de la planificación).</div>
+    </div>
+    <div class="key-box amber">
+      <div class="kb-label">Evidencia</div>
+      <div class="kb-title">Periodizado > No periodizado</div>
+      <div class="kb-desc">Rhea et al. (2004) y ACSM (2009): el entrenamiento periodizado es más efectivo para mejorar fuerza y potencia en toda la población.</div>
+    </div>
+    <div class="key-box coral">
+      <div class="kb-label">Estructura</div>
+      <div class="kb-title">Macrociclo → Mesociclo → Microciclo</div>
+      <div class="kb-desc">Jerarquía de ciclos: el macrociclo engloba varios mesociclos (2–10 microciclos cada uno). El microciclo suele durar 7 días.</div>
+    </div>
+    <div class="key-box purple">
+      <div class="kb-label">Fatiga</div>
+      <div class="kb-title">Periférica / Central · Aguda / Crónica</div>
+      <div class="kb-desc">La fatiga se clasifica por zona (periférica = muscular; central = control) y por tiempo (aguda, subaguda = sobrecarga, crónica = sobreentrenamiento).</div>
+    </div>
+    <div class="key-box teal">
+      <div class="kb-label">Concurrente</div>
+      <div class="kb-title">Fenómeno de interferencia</div>
+      <div class="kb-desc">Limitaciones al combinar fuerza y resistencia. Se minimiza con &lt;3 sesiones/semana, ≤6 reps en fuerza, &gt;90% PAN en cardio.</div>
+    </div>
+  </div>
+
+  <p class="section-title">Modelos clásicos y contemporáneos</p>
+  <div class="callout purple">
+    <strong>Los 4 modelos de referencia para la planificación en salud:</strong> (a) Planificación de Matveiev · (b) Modelo de bloques de Verjoshanski · (c) Modelo ATR · (d) Estructura individualizadora de Bondartchurk.
+  </div>
+
+  <p class="section-title">Los 3 períodos del macrociclo</p>
+  <div class="key-grid">
+    <div class="key-box amber">
+      <div class="kb-label">1er período</div>
+      <div class="kb-title">Preparatorio</div>
+      <div class="kb-desc">Preparación física general. Alto volumen, baja intensidad. Se divide en fase general y fase especial.</div>
+    </div>
+    <div class="key-box teal">
+      <div class="kb-label">2º período</div>
+      <div class="kb-title">Competición</div>
+      <div class="kb-desc">Mejora del rendimiento competitivo. Descenso de volumen, mantenimiento de intensidad. Sub-fases: pre-competitiva y competición principal.</div>
+    </div>
+    <div class="key-box coral">
+      <div class="kb-label">3er período</div>
+      <div class="kb-title">Transitorio</div>
+      <div class="kb-desc">Recuperar funciones orgánicas, especialmente psicológicas. Descanso activo. ~1 mes en deportes colectivos.</div>
+    </div>
+  </div>
+
+  <p class="section-title">Tipos de microciclos</p>
+  <ul class="summary-list">
+    <li><strong>Ajuste / Introductorio</strong> — Baja carga. Preparar al organismo para entrenamientos más intensos.</li>
+    <li><strong>Carga</strong> — Carga media. Mejorar el rendimiento. El más frecuente.</li>
+    <li><strong>Choque / Impacto</strong> — Alta carga. Estimular al máximo la adaptación.</li>
+    <li><strong>Aproximación</strong> — Cargas similares a competición. Preparación específica.</li>
+    <li><strong>Competición</strong> — Organiza competiciones; prioriza la supercompensación.</li>
+    <li><strong>Recuperación</strong> — Muy baja carga. Recuperación activa y ejercicios de contraste.</li>
+  </ul>
+
+  <p class="section-title">Tiempos de recuperación (deporte de élite)</p>
+  <table class="data-table">
+    <tr><th>Capacidad</th><th>Horas</th></tr>
+    <tr><td>Velocidad</td><td>60–70 h</td></tr>
+    <tr><td>Aeróbica</td><td>26–28 h</td></tr>
+    <tr><td>Anaeróbica</td><td>10–14 h</td></tr>
+    <tr><td>Fuerza máxima</td><td>48–60 h</td></tr>
+    <tr><td>Fuerza explosiva</td><td>48–60 h</td></tr>
+    <tr><td>Fuerza hipertrofia/resistencia</td><td>24–48 h</td></tr>
+  </table>
+
+</div><!-- end resumen -->
+
+<!-- ═══════════════════════════════════════════════ TÉRMINOS ═══ -->
+<div id="tab-terminos" class="tab-panel">
+
+  <p class="section-title">Haz clic en un término para ver su definición</p>
+  <div class="chips-grid" id="chips-container"></div>
+  <div class="chip-def" id="chip-def-box">
+    <strong id="chip-def-title"></strong>
+    <span id="chip-def-text"></span>
+  </div>
+
+</div><!-- end terminos -->
+
+<!-- ═══════════════════════════════════════════════ TEST ═══ -->
+<div id="tab-test" class="tab-panel">
+
+  <div class="test-controls" id="filter-controls"></div>
+
+  <div class="test-meta">
+    <span>Preguntas: <strong id="q-count">0</strong></span>
+    <span>Respondidas: <strong id="q-answered">0</strong></span>
+    <span>Correctas: <strong id="q-correct-count">0</strong></span>
+    <button class="shuffle-btn" onclick="shuffleAndRender()">🔀 Mezclar</button>
+  </div>
+
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+
+  <div id="questions-container"></div>
+
+  <div class="result-panel" id="result-panel">
+    <h2>🎉 ¡Test completado!</h2>
+    <div class="result-score" id="result-score">–</div>
+    <p id="result-msg">Revisa las respuestas para reforzar los conceptos.</p>
+    <button class="retry-btn" onclick="retryTest()">Repetir test</button>
+  </div>
+
+</div><!-- end test -->
+
+</main>
+
+<script>
+// ─── TAB SWITCH ───────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'test' && !testRendered) renderTest();
+  if (id === 'terminos' && !termsRendered) renderTerms();
+}
+
+// ─── ACCORDION ────────────────────────────────────────────────
+function toggleAcc(header) {
+  const acc = header.closest('.accordion');
+  acc.classList.toggle('open');
+  const body = acc.querySelector('.accordion-body');
+  body.style.display = acc.classList.contains('open') ? 'block' : 'none';
+}
+document.querySelectorAll('.accordion').forEach(acc => {
+  const body = acc.querySelector('.accordion-body');
+  if (!acc.classList.contains('open')) body.style.display = 'none';
+});
+
+// ─── TERMS DATA ───────────────────────────────────────────────
+const terms = [
+  {t:"Planificación", d:"Proceso global y previo que prevé las actuaciones a corto, medio y largo plazo de forma organizada, estructurada y flexible. Incluye objetivos, metodología, medios de control y evaluación."},
+  {t:"Programación", d:"Concreción detallada de la planificación. Organiza objetivos, actividades y controles proporcionándoles un orden, distribución en el tiempo y secuenciación según la teoría del entrenamiento."},
+  {t:"Periodización", d:"Aspectos dedicados a secuenciar y temporalizar las actividades que caracterizan un tipo u otro de planificación. Es un elemento dentro del proceso de planificación."},
+  {t:"Macrociclo", d:"Estructura de mayor duración del entrenamiento (anual, bianual u olímpico). Engloba todos los objetivos principales de la temporada competitiva y se divide en período preparatorio, de competición y transitorio."},
+  {t:"Mesociclo", d:"Subdivisión del macrociclo compuesta por 2 a 10 microciclos. Desarrolla una cualidad operativa para alcanzar los objetivos finales del entrenamiento."},
+  {t:"Microciclo", d:"Unidad básica de planificación del entrenamiento. Dura entre 2 y 14 días (habitualmente 7). Se compone de estimulación y recuperación."},
+  {t:"SGA", d:"Síndrome General de Adaptación. Proceso por el que el organismo, tras el estrés del entrenamiento (catabolismo), se recupera (anabolismo) y mejora para dar una respuesta superior al mismo estímulo."},
+  {t:"Periodización lineal", d:"Modelo donde la carga se incrementa de forma progresiva y continua a lo largo del tiempo. Es el más clásico y predecible."},
+  {t:"Periodización ondulatoria", d:"Modelo no lineal donde la intensidad y el volumen varían de forma ondulante. Puede ser semanal o diaria."},
+  {t:"Periodización flexible", d:"Propuesta por Fleck (2011). Permite cambiar la zona de entrenamiento según el estado físico, disponibilidad y actitud del sujeto en cada sesión."},
+  {t:"Período preparatorio", d:"Primera fase del macrociclo. Objetivo: preparación física general. Trabajo con alto volumen y baja intensidad. Se divide en fase general y fase especial."},
+  {t:"Período de competición", d:"Segunda fase del macrociclo. Objetivo: mejorar el rendimiento competitivo. Descenso de volumen y mantenimiento progresivo de la intensidad."},
+  {t:"Período transitorio", d:"Tercera fase del macrociclo. Objetivo: recuperar todas las funciones orgánicas, especialmente las psicológicas. Se recomienda descanso activo."},
+  {t:"Fatiga periférica", d:"Tipo de fatiga clasificada según la zona afectada. Se origina en el músculo o tejido orgánico (disminución de ATP, acumulación de metabolitos, alteración de la ATP-asa miofibrilar)."},
+  {t:"Fatiga central", d:"Tipo de fatiga clasificada según la zona afectada. Se origina en el sistema nervioso central (recepción o control del movimiento)."},
+  {t:"Fatiga aguda", d:"Fatiga que aparece de forma inmediata o durante el ejercicio. Es la respuesta fisiológica normal al esfuerzo."},
+  {t:"Fatiga crónica", d:"Fatiga debida al sobreentrenamiento. Aparece cuando la acumulación de carga supera la capacidad de recuperación del organismo de forma sostenida."},
+  {t:"Supercompensación", d:"Fenómeno por el que el organismo, tras el estrés del entrenamiento y la recuperación, alcanza un nivel de rendimiento superior al inicial. Base fisiológica de la mejora deportiva."},
+  {t:"Entrenamiento concurrente", d:"Combinación de ejercicios diseñados para mejorar la capacidad aeróbica y la fuerza en un mismo programa de entrenamiento."},
+  {t:"Fenómeno de interferencia", d:"Limitaciones que surgen cuando se entrenan fuerza y resistencia en el mismo programa. Puede afectar negativamente al rendimiento en ambas cualidades. Descubierto por Hickson (1980)."},
+  {t:"ATR", d:"Modelo de planificación del entrenamiento: Acumulación - Transformación - Realización. Tres bloques consecutivos con objetivos específicos para cada fase."},
+  {t:"PAN", d:"Potencia Anaeróbica (o umbral anaeróbico). En el entrenamiento concurrente se recomienda trabajar la parte cardiorrespiratoria a más del 90% del PAN para centrarse en adaptaciones centrales y minimizar la interferencia."},
+  {t:"Tetradas", d:"Indicios históricos de organización del entrenamiento previos a Matveiev (1983). Evidencia de que existía cierta estructura en el entrenamiento antes de la propuesta formal."},
+  {t:"Periodización selectiva", d:"Denominación del tipo de periodización del modelo progresivo-individualizador en salud. Combina periodización lineal, ondulatoria y flexible según la fase y el estado del individuo."},
+  {t:"Verjoshanski", d:"Autor del modelo contemporáneo de bloques. Su trabajo (1990) 'Entrenamiento deportivo: planificación y programación' es uno de los modelos clásicos de referencia."},
+  {t:"Bondartchurk", d:"Autor de la estructura individualizadora (1989). Propone la máxima adaptación del entrenamiento a las características individuales del deportista."},
+  {t:"Mesociclo introductorio", d:"Tipo de mesociclo inicial. Se trabajan las bases de las cualidades físicas. Suele empezar con 2–3 microciclos de ajuste y terminar con 1 de recuperación."},
+  {t:"Microciclo de choque", d:"Microciclo con altas cargas de entrenamiento cuyo objetivo es estimular al máximo los procesos de adaptación. Se usa con altos volúmenes en períodos preparatorios y alta intensidad en competitivos."},
+  {t:"Responders / Nonresponders", d:"Teoría que explica la variabilidad individual en la respuesta orgánica-adaptativa al entrenamiento. Algunos sujetos responden más que otros al mismo estímulo de entrenamiento."},
+  {t:"Rhea et al. 2004", d:"Meta-análisis que comparó programas periodizados vs no periodizados para mejora de fuerza y potencia. Conclusión: el entrenamiento periodizado es más efectivo en hombres y mujeres de distintos niveles."},
+];
+
+let termsRendered = false;
+let activeChip = null;
+
+function renderTerms() {
+  termsRendered = true;
+  const container = document.getElementById('chips-container');
+  terms.forEach((item, i) => {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.textContent = item.t;
+    chip.onclick = () => showDef(chip, item, i);
+    container.appendChild(chip);
+  });
+}
+
+function showDef(chip, item, i) {
+  const box = document.getElementById('chip-def-box');
+  const title = document.getElementById('chip-def-title');
+  const text = document.getElementById('chip-def-text');
+  if (activeChip === chip) {
+    chip.classList.remove('active');
+    box.classList.remove('visible');
+    activeChip = null;
+    return;
+  }
+  if (activeChip) activeChip.classList.remove('active');
+  chip.classList.add('active');
+  activeChip = chip;
+  title.textContent = item.t;
+  text.textContent = item.d;
+  box.classList.add('visible');
+}
+
+// ─── TEST DATA ────────────────────────────────────────────────
+const allQuestions = [
+  // TEMA 1 – Fundamentos
+  {cat:"T1 Fundamentos",q:"¿En qué año Matveiev sentó las bases de la planificación del entrenamiento?",opts:["1975","1980","1983","1990"],correct:2,exp:"Matveiev en 1983 publicó 'Preparación del deportista', primera propuesta estructurada de planificación."},
+  {cat:"T1 Fundamentos",q:"¿Cómo se llama el libro de Matveiev publicado en 1983?",opts:["Bases del entrenamiento deportivo","Preparación del deportista","Periodización del entrenamiento","Planificación deportiva"],correct:1,exp:"El libro de Matveiev (1983) se titula 'Preparación del deportista'."},
+  {cat:"T1 Fundamentos",q:"¿Qué modelo de planificación propuso Verjoshanski?",opts:["Planificación clásica","Modelo ATR","Modelo de bloques contemporáneo","Estructura individualizadora"],correct:2,exp:"Verjoshanski propuso el modelo contemporáneo de bloques."},
+  {cat:"T1 Fundamentos",q:"¿Qué modelo de planificación propuso Bondartchurk?",opts:["Modelo ATR","Estructura individualizadora","Modelo de bloques","Planificación ondulatoria"],correct:1,exp:"Bondartchurk es autor de la estructura individualizadora."},
+  {cat:"T1 Fundamentos",q:"¿Cuál es el proceso que se prevé de forma general y previa en el entrenamiento?",opts:["Programación","Periodización","Planificación","Estructuración"],correct:2,exp:"La planificación es el proceso global y previo. La programación es la concreción de ese plan."},
+  {cat:"T1 Fundamentos",q:"¿Cómo se llama el proceso que materializa y concreta la planificación en acciones específicas?",opts:["Periodización","Programación","Planificación","Estructuración"],correct:1,exp:"La programación organiza de manera concreta y detallada todos los elementos propuestos en la planificación."},
+  {cat:"T1 Fundamentos",q:"¿Qué aspectos abarca la periodización dentro de la planificación?",opts:["Los objetivos a largo plazo","Secuenciar y temporalizar las actividades","Definir los ejercicios de cada sesión","Evaluar el rendimiento del atleta"],correct:1,exp:"La periodización hace referencia a secuenciar y temporalizar las actividades que caracterizan cada tipo de planificación."},
+  {cat:"T1 Fundamentos",q:"¿Cuánto dura una planificación a corto plazo según los estándares del entrenamiento?",opts:["3–6 meses","6–9 meses","10–12 meses","2 años"],correct:2,exp:"La planificación a corto plazo cubre una temporada deportiva de aproximadamente 10–12 meses."},
+  {cat:"T1 Fundamentos",q:"¿Cuánto abarca la planificación a largo plazo?",opts:["1–2 años","2–3 años","Mínimo 4 años (ciclo olímpico)","6 meses"],correct:2,exp:"La planificación a largo plazo es como mínimo del ciclo olímpico (4 años) o superior."},
+  {cat:"T1 Fundamentos",q:"¿Cuál es la duración más frecuente de la planificación en salud en la actualidad?",opts:["Largo plazo (4 años)","Medio plazo (2 años)","Corto plazo (6–12 meses)","Semestral (3–6 meses)"],correct:2,exp:"La planificación en salud más frecuente es a corto plazo (6–12 meses) por las características de los grupos poblacionales."},
+  {cat:"T1 Fundamentos",q:"¿Qué indicios previos a Matveiev ya mostraban cierta organización del entrenamiento?",opts:["Los Macrociclos","Las Tetradas","Los Mesociclos","Las Periodizaciones ATR"],correct:1,exp:"Las Tetradas son indicios previos a Matveiev de cierta organización del entrenamiento."},
+  {cat:"T1 Fundamentos",q:"¿Cuántos modelos clásicos/contemporáneos principales aportan a la planificación en salud según el módulo?",opts:["2","3","4","5"],correct:2,exp:"Son 4: planificación de Matveiev, bloques de Verjoshanski, ATR y estructura individualizadora de Bondartchurk."},
+
+  // TEMA 2 – Periodización
+  {cat:"T2 Periodización",q:"¿Qué autores concluyen que el entrenamiento periodizado es más efectivo que el no periodizado?",opts:["Fleck (2011)","Rhea et al. (2004)","Harries et al. (2015)","Hickson (1980)"],correct:1,exp:"Rhea et al. (2004) compararon programas periodizados vs no periodizados y concluyeron que el periodizado es más efectivo."},
+  {cat:"T2 Periodización",q:"¿Qué organización apoya la periodización también en adultos sanos (no solo deportistas)?",opts:["OMS (2009)","ACSM (2009)","IOC (2009)","NSCA (2009)"],correct:1,exp:"El ACSM (2009) en su posicionamiento apoya la necesidad de periodizar el entrenamiento en adultos sanos."},
+  {cat:"T2 Periodización",q:"¿Qué tipo de periodización incrementa las cargas de forma progresiva y continua?",opts:["Ondulatoria","Flexible","Lineal","ATR"],correct:2,exp:"La periodización lineal ajusta las cargas de forma progresiva y continua."},
+  {cat:"T2 Periodización",q:"¿Qué tipo de periodización permite cambiar la zona de entrenamiento según el estado físico del sujeto en cada sesión?",opts:["Lineal","Ondulatoria diaria","Flexible no lineal","Bloques ATR"],correct:2,exp:"La periodización flexible (Fleck, 2011) permite cambios basados en el estado físico, disponibilidad y actitud del sujeto."},
+  {cat:"T2 Periodización",q:"¿Cuál es la conclusión de Harries et al. (2015) sobre la periodización lineal vs ondulatoria?",opts:["La lineal es claramente superior","La ondulatoria es claramente superior","No existen diferencias relevantes entre ambas","La flexible es superior a ambas"],correct:2,exp:"Harries et al. (2015) concluyen que no existen diferencias relevantes en la efectividad de los programas lineal vs ondulatoria."},
+  {cat:"T2 Periodización",q:"¿Qué autor propone la periodización no lineal flexible?",opts:["Matveiev","Verjoshanski","Rhea","Fleck"],correct:3,exp:"Fleck (2011) propone y describe la periodización no lineal flexible."},
+  {cat:"T2 Periodización",q:"¿Qué dos elementos fundamentales deben variar para lograr progresiones a largo plazo según el ACSM?",opts:["Ejercicios y descanso","Volumen e intensidad","Duración y frecuencia","Técnica y táctica"],correct:1,exp:"La variación del volumen y la intensidad son los dos elementos fundamentales para lograr progresiones a largo plazo."},
+  {cat:"T2 Periodización",q:"¿Cómo se llama la periodización del modelo progresivo-individualizador en salud?",opts:["Periodización lineal","Periodización ondulatoria","Periodización selectiva","Periodización ATR"],correct:2,exp:"La periodización del modelo en salud se denomina 'periodización selectiva' y combina los tres tipos según la fase."},
+  {cat:"T2 Periodización",q:"¿Qué explica la teoría de 'Responders y Nonresponders'?",opts:["La respuesta aguda al ejercicio","La variabilidad individual en la respuesta adaptativa al entrenamiento","La diferencia entre modelos de periodización","La recuperación tras el sobreentrenamiento"],correct:1,exp:"La teoría de Responders y Nonresponders explica la variabilidad entre personas en la respuesta orgánica-adaptativa al entrenamiento."},
+  {cat:"T2 Periodización",q:"¿Cuál es el principio fisiológico de Selye relacionado con la necesidad de periodizar?",opts:["Sobrecarga progresiva","Adaptación orgánica (el cuerpo se adapta rápidamente al estímulo)","Especificidad del entrenamiento","Reversibilidad"],correct:1,exp:"Las leyes de adaptación orgánica de Selye indican que el cuerpo humano se adapta rápidamente al entrenamiento, requiriendo variabilidad."},
+
+  // TEMA 3 – Macrociclo/Mesociclo/Microciclo
+  {cat:"T3 Ciclos",q:"¿Cuántos períodos tiene normalmente un macrociclo?",opts:["2","3","4","5"],correct:1,exp:"El macrociclo se divide en 3 períodos: preparatorio, de competición y transitorio."},
+  {cat:"T3 Ciclos",q:"¿Cuál es el objetivo principal del período preparatorio?",opts:["Mejora del rendimiento competitivo","Recuperación de funciones orgánicas","Preparación física general","Competiciones específicas"],correct:2,exp:"El período preparatorio tiene como prioridad la preparación física general con alto volumen y escasa intensidad."},
+  {cat:"T3 Ciclos",q:"¿Cuál es el objetivo principal del período de competición en un macrociclo?",opts:["Mejorar la preparación física general","Mejorar el rendimiento competitivo","Recuperar las funciones orgánicas","Desarrollar las bases de las cualidades"],correct:1,exp:"El período de competición busca el perfeccionamiento de los factores específicos del deporte para mejorar el rendimiento competitivo."},
+  {cat:"T3 Ciclos",q:"¿Cuál es el objetivo fundamental del período transitorio?",opts:["Alcanzar el pico de rendimiento","Aumentar la fuerza máxima","Recuperar todas las funciones orgánicas","Mejorar la técnica deportiva"],correct:2,exp:"El período transitorio tiene como objetivo fundamental recuperar todas las funciones orgánicas, especialmente las psicológicas."},
+  {cat:"T3 Ciclos",q:"¿Cuántos microciclos puede tener como mínimo un mesociclo?",opts:["1","2","3","4"],correct:1,exp:"Un mesociclo nunca tiene menos de 2 microciclos."},
+  {cat:"T3 Ciclos",q:"¿Cuántos microciclos puede tener como máximo un mesociclo?",opts:["6","8–10","12","14"],correct:1,exp:"Un mesociclo nunca tiene más de 8 o 10 microciclos."},
+  {cat:"T3 Ciclos",q:"¿Cómo se llama el mesociclo que trabaja las bases de las cualidades físicas?",opts:["Básico","Precompetitivo","Introductorio","Competitivo"],correct:2,exp:"Los mesociclos introductorios son los iniciales. Se trabajan las bases de las cualidades."},
+  {cat:"T3 Ciclos",q:"¿Qué mesociclo transforma las bases obtenidas al nivel específico de competición?",opts:["Introductorio","Básico de desarrollo","Precompetitivo","Básico de estabilización"],correct:2,exp:"Los mesociclos precompetitivos intentan transformar las bases obtenidas a los niveles específicos que se requieren en la competición."},
+  {cat:"T3 Ciclos",q:"¿Cuál es la duración habitual de un microciclo en la práctica?",opts:["2–3 días","5 días","7 días","14 días"],correct:2,exp:"Aunque puede durar entre 2 y 14 días, habitualmente se planifica para 7 días para adaptarse a los hábitos culturales y laborales."},
+  {cat:"T3 Ciclos",q:"¿Cuáles son las dos partes que componen un microciclo?",opts:["Volumen e intensidad","Estimulación y recuperación","Calentamiento y trabajo principal","Fuerza y resistencia"],correct:1,exp:"Un microciclo se compone de dos partes: estimulación y recuperación."},
+  {cat:"T3 Ciclos",q:"¿Cuál de las siguientes relaciones de estimulación-recuperación es válida en un microciclo?",opts:["4:3","3:1","8:1","1:1"],correct:1,exp:"Las relaciones más utilizadas son 6:1, 5:2, 3:1 y 2:1."},
+  {cat:"T3 Ciclos",q:"¿Qué tipo de microciclo tiene como objetivo preparar al organismo para entrenamientos más intensos?",opts:["Carga","Choque","Ajuste o introductorio","Recuperación"],correct:2,exp:"Los microciclos de ajuste o introductorio tienen bajos niveles de carga y su objetivo es preparar al organismo para entrenamientos más intensos."},
+  {cat:"T3 Ciclos",q:"¿Qué tipo de microciclo utiliza altas cargas para estimular al máximo los procesos de adaptación?",opts:["Ajuste","Carga","Choque o impacto","Aproximación"],correct:2,exp:"Los microciclos de choque o impacto utilizan altas cargas con el objetivo de estimular al máximo los procesos de adaptación."},
+  {cat:"T3 Ciclos",q:"¿Qué tipo de microciclo usa cargas similares a las de competición y realiza mucho trabajo específico?",opts:["Carga","Choque","Recuperación","Aproximación"],correct:3,exp:"Los microciclos de aproximación utilizan cargas similares a las de competición y su objetivo es preparar al deportista para la competición."},
+  {cat:"T3 Ciclos",q:"¿Qué tipo de microciclo busca el desarrollo óptimo de los procesos de recuperación con bajo nivel de carga?",opts:["Ajuste","Competición","Recuperación","Carga"],correct:2,exp:"Los microciclos de recuperación utilizan un bajo nivel de carga con sesiones de recuperación activa y ejercicios de contraste."},
+  {cat:"T3 Ciclos",q:"¿Cuál es la estructura correcta de mayor a menor duración en la planificación del entrenamiento?",opts:["Sesión → Microciclo → Mesociclo → Macrociclo","Macrociclo → Mesociclo → Microciclo → Sesión","Mesociclo → Macrociclo → Microciclo → Sesión","Macrociclo → Microciclo → Mesociclo → Sesión"],correct:1,exp:"La jerarquía es: Macrociclo (mayor) → Mesociclo → Microciclo → Sesión (menor)."},
+  {cat:"T3 Ciclos",q:"¿Cómo se llama el ciclo de entrenamiento a largo plazo que puede durar varios meses o incluso años?",opts:["Mesociclo","Biciclo","Microciclo","Macrociclo"],correct:3,exp:"El macrociclo es el plan de entrenamiento a largo plazo que puede durar varios meses o incluso años (anual, bianual u olímpico)."},
+  {cat:"T3 Ciclos",q:"¿Cómo se denomina el macrociclo cuya duración coincide con los Juegos Olímpicos?",opts:["Biciclo","Triclo","Ciclo olímpico","Macrociclo largo"],correct:2,exp:"El ciclo olímpico (4 años) es la base de la planificación a largo plazo."},
+  {cat:"T3 Ciclos",q:"Durante el período preparatorio, ¿cómo es el volumen y la intensidad del trabajo?",opts:["Bajo volumen y alta intensidad","Alto volumen y alta intensidad","Alto volumen y baja intensidad","Bajo volumen y baja intensidad"],correct:2,exp:"El período preparatorio se caracteriza por alto volumen y escasa (baja) intensidad."},
+  {cat:"T3 Ciclos",q:"¿En qué subfases se divide el período de competición?",opts:["General y especial","Pre-competitiva y competiciones principales","Introductoria y de desarrollo","Preparatoria y transitoria"],correct:1,exp:"El período de competición se divide en fase pre-competitiva (menor relevancia) y competiciones principales."},
+  {cat:"T3 Ciclos",q:"¿Qué macrociclo tiene como duración mínima el ciclo olímpico?",opts:["Corto plazo","Medio plazo","Largo plazo","Muy largo plazo"],correct:2,exp:"La planificación a largo plazo abarca como mínimo el ciclo olímpico (4 años)."},
+  {cat:"T3 Ciclos",q:"¿Cuántos elementos clave principales incluye un microciclo deportivo según el módulo?",opts:["3","4","5","6"],correct:3,exp:"El módulo describe 6 elementos clave: objetivos específicos, estructura de sesiones, variabilidad, descanso/recuperación, evaluación y relaciones estimulación-recuperación."},
+  {cat:"T3 Ciclos",q:"¿Qué tipo de mesociclo contiene las cargas globales y busca aumentar el rendimiento?",opts:["Introductorio","Básico de desarrollo","Básico de estabilización","Precompetitivo"],correct:1,exp:"Los mesociclos básicos de desarrollo contienen las cargas globales y buscan aumentar el rendimiento en los diferentes objetivos."},
+
+  // TEMA 4 – Fatiga y recuperación
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuál es la definición de fatiga según el módulo?",opts:["Acumulación de metabolitos en el músculo","Disminución de la capacidad de generar fuerza","Aumento del umbral de lactato","Inhibición del sistema nervioso central"],correct:1,exp:"La fatiga se define como 'disminución de la capacidad de generar fuerza'."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué tipo de fatiga se caracteriza por una disminución de la capacidad de trabajo muscular por acumulación de metabolitos?",opts:["Fatiga central","Fatiga aguda","Fatiga periférica","Fatiga crónica"],correct:2,exp:"La fatiga periférica es orgánica o muscular y se produce por la acumulación de metabolitos que cambian el medio intracelular."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué tipo de fatiga corresponde al sobreentrenamiento?",opts:["Aguda","Subaguda","Crónica","Central"],correct:2,exp:"La fatiga crónica equivale al sobreentrenamiento."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué tipo de fatiga corresponde a la sobrecarga?",opts:["Aguda","Subaguda","Crónica","Periférica"],correct:1,exp:"La fatiga subaguda equivale a la sobrecarga."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuándo se produce la recuperación inmediata?",opts:["Durante el ejercicio","En las primeras 0,5–1,5 horas tras el esfuerzo","A las 24 horas del esfuerzo","Durante el sueño nocturno"],correct:1,exp:"La recuperación inmediata se produce entre la primera ½ hora y 1½ hora de descanso. Se eliminan metabolitos y se paga la deuda de O₂."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué sucede durante la recuperación aplazada?",opts:["Se eliminan metabolitos y se paga la deuda de O₂","Anabolismo intenso, restauración iónica y síntesis proteica estructural","Catabolismo muscular acelerado","Reducción del umbral de fatiga"],correct:1,exp:"La recuperación aplazada se da muchas horas después del esfuerzo, con anabolismo intenso, restauración iónica y aumento de la síntesis proteica."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuánto tiempo de recuperación necesita el deporte de velocidad en élite?",opts:["10–14 horas","24–48 horas","48–60 horas","60–70 horas"],correct:3,exp:"La velocidad requiere entre 60 y 70 horas de recuperación en el deporte de élite."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuánto tiempo de recuperación necesita el ejercicio aeróbico en élite?",opts:["10–14 horas","26–28 horas","48–60 horas","60–70 horas"],correct:1,exp:"El ejercicio aeróbico requiere entre 26 y 28 horas de recuperación en el deporte de élite."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuánto tarda en recuperarse la fuerza máxima en deportistas de élite?",opts:["10–14 horas","24–48 horas","48–60 horas","60–70 horas"],correct:2,exp:"La fuerza máxima requiere entre 48 y 60 horas de recuperación en el deporte de élite."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué efecto del entrenamiento se refiere a la adaptación crónica o a largo plazo?",opts:["Inmediato (respuesta aguda)","Resultante (supercompensación)","Acumulativo (adaptación)","Transitorio (recuperación)"],correct:2,exp:"El efecto acumulativo del entrenamiento corresponde a la adaptación crónica o a largo plazo."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuál de los siguientes factores influye en la adaptación durante el entrenamiento?",opts:["Temperatura ambiente","Cantidad de sueño","Nivel de estrés","Dieta"],correct:2,exp:"El nivel de estrés es uno de los factores que influyen en la adaptación. Los factores clave son: nivel de estrés, tendencia a la homeostasis y efecto del entrenamiento."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuánto tiempo de recuperación necesita el ejercicio anaeróbico en élite?",opts:["10–14 horas","24–28 horas","48–60 horas","60–70 horas"],correct:0,exp:"El ejercicio anaeróbico requiere entre 10 y 14 horas de recuperación en el deporte de élite."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué tipo de fatiga se origina en el sistema nervioso (recepción o control)?",opts:["Fatiga periférica","Fatiga aguda","Fatiga central","Fatiga subaguda"],correct:2,exp:"La fatiga central se origina en el sistema nervioso central (recepción o control del movimiento)."},
+
+  // TEMA 5 – Entrenamiento concurrente
+  {cat:"T5 Concurrente",q:"¿Cuál es el fenómeno conocido como interferencia en el entrenamiento concurrente?",opts:["La combinación de ejercicios de fuerza y resistencia en un mismo programa","El aumento de la capacidad aeróbica mediante ejercicios de fuerza","La mejora de la economía de carrera en atletas de resistencia","La planificación de sesiones de fuerza cortas y aisladas"],correct:0,exp:"Las interferencias son las limitaciones que surgen cuando se entrenan fuerza y resistencia en un mismo programa."},
+  {cat:"T5 Concurrente",q:"¿En qué año se descubrió por primera vez el fenómeno de interferencia en el entrenamiento concurrente?",opts:["1975","1980","1983","1990"],correct:1,exp:"Hickson (1980) fue el primero en describir que el entrenamiento de resistencia combinado con fuerza podría afectar negativamente el rendimiento."},
+  {cat:"T5 Concurrente",q:"¿Cuántas sesiones semanales de entrenamiento simultáneo no tienen efectos negativos según la evidencia?",opts:["Menos de 2","Menos de 3","Menos de 4","Menos de 5"],correct:1,exp:"El entrenamiento simultáneo no tiene efectos negativos cuando las sesiones son inferiores a 3 por semana."},
+  {cat:"T5 Concurrente",q:"En el entrenamiento concurrente, ¿cuántas repeticiones máximo se recomiendan para la parte de fuerza?",opts:["4 repeticiones","6 repeticiones","8 repeticiones","10 repeticiones"],correct:1,exp:"En el entrenamiento de fuerza del programa concurrente no se deben realizar más de 6 repeticiones para centrarse en adaptaciones neurales."},
+  {cat:"T5 Concurrente",q:"¿A qué porcentaje del PAN se debe trabajar la parte cardiorrespiratoria en el entrenamiento concurrente?",opts:["Más del 70%","Más del 80%","Más del 90%","Más del 60%"],correct:2,exp:"Para mejorar el VO₂ en la parte cardiorrespiratoria se debe trabajar a más del 90% del PAN para centrarse en adaptaciones centrales."},
+  {cat:"T5 Concurrente",q:"¿Por qué el entrenamiento concurrente a alta intensidad minimiza la interferencia?",opts:["Porque cansa más al atleta","Porque implica el sistema nervioso en lugar del sistema metabólico","Porque reduce el volumen total","Porque activa fibras tipo I"],correct:1,exp:"Con entrenamientos exigentes se logra una intervención del sistema nervioso y no del sistema metabólico, que es el que genera interferencias."},
+  {cat:"T5 Concurrente",q:"¿En qué sujetos el orden de los ejercicios (fuerza o resistencia primero) no influye en la interferencia?",opts:["En deportistas de élite","En sujetos entrenados","En sujetos no entrenados con volumen moderado","En todos los sujetos por igual"],correct:2,exp:"En sujetos no entrenados, el orden de ambas modalidades durante la sesión no influye en el fenómeno de interferencia si la frecuencia y el volumen son moderados."},
+  {cat:"T5 Concurrente",q:"¿Qué adaptaciones celulares se producen en el entrenamiento concurrente?",opts:["Iguales en fuerza y resistencia","Opuestas en fuerza y resistencia (excepto fibras tipo I)","Complementarias en ambas modalidades","Solo en fibras tipo II"],correct:1,exp:"Las adaptaciones a nivel celular son opuestas en ambas modalidades de entrenamiento, a excepción de las fibras musculares tipo I."},
+  {cat:"T5 Concurrente",q:"¿Qué deporte requiere entrenamiento concurrente de fuerza y resistencia según el módulo?",opts:["Atletismo de pista","Rugby y CrossFit","Natación de velocidad","Ciclismo de ruta"],correct:1,exp:"El módulo menciona el rugby y el CrossFit como deportes donde las exigencias requieren buen acondicionamiento aeróbico y de fuerza."},
+  {cat:"T5 Concurrente",q:"Según Rhea et al. (2004), ¿qué es más efectivo para mejorar la fuerza y la potencia?",opts:["Ninguno de los dos es efectivo","Ambos son igualmente efectivos","El entrenamiento periodizado","El entrenamiento no periodizado"],correct:2,exp:"Rhea et al. (2004) concluyeron que el entrenamiento periodizado es más efectivo que el no periodizado para mejorar fuerza y potencia."},
+  {cat:"T5 Concurrente",q:"¿Cuál es la primera variable a considerar para evitar la interferencia en el entrenamiento concurrente?",opts:["El tipo de ejercicio","El volumen total de entrenamiento","La hora del día","El nivel de hidratación"],correct:1,exp:"El volumen total de entrenamiento, junto con la frecuencia, intensidad, orden y grupos musculares, es la primera variable a controlar."},
+  {cat:"T5 Concurrente",q:"¿En qué tipo de adaptaciones debe centrarse el entrenamiento para minimizar la interferencia?",opts:["Adaptaciones periféricas","Adaptaciones metabólicas","Adaptaciones centrales","Adaptaciones locales"],correct:2,exp:"El entrenamiento debe centrarse en adaptaciones centrales en lugar de periféricas para minimizar la interferencia."},
+
+  // PREGUNTAS TIPO QUIZ DEL ENUNCIADO
+  {cat:"T1 Fundamentos",q:"¿Cuál de los siguientes modelos de planificación del entrenamiento fue propuesto por Matveiev en 1983?",opts:["Modelo de bloques de Verjoshanski","Modelo de ATR","Planificación de Matveiev","Estructura individualizadora de Bondartchurk"],correct:2,exp:"Matveiev en 1983 propuso la planificación clásica que lleva su nombre."},
+  {cat:"T2 Periodización",q:"¿Cuál es uno de los elementos más importantes en el ámbito del entrenamiento deportivo?",opts:["La nutrición","La periodización","El descanso","La suplementación"],correct:1,exp:"La periodización es uno de los elementos más importantes del entrenamiento deportivo ya que determina la secuenciación y magnitud de las cargas."},
+  {cat:"T3 Ciclos",q:"¿Cuál es la estructura correcta de un plan de entrenamiento utilizando macrociclos, mesociclos y microciclos?",opts:["Períodos iguales sin importar la duración","Cortos (macro), medianos (meso) y largos (micro)","Largos (micro), medianos (macro) y cortos (meso)","Largos (macro), medianos (meso) y cortos (micro)"],correct:3,exp:"La estructura correcta es: períodos largos (macrociclos), medianos (mesociclos) y cortos (microciclos)."},
+  {cat:"T1 Fundamentos",q:"¿Cuál es la diferencia principal entre planificación y programación en el ámbito del ejercicio físico?",opts:["La planificación es a corto plazo y la programación a largo plazo","La planificación es específica y detallada; la programación es general y previa","La planificación es un proceso general y previo; la programación concreta y materializa cada acción","La planificación se basa en experiencia profesional; la programación no la considera"],correct:2,exp:"La planificación es el proceso general y previo, mientras que la programación concreta y materializa cada acción."},
+  {cat:"T3 Ciclos",q:"¿Cuál es el objetivo principal de la periodización en la planificación del entrenamiento?",opts:["Reducir el tiempo de entrenamiento semanal","Mejorar la flexibilidad y movilidad","Aumentar la masa muscular rápidamente","Optimizar el rendimiento y prevenir lesiones"],correct:3,exp:"El objetivo principal de la periodización es optimizar el rendimiento y prevenir lesiones mediante la estructuración organizada del entrenamiento."},
+  {cat:"T3 Ciclos",q:"¿Cuál es el término que describe un ciclo de entrenamiento de una semana con metas específicas?",opts:["Mesociclo","Biciclo","Microciclo","Macrociclo"],correct:2,exp:"El microciclo es la unidad básica de planificación que generalmente dura una semana con metas específicas de entrenamiento."},
+  {cat:"T1 Fundamentos",q:"¿Quién es el autor del libro 'Preparación del deportista' publicado en 1983?",opts:["Tschiene, P.","Rodríguez, J.L.M.","Matveiev, L.","Vargas, F.S."],correct:2,exp:"Matveiev, L. (1983) es el autor de 'Preparación del deportista', la primera propuesta estructurada de planificación del entrenamiento."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Cuál de los siguientes tipos de fatiga se caracteriza por una disminución de la capacidad de trabajo muscular debido a la acumulación de metabolitos?",opts:["Fatiga central","Fatiga aguda","Fatiga crónica","Fatiga periférica"],correct:3,exp:"La fatiga periférica (orgánica o muscular) se produce por la acumulación de metabolitos que disminuyen la capacidad de trabajo muscular."},
+
+  // PREGUNTAS ADICIONALES PARA LLEGAR A 80+
+  {cat:"T3 Ciclos",q:"¿Cuántos períodos tiene el período de competición del macrociclo?",opts:["Uno (sólo competición)","Dos: pre-competitiva y competición principal","Tres: introductoria, competición y recuperación","Cuatro: según el calendario"],correct:1,exp:"El período de competición se divide en fase pre-competitiva (competiciones de preparación) y competiciones principales."},
+  {cat:"T2 Periodización",q:"¿Qué estudio investiga específicamente el efecto de la periodización flexible en principiantes?",opts:["ACSM (2009)","Rhea et al. (2004)","Harries et al. (2015)","McNamara y Stearne (2010)"],correct:3,exp:"McNamara y Stearne (2010) investigaron la periodización flexible comparada con ondulatoria en principiantes en entrenamiento de fuerza."},
+  {cat:"T5 Concurrente",q:"¿Cuál es el objetivo del entrenamiento concurrente?",opts:["Mejorar solo la fuerza muscular","Mejorar solo la capacidad aeróbica","Mejorar la capacidad aeróbica y la fuerza en un mismo programa","Mejorar la flexibilidad y la fuerza"],correct:2,exp:"El entrenamiento concurrente combina ejercicios para mejorar la capacidad aeróbica y la fuerza en un mismo programa."},
+  {cat:"T3 Ciclos",q:"¿Cuándo suelen usarse los microciclos de ajuste/introductorio?",opts:["En el pico de la competición","Al inicio de períodos, tras descansos o ante cambios significativos","Cuando el deportista está en su máximo rendimiento","Solo en el período transitorio"],correct:1,exp:"Los microciclos de ajuste se usan al inicio de períodos competitivos, tras períodos de descanso o ante cambios significativos en el entrenamiento."},
+  {cat:"T1 Fundamentos",q:"¿Qué significa ATR en el modelo de planificación?",opts:["Alto Trabajo de Rendimiento","Acumulación-Transformación-Realización","Adaptación-Transición-Rendimiento","Ajuste-Trabajo-Recuperación"],correct:1,exp:"ATR corresponde a Acumulación, Transformación, Realización: los tres bloques consecutivos del modelo."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué proceso biológico ocurre durante el entrenamiento?",opts:["Anabolismo","Catabolismo","Síntesis proteica","Supercompensación"],correct:1,exp:"Al entrenar, el cuerpo entra en un proceso de catabolismo. En el descanso (anabolismo) se recupera y mejora."},
+  {cat:"T5 Concurrente",q:"¿Qué cualidad física puede optimizar la economía de carrera en atletas de resistencia?",opts:["Flexibilidad","Coordinación","Fuerza","Velocidad de reacción"],correct:2,exp:"El entrenamiento de fuerza puede conducir a un aumento en el rendimiento en atletas de resistencia al optimizar la economía de carrera."},
+  {cat:"T3 Ciclos",q:"¿Qué tipo de mesociclo busca consolidar el rendimiento alcanzado?",opts:["Introductorio","Básico de desarrollo","Básico de estabilización","Precompetitivo"],correct:2,exp:"Los mesociclos básicos de estabilización buscan consolidar el rendimiento alcanzado."},
+  {cat:"T2 Periodización",q:"¿Qué modelo de periodización divide los bloques en Acumulación, Transformación y Realización?",opts:["Lineal","Ondulatoria","ATR","Flexible"],correct:2,exp:"El modelo ATR (Acumulación-Transformación-Realización) organiza el entrenamiento en tres bloques consecutivos."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿En qué rango de horas se recupera la capacidad anaeróbica en deportistas de élite?",opts:["4–6 horas","10–14 horas","26–28 horas","48–60 horas"],correct:1,exp:"El ejercicio anaeróbico requiere entre 10 y 14 horas de recuperación en el deporte de élite."},
+  {cat:"T3 Ciclos",q:"¿Qué tipo de microciclo organiza las competiciones importantes y prioriza la supercompensación?",opts:["Carga","Aproximación","Competición","Choque"],correct:2,exp:"Los microciclos de competición integran las competiciones importantes y es fundamental la recuperación para llegar al día de máxima supercompensación."},
+  {cat:"T5 Concurrente",q:"¿Qué tipo de fibras musculares tienen adaptaciones celulares similares tanto en entrenamiento de fuerza como de resistencia?",opts:["Fibras tipo IIa","Fibras tipo IIb","Fibras tipo I","Fibras tipo IIx"],correct:2,exp:"Las adaptaciones celulares son opuestas en ambas modalidades de entrenamiento, a excepción de las fibras musculares tipo I."},
+  {cat:"T1 Fundamentos",q:"¿Qué autor publicó en 1990 'Entrenamiento deportivo: planificación y programación'?",opts:["Matveiev","Verjoshanski","Bondartchurk","Fleck"],correct:1,exp:"Verjoshanski, I.V. (1990). 'Entrenamiento deportivo: planificación y programación'. Martinez Roca."},
+  {cat:"T2 Periodización",q:"¿Cuál es el objetivo fundamental de la variabilidad en la periodización?",opts:["Reducir el tiempo de entrenamiento","Evitar la adaptación excesiva y lograr mejoras continuas","Simplificar la planificación","Aumentar el volumen de entrenamiento"],correct:1,exp:"Mantener variabilidad en la aplicación de estímulos es necesario para lograr mejoras y evitar la adaptación excesiva del organismo."},
+  {cat:"T5 Concurrente",q:"¿Por qué la interferencia es mayor en deportistas altamente entrenados?",opts:["Porque tienen más masa muscular","Por la menor activación de fibras tipo II tras el entrenamiento de resistencia","Porque realizan mayor volumen de entrenamiento","Por mayor producción de ácido láctico"],correct:1,exp:"En sujetos altamente entrenados, el entrenamiento de resistencia puede perjudicar la fuerza por la menor activación de fibras tipo II."},
+  {cat:"T3 Ciclos",q:"¿Cuál es la relación estimulación:recuperación más exigente de las habituales en microciclos?",opts:["2:1","3:1","5:2","6:1"],correct:3,exp:"La relación 6:1 (6 días de estimulación por 1 de recuperación) es la más exigente de las relaciones habituales."},
+  {cat:"T1 Fundamentos",q:"¿Cuántos años han pasado aproximadamente desde que Matveiev sentó las bases de la planificación?",opts:["2 décadas","3 décadas","4 décadas","5 décadas"],correct:2,exp:"Matveiev formalizó la planificación en 1983, lo que equivale a aproximadamente 4 décadas de evolución de los modelos."},
+  {cat:"T3 Ciclos",q:"¿Qué sucede con la intensidad según se acerca la competición durante el período preparatorio?",opts:["La intensidad disminuye progresivamente","La intensidad se mantiene constante","Las actividades tienden a ser más específicas e intensas","El volumen aumenta y la intensidad también"],correct:2,exp:"Según se acerca la competición, el tipo de actividades tenderán a más específicas e intensas."},
+  {cat:"T4 Fatiga y Recuperación",q:"¿Qué efecto del entrenamiento produce la supercompensación?",opts:["Inmediato (respuesta aguda)","Resultante (supercompensación)","Acumulativo (adaptación)","Transitorio"],correct:1,exp:"El efecto resultante del entrenamiento produce la supercompensación, donde el organismo alcanza un nivel superior al inicial."},
+  {cat:"T5 Concurrente",q:"¿Qué otros deportes además de rugby y CrossFit requieren entrenamiento concurrente?",opts:["Solo el rugby","Solo el CrossFit","Todos los deportes por igual","Deportes que requieren buen acondicionamiento aeróbico y fuerza"],correct:3,exp:"Cualquier deporte que requiera un buen acondicionamiento aeróbico y fuerza simultáneamente necesitará entrenamiento concurrente planificado."},
+];
+
+// ─── TEST ENGINE ──────────────────────────────────────────────
+let testRendered = false;
+let filteredQuestions = [];
+let answeredMap = {};
+let activeFilter = 'all';
+
+const categories = ['all','T1 Fundamentos','T2 Periodización','T3 Ciclos','T4 Fatiga y Recuperación','T5 Concurrente'];
+const catLabels = {'all':'Todas','T1 Fundamentos':'T1 Fundamentos','T2 Periodización':'T2 Periodización','T3 Ciclos':'T3 Ciclos','T4 Fatiga y Recuperación':'T4 Fatiga y Rec.','T5 Concurrente':'T5 Concurrente'};
+const catColors = {'T1 Fundamentos':'purple','T2 Periodización':'teal','T3 Ciclos':'amber','T4 Fatiga y Recuperación':'coral','T5 Concurrente':'purple'};
+
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderTest() {
+  testRendered = true;
+  // Build filter buttons
+  const fc = document.getElementById('filter-controls');
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (cat === 'all' ? ' active' : '');
+    btn.textContent = catLabels[cat];
+    btn.onclick = () => setFilter(cat, btn);
+    fc.appendChild(btn);
+  });
+  applyFilter('all');
+}
+
+function setFilter(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = cat;
+  applyFilter(cat);
+}
+
+function applyFilter(cat) {
+  answeredMap = {};
+  filteredQuestions = cat === 'all'
+    ? shuffleArr(allQuestions)
+    : shuffleArr(allQuestions.filter(q => q.cat === cat));
+  renderQuestions();
+}
+
+function shuffleAndRender() {
+  answeredMap = {};
+  filteredQuestions = activeFilter === 'all'
+    ? shuffleArr(allQuestions)
+    : shuffleArr(allQuestions.filter(q => q.cat === activeFilter));
+  renderQuestions();
+}
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  document.getElementById('result-panel').classList.remove('visible');
+  document.getElementById('q-count').textContent = filteredQuestions.length;
+  document.getElementById('q-answered').textContent = '0';
+  document.getElementById('q-correct-count').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+
+  filteredQuestions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'qcard-' + idx;
+    const color = catColors[q.cat] || 'purple';
+    card.innerHTML = `
+      <div class="q-number">Pregunta ${idx + 1} / ${filteredQuestions.length}</div>
+      <span class="q-cat-tag" style="background:var(--${color});color:${color==='amber'?'#9a6c1a':color==='coral'?'#a63b2a':color==='teal'?'#1a7a55':'var(--accent)'}">${q.cat}</span>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts-${idx}">
+        ${q.opts.map((o,oi) => `
+          <label class="opt-label" id="opt-${idx}-${oi}" onclick="selectOpt(${idx},${oi})">
+            <input type="radio" name="q${idx}" value="${oi}">
+            <div class="opt-circle"></div>
+            <span>${o}</span>
+          </label>
+        `).join('')}
+      </div>
+      <button class="submit-btn" id="btn-${idx}" onclick="submitAnswer(${idx})" disabled>ENVIAR</button>
+      <div class="feedback-row" id="fb-${idx}">
+        <div class="feedback-icon" id="fb-icon-${idx}"></div>
+        <div class="feedback-text" id="fb-text-${idx}"></div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+function selectOpt(qIdx, optIdx) {
+  if (answeredMap[qIdx] !== undefined) return;
+  const opts = document.getElementById('opts-' + qIdx).querySelectorAll('.opt-label');
+  opts.forEach(o => o.classList.remove('selected'));
+  opts[optIdx].classList.add('selected');
+  document.getElementById('btn-' + qIdx).disabled = false;
+}
+
+function submitAnswer(qIdx) {
+  if (answeredMap[qIdx] !== undefined) return;
+  const q = filteredQuestions[qIdx];
+  const selectedLabel = document.getElementById('opts-' + qIdx).querySelector('.opt-label.selected');
+  if (!selectedLabel) return;
+
+  const selectedIdx = parseInt(selectedLabel.id.split('-')[2]);
+  const isCorrect = selectedIdx === q.correct;
+  answeredMap[qIdx] = isCorrect;
+
+  const opts = document.getElementById('opts-' + qIdx).querySelectorAll('.opt-label');
+  opts.forEach((o, i) => {
+    if (i === q.correct) o.classList.add('correct-ans');
+    else if (i === selectedIdx && !isCorrect) o.classList.add('wrong-ans');
+    o.style.cursor = 'default';
+  });
+
+  const fb = document.getElementById('fb-' + qIdx);
+  const fbIcon = document.getElementById('fb-icon-' + qIdx);
+  const fbText = document.getElementById('fb-text-' + qIdx);
+  fb.classList.add('visible');
+  fbIcon.textContent = isCorrect ? '✓' : '✕';
+  fbIcon.classList.add(isCorrect ? 'correct-icon' : 'wrong-icon');
+  fbText.textContent = q.exp;
+
+  document.getElementById('btn-' + qIdx).disabled = true;
+
+  updateStats();
+}
+
+function updateStats() {
+  const total = filteredQuestions.length;
+  const answered = Object.keys(answeredMap).length;
+  const correct = Object.values(answeredMap).filter(Boolean).length;
+  document.getElementById('q-answered').textContent = answered;
+  document.getElementById('q-correct-count').textContent = correct;
+  document.getElementById('progress-fill').style.width = (answered / total * 100) + '%';
+
+  if (answered === total) {
+    const pct = Math.round(correct / total * 100);
+    const panel = document.getElementById('result-panel');
+    document.getElementById('result-score').textContent = pct + '%';
+    document.getElementById('result-msg').textContent =
+      pct >= 80 ? '¡Excelente dominio del módulo!' :
+      pct >= 60 ? 'Buen trabajo. Repasa los temas con más errores.' :
+      'Sigue practicando. Revisa el esquema y el resumen.';
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function retryTest() {
+  shuffleAndRender();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

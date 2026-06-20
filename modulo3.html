@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 3 – Bases Anatómicas | Fitness Instructor · Five Stars</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header { background: #1a1a18; color: #fff; padding: 18px 28px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+  header .badge { background: #534AB7; color: #fff; font-size: .72rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 0; background: #fff; border-bottom: 2px solid #e0dfd8; padding: 0 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+  .tab-btn { padding: 14px 20px; font-size: .9rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #666; border-bottom: 3px solid transparent; transition: all .2s; }
+  .tab-btn.active { color: #534AB7; border-bottom-color: #534AB7; }
+  .tab-btn:hover { color: #534AB7; }
+
+  /* ── CONTENT ── */
+  .tab-content { display: none; padding: 24px 20px; max-width: 900px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* ── CARDS ── */
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+  .card-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: .95rem; user-select: none; }
+  .card-header:hover { background: #fafaf8; }
+  .card-body { padding: 0 18px 16px; display: none; }
+  .card.open .card-body { display: block; }
+  .card.open .chevron { transform: rotate(180deg); }
+  .chevron { transition: transform .25s; font-size: .8rem; color: #888; }
+
+  /* category pill colours */
+  .cat-purple .card-header { background: #EEEDFE; }
+  .cat-teal   .card-header { background: #E1F5EE; }
+  .cat-amber  .card-header { background: #FAEEDA; }
+  .cat-coral  .card-header { background: #FAECE7; }
+
+  /* ── SECTION TITLES ── */
+  .section-title { font-size: 1rem; font-weight: 700; color: #534AB7; margin: 22px 0 10px; letter-spacing: .02em; text-transform: uppercase; }
+  .section-title:first-child { margin-top: 0; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 10px; }
+  th { background: #1a1a18; color: #fff; padding: 8px 10px; text-align: left; }
+  td { padding: 7px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+  tr:nth-child(even) td { background: #fafaf8; }
+
+  /* ── TERM CHIPS ── */
+  .term-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .term-chip { background: #EEEDFE; border: 0.5px solid #c8c5f5; border-radius: 8px; padding: 5px 12px; font-size: .84rem; cursor: pointer; transition: background .15s; }
+  .term-chip:hover { background: #d9d7fc; }
+  .term-detail { background: #f5f4f0; border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-size: .88rem; line-height: 1.6; display: none; }
+
+  /* ── SUMMARY bullets ── */
+  ul.summary { padding-left: 20px; line-height: 1.8; font-size: .9rem; }
+  ul.summary li { margin-bottom: 4px; }
+  .key-box { background: #EEEDFE; border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: .9rem; line-height: 1.7; }
+  .key-box strong { color: #534AB7; }
+
+  /* ── TEST ── */
+  .test-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+  .test-counter { font-size: .9rem; color: #555; }
+  .progress-bar { height: 6px; background: #e0dfd8; border-radius: 3px; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: #534AB7; border-radius: 3px; transition: width .3s; }
+  .question-card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .question-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 14px; line-height: 1.5; }
+  .option-label { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: .9rem; transition: background .15s; margin-bottom: 6px; border: 1px solid transparent; }
+  .option-label:hover { background: #f5f4f0; border-color: #d3d1c7; }
+  .option-label input[type=radio] { margin-top: 3px; accent-color: #534AB7; flex-shrink: 0; }
+  .option-label.correct { background: #E1F5EE; border-color: #86d8a8; }
+  .option-label.wrong   { background: #FAECE7; border-color: #f5a58a; }
+  .option-label.missed  { background: #E1F5EE; border-color: #86d8a8; opacity: .7; }
+
+  .btn-submit { background: #FFD700; color: #1a1a18; border: none; padding: 13px 32px; font-size: 1rem; font-weight: 800; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: .04em; transition: opacity .2s; }
+  .btn-submit:hover { opacity: .88; }
+  .btn-submit:disabled { opacity: .4; cursor: not-allowed; }
+
+  .feedback-box { display: flex; align-items: flex-start; gap: 12px; margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: #f5f4f0; font-size: .87rem; line-height: 1.6; }
+  .fb-circle { width: 28px; height: 28px; border-radius: 50%; background: #1a1a18; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: .85rem; }
+  .fb-ok  .fb-circle::after { content: "✓"; color: #4caf50; }
+  .fb-err .fb-circle::after { content: "✕"; color: #FFD700; }
+
+  .result-panel { background: #1a1a18; color: #fff; border-radius: 12px; padding: 24px; text-align: center; margin-top: 20px; display: none; }
+  .result-panel h2 { font-size: 2rem; color: #FFD700; }
+  .result-panel p { margin-top: 8px; font-size: 1rem; color: #ccc; }
+  .btn-retry { background: #534AB7; color: #fff; border: none; padding: 12px 28px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 18px; font-size: .95rem; }
+
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #d3d1c7; background: #fff; font-size: .82rem; cursor: pointer; transition: all .15s; }
+  .filter-btn.active { background: #534AB7; color: #fff; border-color: #534AB7; }
+
+  p.note { font-size: .82rem; color: #888; margin-top: 6px; }
+  hr.divider { border: none; border-top: 1px solid #e0dfd8; margin: 18px 0; }
+
+.back-bar{background:#252522;padding:0.5rem 1.5rem}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
+.back-link:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="back-bar"><a class="back-link" href="index.html">← Todos los módulos</a></div>
+<header>
+  <div>
+    <div class="badge">MÓDULO 3</div>
+  </div>
+  <h1>Bases Anatómicas del Movimiento<br><span style="font-weight:400;font-size:.85rem;opacity:.8">Sistema Óseo · Muscular · Articulaciones</span></h1>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="openTab(this,'esquema')">📋 Esquema</button>
+  <button class="tab-btn" onclick="openTab(this,'resumen')">💡 Resumen clave</button>
+  <button class="tab-btn" onclick="openTab(this,'siglas')">🔤 Siglas y términos</button>
+  <button class="tab-btn" onclick="openTab(this,'test')">✏️ Test</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1 – ESQUEMA
+══════════════════════════════════════════════ -->
+<div id="esquema" class="tab-content active">
+
+  <div class="section-title">1 · Sistema Óseo – Estructura y Composición</div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Tejido óseo: generalidades <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Tejido conectivo <strong>especializado</strong>: células y matriz extracelular adaptadas a función mecánica y metabólica.</li>
+        <li>Matriz extracelular <strong>mineralizada</strong> (hidroxiapatita = fosfato cálcico).</li>
+        <li>Unidad estructural: <strong>osteona</strong> (sistema de Havers). Remodelación permanente.</li>
+        <li>Células conectadas entre sí mediante canalículos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Células óseas <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Célula</th><th>Función</th><th>Características clave</th></tr>
+        <tr><td><strong>Células osteoprogenitoras</strong></td><td>Dan origen a osteoblastos</td><td>Células madre óseas</td></tr>
+        <tr><td><strong>Osteoblastos</strong></td><td>Síntesis de hueso (osteoide)</td><td>Inmaduras; RER abundante; citoplasma basófilo; producen colágeno tipo 1 y 5 + hidroxiapatita</td></tr>
+        <tr><td><strong>Osteocitos</strong></td><td>Mantenimiento del hueso</td><td>Osteoblastos maduros rodeados de su propia matriz</td></tr>
+        <tr><td><strong>Osteoclastos</strong></td><td>Resorción y remodelación</td><td>Multinucleadas, citoplasma acidófilo; ácidos orgánicos degradan mineral; hidrolasas lisosómicas degradan matriz orgánica</td></tr>
+        <tr><td><strong>Células de revestimiento</strong></td><td>Cubren superficie ósea externa</td><td>Aplanadas; forman periostio</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Clasificación de los huesos <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Por densidad:</strong> Hueso compacto (cortical, periférico, ordenado) / Hueso esponjoso (trabecular, interior, aloja médula roja)</li>
+        <li><strong>Por forma:</strong> Largos · Cortos · Irregulares · Sesamoideos · Planos</li>
+      </ul>
+      <hr class="divider">
+      <p style="font-weight:700;margin-bottom:6px">Regiones del hueso largo:</p>
+      <table>
+        <tr><th>Región</th><th>Localización</th><th>Contenido destacado</th></tr>
+        <tr><td>Epífisis proximal/distal</td><td>Extremos</td><td>Médula ósea roja (hematopoyesis)</td></tr>
+        <tr><td>Metáfisis</td><td>Entre epífisis y diáfisis</td><td>Cartílago de crecimiento / placas epifisiarias</td></tr>
+        <tr><td>Diáfisis</td><td>Cuerpo central</td><td>Hueso compacto; médula amarilla (tejido adiposo)</td></tr>
+      </table>
+      <p class="note" style="margin-top:8px">Periostio: membrana fibrosa externa vascular que cubre el hueso (excepto superficies articulares y zonas de inserción).</p>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">La Osteona (sistema de Havers) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Estructura circular con <strong>láminas concéntricas</strong> de osteocitos.</li>
+        <li><strong>Canal de Havers</strong> central: contiene vasos sanguíneos que irrigan el hueso compacto.</li>
+        <li><strong>Canales de Volkmann</strong>: conectan osteonas entre sí y con el canal medular; transportan células madre hematopoyéticas.</li>
+        <li>Lagunas: espacios donde residen los osteocitos.</li>
+        <li>Canalículos calcóforos: comunicación entre osteocitos.</li>
+      </ul>
+    </div>
+  </div>
+
+  
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Matriz extracelular osea <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Mineralizada:</strong> mineral principal = <strong>hidroxiapatita</strong> (fosfato calcico); otorga densidad y dureza.</li>
+        <li><strong>Colageno tipo 1 y tipo 5:</strong> aportan elasticidad y resistencia a la traccion.</li>
+        <li>La porcion organica no mineralizada se denomina <strong>osteoide</strong> (sintetizado por los osteoblastos antes de la mineralizacion con hidroxiapatita).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">2 &middot; Clasificacion de los Huesos</div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Hueso compacto y hueso esponjoso <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Hueso compacto (cortical):</strong> periferia del hueso; estructura ordenada y regular; otorga dureza.</li>
+        <li><strong>Hueso esponjoso (trabecular):</strong> interior del hueso; entramado de trabeculas con desorganizacion de osteonas; aloja celulas hematopoyeticas (medula roja).</li>
+        <li><strong>Periostio:</strong> membrana fibrosa vascular resistente que cubre externamente el hueso, excepto en superficies articulares (cartilago hialino) y zonas de insercion de tendones/ligamentos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Tipos de huesos segun su forma <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Tipo</th><th>Caracteristicas</th><th>Ejemplos</th></tr>
+        <tr><td><strong>Largos</strong></td><td>Longitud mayor que anchura; epifisis + diafisis diferenciadas</td><td>Humero, femur, tibia, radio, cubito</td></tr>
+        <tr><td><strong>Cortos</strong></td><td>Dimensiones similares en tres planos</td><td>Huesos del carpo y tarso</td></tr>
+        <tr><td><strong>Irregulares</strong></td><td>Forma compleja</td><td>Vertebras (atlas, axis), esfenoides</td></tr>
+        <tr><td><strong>Sesamoideos</strong></td><td>Incluidos en tendones</td><td>Patela (rotula) - el mayor sesamoideo</td></tr>
+        <tr><td><strong>Planos</strong></td><td>Amplios y delgados; protegen organos</td><td>Costillas, esternon, escapula, boveda craneal</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">3 &middot; Composicion Estructural &#8212; La Osteona</div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">La Osteona &#8212; componentes detallados <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Estructura circular con <strong>laminas concentricas</strong> de osteocitos agrupados en capas.</li>
+        <li><strong>Canal de Havers</strong> (central): contiene vasos sanguineos que irrigan el hueso compacto.</li>
+        <li><strong>Canales de Volkmann</strong>: conectan distintos sistemas de Havers entre si y con el canal medular; transportan celulas madre hematopoyeticas.</li>
+        <li><strong>Lagunas:</strong> cavidades donde residen los osteocitos.</li>
+        <li><strong>Canaliculos calcoforos:</strong> comunican lagunas vecinas; permiten nutricion e intercambio entre osteocitos.</li>
+        <li><strong>Lamelas intersticiales:</strong> restos de osteonas antiguas entre osteonas nuevas; producto de la remodelacion osea.</li>
+        <li><strong>Fibras de Sharpey:</strong> fibras de colageno del periostio que penetran y anclan el tejido blando al hueso cortical.</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="section-title">4 · Articulaciones</div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Tipos de articulaciones <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Tipo</th><th>Nombre alternativo</th><th>Movilidad</th><th>Ejemplo</th></tr>
+        <tr><td>Sinoviales</td><td>Diartrosis</td><td>Alta</td><td>Rodilla, cadera, hombro, codo</td></tr>
+        <tr><td>Cartilaginosas</td><td>Anfiartrosis</td><td>Limitada</td><td>Sínfisis púbica, discos intervertebrales</td></tr>
+        <tr><td>Fibrosas</td><td>Sinartrosis</td><td>Nula o mínima</td><td>Suturas craneales, sindesmosis radio-cúbito</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Componentes articulares <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Ligamentos:</strong> tejido conectivo NO contráctil; mantienen posición entre huesos; evitan luxaciones.</li>
+        <li><strong>Tendones:</strong> tejido conectivo que une músculo a hueso; transmiten energía a los segmentos articulares.</li>
+        <li><strong>Bursas sinoviales:</strong> bolsas de líquido sinovial; reducen fricción entre estructuras adyacentes.</li>
+        <li><strong>Cartílago articular:</strong> cubre y protege superficies articulares; nutre la articulación; aumenta congruencia.</li>
+        <li><strong>Meniscos:</strong> discos fibrosos; protegen de impactos; estabilizan el centro de presiones; aumentan congruencia.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">5 · Huesos del cuerpo humano</div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Cabeza (cráneo y cara) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <p style="font-size:.88rem;font-weight:700;margin-bottom:6px">Vista anterior:</p>
+      <p style="font-size:.87rem;line-height:1.8">Hueso frontal · Hueso lagrimal · Hueso temporal · Ala mayor del esfenoides · Hueso cigomático (malar) · Maxilar · Dientes · Hueso parietal · Ala menor del esfenoides · Hueso nasal · Lámina orbitaria del etmoides · Mandíbula</p>
+      <p style="font-size:.88rem;font-weight:700;margin:10px 0 6px">Vista lateral (adicionales):</p>
+      <p style="font-size:.87rem;line-height:1.8">Hueso occipital · Parte escamosa del temporal · Meato acústico externo · Apófisis mastoides · Apófisis estiloides</p>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Columna vertebral y tórax <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <p style="font-weight:700;margin-bottom:6px">33 vértebras distribuidas en 5 regiones:</p>
+      <table>
+        <tr><th>Región</th><th>N.º</th><th>Características</th></tr>
+        <tr><td>Cervicales (C1–C7)</td><td>7</td><td>Más pequeñas; C1 = Atlas (rotación), C2 = Axis</td></tr>
+        <tr><td>Torácicas (T1–T12)</td><td>12</td><td>Articuladas con costillas; más grandes que cervicales</td></tr>
+        <tr><td>Lumbares (L1–L5)</td><td>5</td><td>Más grandes y robustas; soportan mayor peso</td></tr>
+        <tr><td>Sacras</td><td>5 (fusionadas)</td><td>Forman el sacro; conecta con pelvis</td></tr>
+        <tr><td>Coccígeas</td><td>4 (fusionadas)</td><td>Forman el cóccix (vestigial)</td></tr>
+      </table>
+      <hr class="divider">
+      <p style="font-weight:700;margin-bottom:6px">Tórax:</p>
+      <ul class="summary">
+        <li><strong>Esternón:</strong> manubrio + cuerpo + apófisis xifoides</li>
+        <li><strong>Costillas verdaderas</strong> (1–7): unión directa al esternón</li>
+        <li><strong>Costillas falsas</strong> (8–10): unión indirecta (cartílago del par anterior)</li>
+        <li><strong>Costillas flotantes</strong> (11–12): solo se unen a vértebras torácicas</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Cintura escapular <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Hueso</th><th>Partes clave</th><th>Articulaciones</th></tr>
+        <tr><td><strong>Escápula (omóplato)</strong></td><td>Espina · Acromion · Cavidad glenoidea · Apófisis coracoides · Fosa supra/infraespinosa</td><td>Glenohumeral (con húmero)</td></tr>
+        <tr><td><strong>Clavícula</strong></td><td>Extremo acromial · Extremo esternal · Cuerpo (shaft)</td><td>Esternoclavicular + Acromioclavicular</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Cintura pélvica <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Hueso/parte</th><th>Descripción</th></tr>
+        <tr><td><strong>Ilion</strong></td><td>Porción mayor/superior; cresta ilíaca palpable; articula con sacro (art. sacroilíaca)</td></tr>
+        <tr><td><strong>Isquion</strong></td><td>Posterior e inferior; tubérculo isquiático (apoyo al sentarse)</td></tr>
+        <tr><td><strong>Pubis</strong></td><td>Anterior e inferior; sínfisis púbica (une ambos lados)</td></tr>
+        <tr><td><strong>Sacro</strong></td><td>5 vértebras fusionadas; parte posterior de la pelvis</td></tr>
+        <tr><td><strong>Cóccix</strong></td><td>3–5 vértebras coccígeas fusionadas; anclaje muscular y ligamentoso</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Miembro superior – huesos <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Segmento</th><th>Huesos</th></tr>
+        <tr><td>Brazo</td><td>Húmero (único)</td></tr>
+        <tr><td>Antebrazo</td><td>Radio (lateral/pulgar) · Cúbito/Ulna (medial/meñique)</td></tr>
+        <tr><td>Muñeca (carpo)</td><td>Proximal: Escafoides, Semilunar, Piramidal, Pisiforme<br>Distal: Trapecio, Trapezoide, Grande (capitate), Ganchoso (hamate)</td></tr>
+        <tr><td>Palma (metacarpo)</td><td>5 metacarpianos (I→V desde pulgar)</td></tr>
+        <tr><td>Dedos (falanges)</td><td>Cada dedo: proximal + media + distal (pulgar: solo proximal + distal)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Miembro inferior – huesos <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Segmento</th><th>Huesos</th></tr>
+        <tr><td>Muslo</td><td>Fémur (el más largo y fuerte del cuerpo)</td></tr>
+        <tr><td>Rótula</td><td>Patela (hueso sesamoideo en tendón cuadricipital)</td></tr>
+        <tr><td>Pierna</td><td>Tibia (medial, soporta peso) · Peroné/Fíbula (lateral, menos soporte)</td></tr>
+        <tr><td>Tobillo/tarso</td><td>Calcáneo · Astrágalo (talus) · Navicular · Cuboides · Cuneiformes medial, intermedio y lateral</td></tr>
+        <tr><td>Planta (metatarso)</td><td>5 metatarsianos (I→V desde hallux)</td></tr>
+        <tr><td>Dedos del pie</td><td>Igual que mano: 3 falanges por dedo excepto hallux (2)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">6 · Sistema Muscular – Miembro superior y tronco</div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Músculos pectorales y dorsal ancho <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Pectoral menor</strong></td><td>Apófisis coracoides</td><td>Cara antero-lateral costillas 3ª–5ª</td><td>Eleva costillas; sujeta escápula</td></tr>
+        <tr><td><strong>Pectoral mayor – porción clavicular</strong></td><td>2/3 mediales clavícula (cara ant.)</td><td rowspan="3">Cresta subtroquiteriana</td><td>Flexión y coaptación del hombro</td></tr>
+        <tr><td><strong>Pectoral mayor – porción esternal</strong></td><td>Articulaciones esternocostales 1ª–6ª</td><td>Aducción y rotación interna</td></tr>
+        <tr><td><strong>Pectoral mayor – porción abdominal</strong></td><td>Cartílagos intercostales 7º–9º</td><td>Extensión del hombro</td></tr>
+        <tr><td><strong>Dorsal ancho</strong></td><td>Vértebras D7–L5, cresta sacra, cresta ilíaca, costillas 9ª–12ª (cara interna)</td><td>Surco tubérculo menor del húmero</td><td>Extensión, aducción y rotación interna del brazo</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Músculos escapulares (trapecio, romboides, serratos, deltoides) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Trapecio sup.</strong></td><td>Espina occipital → apóf. espinosas C7</td><td>1/3 externo borde sup. clavícula</td><td>Eleva y rota omóplato</td></tr>
+        <tr><td><strong>Trapecio medio</strong></td><td>Apóf. espinosas C7–D3</td><td>Acromion</td><td>Aducción omóplato</td></tr>
+        <tr><td><strong>Trapecio inf.</strong></td><td>Apóf. espinosas D4–D12</td><td>Borde sup. espina omóplato</td><td>Rotación omóplato; estabilizador hombro; extensor cuello</td></tr>
+        <tr><td><strong>Romboides menor</strong></td><td>Apóf. espinosas C7–D1</td><td>Borde interno escápula</td><td>Aducción, estabilización y elevación omóplato</td></tr>
+        <tr><td><strong>Romboides mayor</strong></td><td>Apóf. espinosas T1–T4</td><td>Borde medial escápula (bajo espina)</td><td>Aducción, estabilización y elevación omóplato</td></tr>
+        <tr><td><strong>Serrato anterior</strong></td><td>Costillas 1ª–9ª</td><td>Borde medial escápula</td><td>Sup: baja brazo; Int: aleja escápula lat.; Inf: rota escápula lat.</td></tr>
+        <tr><td><strong>Deltoides anterior</strong></td><td>1/3 lateral clavícula</td><td rowspan="3">Tuberosidad deltoidea del húmero</td><td>Flexión, rot. interna, aducción</td></tr>
+        <tr><td><strong>Deltoides acromial</strong></td><td>Acromion</td><td>Abducción</td></tr>
+        <tr><td><strong>Deltoides posterior</strong></td><td>Espina escápula</td><td>Extensión, rot. externa, aducción</td></tr>
+        <tr><td><strong>Angular de la escápula</strong></td><td>Apóf. transversas C1–C4</td><td>Ángulo superior escápula</td><td>Baja ángulo inferior; inclina cuello ipsilateral</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Manguito rotador (SITS) y coracobraquial <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Supraespinoso</strong></td><td>Fosa supraespinosa escápula</td><td>Tubérculo mayor húmero (parte posterior)</td><td>Abducción</td></tr>
+        <tr><td><strong>Infraespinoso</strong></td><td>Fosa infraespinosa escápula</td><td>Tubérculo mayor húmero (parte posterior)</td><td>Rotación externa</td></tr>
+        <tr><td><strong>Redondo menor</strong></td><td>Borde lateral escápula</td><td>Tubérculo mayor húmero (parte posterior)</td><td>Rotación externa y leve aducción</td></tr>
+        <tr><td><strong>Subescapular</strong></td><td>Fosa subescapular</td><td>Tubérculo menor húmero</td><td>Rotación interna</td></tr>
+        <tr><td><strong>Redondo mayor</strong></td><td>Ángulo inferior escápula</td><td>Cresta tubérculo menor húmero</td><td>Rotación interna, aducción y extensión</td></tr>
+        <tr><td><strong>Coracobraquial</strong></td><td>Apófisis coracoides escápula</td><td>Cresta tubérculo menor húmero</td><td>Flexión, aducción y rotación interna</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Músculos del brazo (bíceps, braquial, tríceps, ancóneo) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Bíceps braquial – cabeza larga</strong></td><td>Tubérculo supraglenoideo escápula</td><td rowspan="2">Tuberosidad del radio</td><td rowspan="2">Flexión y supinación codo; flexión hombro; ABD + rot. interna húmero</td></tr>
+        <tr><td><strong>Bíceps braquial – cabeza corta</strong></td><td>Apófisis coracoides escápula</td></tr>
+        <tr><td><strong>Braquial</strong></td><td>Cara anterior húmero</td><td>Tuberosidad del cúbito</td><td>Flexión del codo</td></tr>
+        <tr><td><strong>Tríceps – cabeza larga</strong></td><td>Tubérculo infraglenoideo escápula</td><td rowspan="3">Olécranon del húmero</td><td rowspan="3">Extensión codo; extensión y aducción hombro</td></tr>
+        <tr><td><strong>Tríceps – cabeza medial</strong></td><td>Cara posterior húmero + tabique intermuscular</td></tr>
+        <tr><td><strong>Tríceps – cabeza lateral</strong></td><td>Húmero posterior + tabique lateral</td></tr>
+        <tr><td><strong>Ancóneo</strong></td><td>Epicóndilo lateral del húmero</td><td>Olécranon del cúbito</td><td>Extiende el codo y fija su articulación</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Músculos del tronco – subclavio, escalenos, intercostales, diafragma <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Subclavio</strong></td><td>1ª costilla</td><td>Cara inferior clavícula</td><td>Estabiliza clavícula en art. esternoclavicular</td></tr>
+        <tr><td><strong>Escalenos (ant./med./post.)</strong></td><td>Apóf. transversas C3–C6 (ant./med. C4–C6 post.)</td><td>1ª y 2ª costilla</td><td>Inspiración; flexión lateral cervical; flexión bilateral cuello</td></tr>
+        <tr><td><strong>Intercostales ext./int./íntimo</strong></td><td colspan="2">Entre bordes costales adyacentes</td><td>Elevan y descienden costillas (inspiración/espiración); estabilizan pared torácica</td></tr>
+        <tr><td><strong>Subcostales</strong></td><td colspan="2">Costillas inferiores → 2–3 costillas más abajo</td><td>Espiración</td></tr>
+        <tr><td><strong>Cuadrado lumbar</strong></td><td>Cresta ilíaca + lig. iliolumbar</td><td>12ª costilla + vértebras L1–L4</td><td>Inclina tronco ipsilateral; estabiliza 12ª costilla</td></tr>
+        <tr><td><strong>Diafragma</strong></td><td>Costillas 7ª–12ª (costal); L1–L3 (lumbar); apóf. xifoides (esternal)</td><td>Tendón central</td><td>Músculo principal de la respiración; comprime vísceras abdominales</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Músculos abdominales y psoas <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Recto del abdomen</strong></td><td>Cresta del pubis / sínfisis del pubis</td><td>Cartílagos 5ª–7ª costillas + apóf. xifoides</td><td>Flexión tronco; compresión abdominal; estabiliza pelvis</td></tr>
+        <tr><td><strong>Oblicuo externo</strong></td><td>Cara externa costillas 5ª–12ª</td><td>Línea alba, tubérculo pubis, cresta ilíaca ant.</td><td>Flexión e inclinación tronco; estabiliza pelvis</td></tr>
+        <tr><td><strong>Oblicuo interno</strong></td><td>Fascia toracolumbar, cresta ilíaca, EIAS</td><td>Bordes inferiores costillas 10ª–12ª + línea alba</td><td>Flexión e inclinación tronco; estabiliza pelvis</td></tr>
+        <tr><td><strong>Transverso del abdomen</strong></td><td>Cartílagos costales 7ª–12ª, fascia toracolumbar, cresta ilíaca, EIAS</td><td>Línea alba + cresta del pubis</td><td>Rotación tronco (unilateral); compresión abdominal (bilateral)</td></tr>
+        <tr><td><strong>Psoas mayor</strong></td><td>Cuerpos vert. T12–L4 (superf.); apóf. costales L1–L5 (prof.)</td><td>Trocánter menor fémur</td><td>Flexión + rot. externa columna lumbar; eleva tronco desde supino</td></tr>
+        <tr><td><strong>Psoas menor</strong></td><td>Vértebras T12, L1 + disco</td><td>Línea pectínea, rama iliopubiana, fascia ilíaca</td><td>Débil flexor del tronco</td></tr>
+        <tr><td><strong>Ilíaco</strong></td><td>Fosa ilíaca</td><td>Trocánter menor fémur</td><td>Débil flexor del tronco</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Músculos de la espalda (erector espinal, serrato post., esplenio) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen principal</th><th>Inserción principal</th><th>Acción</th></tr>
+        <tr><td><strong>Iliocostal</strong></td><td>Sacro, cresta ilíaca, fascia toracolumbar, costillas 3ª–12ª</td><td>Apóf. transversas C4–C6; costillas 1ª–12ª</td><td>Extensión bilateral columna; inclinación lateral unilateral</td></tr>
+        <tr><td><strong>Longuísimo</strong></td><td>Sacro, cresta ilíaca, vert. lumbares y torácicas inf.</td><td>Apóf. mastoides; apóf. transversas C2–C5; costillas 2ª–12ª</td><td>Extensión y rotación de la cabeza (bilateral/unilateral)</td></tr>
+        <tr><td><strong>Espinoso</strong></td><td>Apóf. espinosas C5–T2 (cerv.); T10–L3 (tor.)</td><td>Apóf. espinosas C2–C5; T2–T8</td><td>Extensión columna cervical y torácica</td></tr>
+        <tr><td><strong>Serrato posterior superior</strong></td><td>Lig. nucal, apóf. espinosas C7–T3</td><td>Costillas 2ª–4ª (bordes superiores)</td><td>Eleva costillas</td></tr>
+        <tr><td><strong>Serrato posterior inferior</strong></td><td>Apóf. espinosas T11–L2</td><td>Costillas 8ª–12ª (bordes inferiores)</td><td>Desciende costillas</td></tr>
+        <tr><td><strong>Esplenio de la cabeza</strong></td><td>Lig. nucal, vértebras C3–C7</td><td>Hueso occipital</td><td>Extiende columna cervical y cabeza (bilateral); flexión y rotación ipsilateral (unilateral)</td></tr>
+        <tr><td><strong>Esplenio del cuello</strong></td><td>Apóf. espinosas T3–T6</td><td>Apóf. transversas C1–C2</td><td>Igual al anterior</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">7 · Sistema Muscular – Miembro inferior</div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Cuádriceps y músculos anteriores del muslo <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Recto femoral</strong></td><td>EIAI + techo acetabular</td><td>Tuberosidad tibial</td><td rowspan="4">Extensión de rodilla</td></tr>
+        <tr><td><strong>Vasto medial</strong></td><td>Línea áspera (labio medial) + línea intertrocantérea distal</td><td>Cóndilos medial y lateral tibia</td></tr>
+        <tr><td><strong>Vasto lateral</strong></td><td>Línea áspera (labio lateral) + trocánter mayor (cara lateral)</td><td>Cóndilos medial y lateral tibia</td></tr>
+        <tr><td><strong>Vasto intermedio</strong></td><td>Surco femoral</td><td>Tuberosidad tibial</td></tr>
+        <tr><td><strong>Sartorio</strong></td><td>EIAS</td><td>Medial a la tuberosidad tibial</td><td>Flexión y rotación interna</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Glúteos y rotadores externos de cadera <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Glúteo mayor</strong></td><td>Sacro, ilion, fascia toracolumbar, lig. sacrotuberoso</td><td>Fibras sup → tracto iliotibial; inf → tuberosidad glútea</td><td>Extensión + ABD (fibras sup); extensión + ADD (fibras inf)</td></tr>
+        <tr><td><strong>Glúteo medio</strong></td><td>Ilion (bajo cresta ilíaca)</td><td>Cara lateral trocánter mayor</td><td>ABD cadera; flexión, rot. interna, extensión y rot. interna</td></tr>
+        <tr><td><strong>Glúteo menor</strong></td><td>Ilion (bajo glúteo medio)</td><td>Cara anterolateral trocánter mayor</td><td>ABD cadera; flexión, rot. interna, extensión y rot. interna</td></tr>
+        <tr><td><strong>Tensor fascia lata (TFL)</strong></td><td>EIAS</td><td>Tracto iliotibial</td><td>Tensión fascia lata; ABD, flexión y rot. interna cadera</td></tr>
+        <tr><td><strong>Piriforme</strong></td><td>Cara pélvica del sacro</td><td>Vértice trocánter mayor</td><td>Rot. interna, ABD y extensión cadera</td></tr>
+        <tr><td><strong>Obturador interno</strong></td><td>Cara interna membrana obturatriz</td><td>Cara medial trocánter mayor</td><td>Rot. externa, ADD y extensión cadera</td></tr>
+        <tr><td><strong>Géminos (sup/inf)</strong></td><td>Sup: espina ciática; Inf: tuberosidad isquiática</td><td>Con tendón obturador interno</td><td>Rot. externa, ADD y extensión cadera</td></tr>
+        <tr><td><strong>Cuadrado femoral</strong></td><td>Borde lateral tuberosidad isquiática</td><td>Cresta intertrocantérea fémur</td><td>Rot. externa y ADD cadera</td></tr>
+        <tr><td><strong>Obturador externo</strong></td><td>Cara externa membrana obturatriz</td><td>Fosa trocantérica fémur</td><td>ADD y rot. externa cadera</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Aductores y grupo medial del muslo <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Pectíneo</strong></td><td>Pecten del pubis</td><td>Línea pectínea + línea áspera proximal</td><td>Rot. externa, ADD cadera; estabiliza pelvis</td></tr>
+        <tr><td><strong>Aductor largo</strong></td><td>Rama sup. pubis + cara ant. sínfisis</td><td>Línea áspera + labio medial fémur</td><td>ADD + flexión cadera; estabiliza pelvis</td></tr>
+        <tr><td><strong>Aductor corto</strong></td><td>Rama inferior del pubis</td><td>Línea áspera + labio medial fémur</td><td>ADD + flexión cadera; estabiliza pelvis</td></tr>
+        <tr><td><strong>Aductor mayor</strong></td><td>Rama inf. pubis, rama isquiática, tuberosidad isquiática</td><td>Labio medial línea áspera + tubérculo aductor</td><td>ADD, extensión y leve flexión cadera</td></tr>
+        <tr><td><strong>Grácil</strong></td><td>Rama inf. pubis (bajo sínfisis)</td><td>Borde medial tuberosidad tibia</td><td>ADD + flexión cadera; flexión + rot. interna rodilla</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Isquiotibiales (grupo posterior muslo) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Músculo</th><th>Origen</th><th>Inserción</th><th>Acción</th></tr>
+        <tr><td><strong>Bíceps femoral – cab. larga</strong></td><td>Tuberosidad isquiática + lig. sacrotuberoso</td><td rowspan="2">Cabeza del peroné</td><td>Extensión, flexión y rot. externa cadera</td></tr>
+        <tr><td><strong>Bíceps femoral – cab. corta</strong></td><td>Labio lateral de la línea áspera</td><td>Flexión y rot. externa cadera</td></tr>
+        <tr><td><strong>Semimembranoso</strong></td><td>Tuberosidad isquiática</td><td>Cóndilo tibial medial; lig. poplíteo oblicuo</td><td>Extensión cadera; flexión + rot. interna rodilla</td></tr>
+        <tr><td><strong>Semitendinoso</strong></td><td>Tuberosidad isquiática + lig. sacrotuberoso</td><td>Tuberosidad tibia (pata de ganso)</td><td>Extensión cadera; flexión + rot. interna rodilla</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /esquema -->
+
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 – RESUMEN CLAVE
+══════════════════════════════════════════════ -->
+<div id="resumen" class="tab-content">
+
+  <div class="section-title">Sistema Óseo</div>
+  <div class="key-box">
+    <strong>El hueso es tejido conectivo especializado.</strong> Su matriz extracelular mineralizada (hidroxiapatita = fosfato cálcico) le da dureza. La unidad funcional es la <strong>osteona</strong>. Las 4 células clave son: osteoprogenitora → osteoblasto → osteocito (madurez) y osteoclasto (resorción).
+  </div>
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">5 tipos de huesos por forma <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Largos</strong> – húmero, fémur, tibia (epífisis + diáfisis bien diferenciadas)</li>
+        <li><strong>Cortos</strong> – huesos del carpo y tarso</li>
+        <li><strong>Irregulares</strong> – vértebras, huesos del cráneo como esfenoides</li>
+        <li><strong>Sesamoideos</strong> – patela (rótula), incluidos en tendones</li>
+        <li><strong>Planos</strong> – costillas, esternón, escápula, bóveda craneal</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Médula ósea roja vs. amarilla <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Médula roja:</strong> en epífisis de huesos largos y hueso esponjoso → hematopoyesis (produce plaquetas, eritrocitos y leucocitos).</li>
+        <li><strong>Médula amarilla:</strong> en diáfisis → reserva de tejido adiposo para energía (vía oxidativa).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Articulaciones</div>
+  <div class="key-box">
+    Articulación = unión entre dos o más huesos. <strong>Diartrosis (sinoviales):</strong> mayor movilidad → poseen membrana sinovial, líquido sinovial, cartílago articular, ligamentos, bursas y meniscos. <strong>Anfiartrosis (cartilaginosas):</strong> movilidad limitada (sínfisis, discos). <strong>Sinartrosis (fibrosas):</strong> sin movimiento (suturas craneales).
+  </div>
+
+  <div class="section-title">Columna vertebral — curvas fisiológicas</div>
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Curvas de la columna <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Lordosis cervical</strong> (C1–C7): cóncava posterior</li>
+        <li><strong>Cifosis torácica</strong> (T1–T12): convexa posterior</li>
+        <li><strong>Lordosis lumbar</strong> (L1–L5): cóncava posterior</li>
+        <li><strong>Cifosis sacropélvica</strong> (sacro + cóccix): convexa posterior</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Músculos – conceptos clave de origen, inserción y acción</div>
+  <div class="key-box">
+    <strong>Origen:</strong> punto de anclaje más fijo (generalmente proximal). <strong>Inserción:</strong> punto de anclaje más móvil (generalmente distal). El músculo se acorta entre origen e inserción al contraerse.
+  </div>
+  <div class="card cat-purple">
+    <div class="card-header" onclick="toggle(this)">Manguito rotador – regla SITS <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>S</strong>upraespinoso → Abducción</li>
+        <li><strong>I</strong>nfraespinoso → Rotación externa</li>
+        <li><strong>T</strong>eres minor (Redondo menor) → Rotación externa</li>
+        <li><strong>S</strong>ubescapular → Rotación interna</li>
+      </ul>
+      <p class="note">Los 4 forman el manguito; el subescapular es el único rotador interno del grupo.</p>
+    </div>
+  </div>
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Isquiotibiales – triple función <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Extensión de la articulación de la <strong>cadera</strong></li>
+        <li>Flexión de la <strong>rodilla</strong></li>
+        <li>Rotación de la rodilla (interna: semimembranoso y semitendinoso; externa: bíceps femoral)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Erector espinal (iliocostal, longuísimo, espinoso) <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li>Los tres forman la <strong>masa común del erector espinal</strong>.</li>
+        <li>Acción bilateral: extensión de la columna.</li>
+        <li>Acción unilateral: inclinación lateral hacia el mismo lado.</li>
+        <li>Se ubican a ambos lados de la columna, desde el sacro hasta el cráneo.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Músculos abdominales – capas y función <span class="chevron">▼</span></div>
+    <div class="card-body">
+      <p style="font-size:.88rem;margin-bottom:8px">De superficial a profundo:</p>
+      <ul class="summary">
+        <li><strong>Recto del abdomen:</strong> flexión del tronco y estabilización pélvica.</li>
+        <li><strong>Oblicuo externo:</strong> fibras descendentes; rotación contralateral.</li>
+        <li><strong>Oblicuo interno:</strong> fibras ascendentes; rotación ipsilateral.</li>
+        <li><strong>Transverso del abdomen:</strong> más profundo; compresión abdominal; estabilizador de columna lumbar (core).</li>
+      </ul>
+    </div>
+  </div>
+
+  
+  <div class="section-title">Cintura Escapular y Pelvis &#8212; claves</div>
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Escapula &#8212; partes a recordar <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Espina:</strong> prominencia posterior; separa fosa supra- e infraespinosa.</li>
+        <li><strong>Acromion:</strong> extension lateral de la espina; articula con clavicula (art. acromioclavicular).</li>
+        <li><strong>Cavidad glenoidea:</strong> depresion lateral que articula con cabeza del humero (art. glenohumeral).</li>
+        <li><strong>Apofisis coracoides:</strong> saliente anterior; origen de biceps cab. corta, coracobraquial y pectoral menor.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card cat-teal">
+    <div class="card-header" onclick="toggle(this)">Cintura pelvi ca &#8212; funcion triple <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Soporte:</strong> transmite el peso del tronco a los miembros inferiores.</li>
+        <li><strong>Movilidad:</strong> facilita la locomocion y los movimientos de las EEII.</li>
+        <li><strong>Proteccion:</strong> resguarda vejiga, intestinos y organos reproductivos.</li>
+        <li>El <strong>acetabulo</strong> (cavidad del coxal) articula con la cabeza del femur (art. coxofemoral).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card cat-coral">
+    <div class="card-header" onclick="toggle(this)">Huesos del craneo &#8212; referencia rapida <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Boveda craneal (planos):</strong> Frontal, Parietales (2), Temporales (2), Occipital.</li>
+        <li><strong>Base del craneo:</strong> Esfenoides (alas mayor y menor), Etmoides (lamina orbitaria).</li>
+        <li><strong>Cara:</strong> Nasales, Lagrimales, Cigomaticos, Maxilares, Mandibula.</li>
+        <li><strong>Apofisis clave del temporal:</strong> mastoides, estiloides, meato acustico externo.</li>
+        <li>La <strong>mandibula</strong> es el UNICO hueso movil de la cara; articula en la ATM.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card cat-amber">
+    <div class="card-header" onclick="toggle(this)">Osteona &#8212; componentes clave <span class="chevron">&#9660;</span></div>
+    <div class="card-body">
+      <ul class="summary">
+        <li><strong>Laminas concentricas</strong> de osteocitos forman la osteona.</li>
+        <li><strong>Canal de Havers:</strong> centro de la osteona; vasos sanguineos y nervios.</li>
+        <li><strong>Canales de Volkmann:</strong> conectan osteonas entre si y con canal medular.</li>
+        <li><strong>Lagunas:</strong> cavidades donde viven los osteocitos.</li>
+        <li><strong>Canaliculos:</strong> canales finos que unen lagunas vecinas para nutricion.</li>
+        <li><strong>Fibras de Sharpey:</strong> fibras del periostio que anclan el tejido al hueso.</li>
+      </ul>
+    </div>
+  </div>
+
+<div class="section-title">Miembro inferior – pares agonista/antagonista clave</div>
+  <div class="key-box">
+    <strong>Rodilla – extensión:</strong> Cuádriceps (agonista) ↔ Isquiotibiales (antagonista)<br>
+    <strong>Cadera – extensión:</strong> Glúteo mayor + isquiotibiales ↔ Psoas ilíaco + recto femoral<br>
+    <strong>Cadera – abducción:</strong> Glúteo medio/menor + TFL ↔ Aductores<br>
+    <strong>Hombro – abducción:</strong> Deltoides acromial + supraespinoso ↔ Pectoral mayor + dorsal ancho
+  </div>
+
+</div><!-- /resumen -->
+
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 – SIGLAS Y TÉRMINOS
+══════════════════════════════════════════════ -->
+<div id="siglas" class="tab-content">
+  <p style="font-size:.88rem;color:#666;margin-bottom:14px">Haz clic en cualquier término para ver su definición.</p>
+
+  <div class="section-title">Anatomía ósea</div>
+  <div class="term-grid" id="tg-oseo"></div>
+
+  <div class="section-title" style="margin-top:20px">Articulaciones y tejidos blandos</div>
+  <div class="term-grid" id="tg-art"></div>
+
+  <div class="section-title" style="margin-top:20px">Músculos y movimientos</div>
+  <div class="term-grid" id="tg-musc"></div>
+
+  <div class="section-title" style="margin-top:20px">Abreviaturas y siglas</div>
+  <div class="term-grid" id="tg-siglas"></div>
+
+  <div class="term-detail" id="term-detail"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 – TEST
+══════════════════════════════════════════════ -->
+<div id="test" class="tab-content">
+  <div class="test-header">
+    <div>
+      <strong style="font-size:1.1rem">Test de autoevaluación</strong>
+      <p class="note" id="test-count">Cargando preguntas…</p>
+    </div>
+    <div class="filter-bar" id="filter-bar"></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0"></div></div>
+  <div id="questions-container"></div>
+  <button class="btn-submit" id="btn-submit" onclick="submitTest()">ENVIAR RESPUESTAS</button>
+  <div class="result-panel" id="result-panel">
+    <h2 id="score-display"></h2>
+    <p id="score-msg"></p>
+    <button class="btn-retry" onclick="retryTest()">Reintentar</button>
+  </div>
+</div>
+
+
+<script>
+/* ══════════════════════ TABS ══════════════════════ */
+function openTab(btn, id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ══════════════════════ ACCORDION ══════════════════════ */
+function toggle(header) {
+  const card = header.closest('.card');
+  card.classList.toggle('open');
+}
+
+/* ══════════════════════ TERMS ══════════════════════ */
+const TERMS = {
+  oseo: [
+    {t:'Osteona', d:'Unidad estructural del hueso compacto. Láminas concéntricas de osteocitos alrededor de un canal de Havers central.'},
+    {t:'Osteoblasto', d:'Célula inmadura que sintetiza el osteoide (matriz orgánica). Al madurar se convierte en osteocito.'},
+    {t:'Osteocito', d:'Osteoblasto maduro encerrado en su propia matriz. Mantiene el tejido óseo.'},
+    {t:'Osteoclasto', d:'Célula multinucleada de origen monocítico que realiza la resorción ósea mediante ácidos orgánicos e hidrolasas lisosómicas.'},
+    {t:'Osteoide', d:'Porción orgánica no mineralizada de la matriz ósea (colágeno tipo 1 y 5 + otras proteínas). Se mineraliza con hidroxiapatita.'},
+    {t:'Hidroxiapatita', d:'Mineral principal del hueso: fosfato cálcico. Otorga dureza y rigidez a la matriz ósea.'},
+    {t:'Canal de Havers', d:'Canal central de la osteona por donde discurren vasos sanguíneos y nervios que irrigan el hueso compacto.'},
+    {t:'Canal de Volkmann', d:'Canales transversales que conectan sistemas de Havers entre sí y con la cavidad medular. Transportan células madre hematopoyéticas.'},
+    {t:'Periostio', d:'Membrana fibrosa vascular y resistente que cubre la superficie externa del hueso (excepto superficies articulares e inserciones).'},
+    {t:'Endostio', d:'Capa de células que recubre la superficie interna del hueso (cavidad medular y canales de Havers).'},
+    {t:'Epífisis', d:'Extremos de los huesos largos. Contienen médula ósea roja (hematopoyesis).'},
+    {t:'Diáfisis', d:'Cuerpo o segmento central del hueso largo. Formado principalmente por hueso compacto. Contiene médula amarilla.'},
+    {t:'Metáfisis', d:'Zona de transición entre epífisis y diáfisis. Corresponde al cartílago de crecimiento (placa epifisiaria).'},
+    {t:'Médula roja', d:'Tejido hematopoyético localizado en epífisis de huesos largos y hueso esponjoso. Produce eritrocitos, leucocitos y plaquetas.'},
+    {t:'Médula amarilla', d:'Tejido adiposo en la diáfisis. Reserva energética; puede convertirse en médula roja si se necesita.'},
+    {t:'Hueso compacto', d:'Tipo de hueso con osteonas ordenadas. Se localiza en la periferia/cortical del hueso. Proporciona dureza.'},
+    {t:'Hueso esponjoso', d:'Tipo de hueso trabecular, en el interior. Aloja médula ósea roja entre sus trabéculas.'},
+    {t:'Cartílago articular', d:'Cartílago hialino que recubre las superficies articulares. Reduce fricción, amortigua impactos y aumenta la congruencia.'},
+    {t:'Celulas osteoprogenitoras', d:'Celulas madre del tejido oseo de las que derivan los osteoblastos.'},
+    {t:'Celulas de revestimiento', d:'Celulas aplanadas perifericas del hueso. Forman el tejido conjuntivo externo (periostio).'},
+    {t:'Laguna osea', d:'Espacio dentro de la matriz osea mineralizada donde reside el osteocito.'},
+    {t:'Canaliculos calcoforos', d:'Canales microscopicos que conectan lagunas vecinas, permitiendo la comunicacion y nutricion entre osteocitos.'},
+    {t:'Fibras de Sharpey', d:'Fibras de colageno del periostio que penetran y anclan el tejido blando al hueso cortical.'},
+    {t:'Lamelas intersticiales', d:'Restos de osteonas antiguas entre osteonas nuevas en el hueso compacto; resultado de la remodelacion osea.'},
+    {t:'Hematopoyesis', d:'Proceso de formacion de celulas sanguineas (eritrocitos, leucocitos, plaquetas) en la medula osea roja.'},
+    {t:'Acetabulo', d:'Cavidad del hueso coxal que articula con la cabeza del femur, formando la articulacion de la cadera (coxofemoral).'},
+    {t:'Acromion', d:'Extension lateral de la espina de la escapula que articula con la clavicula formando la articulacion acromioclavicular.'},
+    {t:'Cavidad glenoidea', d:'Depresion de la escapula que articula con la cabeza del humero formando la articulacion del hombro (glenohumeral).'},
+    {t:'Apofisis coracoides', d:'Saliente anterior de la escapula. Punto de insercion de pectoral menor, biceps cab. corta y coracobraquial.'},
+    {t:'Calcaneo', d:'Hueso del talon. Es el mayor hueso del tarso y articula con el astragalo superiormente.'},
+    {t:'Astragalo', d:'Hueso del tarso que conecta la pierna con el pie. Articula con tibia, perone y calcaneo.'},
+  ],
+  art: [
+    {t:'Diartrosis', d:'Articulación sinovial de alta movilidad (ej. rodilla, cadera, hombro). Posee cavidad sinovial con líquido sinovial.'},
+    {t:'Anfiartrosis', d:'Articulación cartilaginosa de movilidad limitada (ej. sínfisis púbica, discos intervertebrales).'},
+    {t:'Sinartrosis', d:'Articulación fibrosa sin movimiento funcional (ej. suturas craneales).'},
+    {t:'Ligamento', d:'Tejido conectivo denso NO contráctil. Une hueso con hueso. Estabiliza articulaciones y previene luxaciones.'},
+    {t:'Tendón', d:'Tejido conectivo que une músculo con hueso. Transmite la fuerza contráctil muscular al esqueleto.'},
+    {t:'Bursa sinovial', d:'Bolsa de líquido sinovial entre estructuras anatómicas para reducir la fricción (tendón-hueso, piel-hueso).'},
+    {t:'Menisco', d:'Disco fibrocartilaginoso interarticular (rodilla). Protege de impactos, estabiliza el centro de presiones y aumenta congruencia.'},
+    {t:'Congruencia', d:'Grado de encaje o ajuste entre las superficies articulares. Mayor congruencia = mayor estabilidad.'},
+    {t:'Articulación glenohumeral', d:'Articulación entre la cabeza del húmero y la cavidad glenoidea de la escápula. Gran movilidad / poca estabilidad ósea.'},
+    {t:'Articulación sacroilíaca', d:'Articulación entre el sacro y el ilion. Transmite el peso del tronco a los miembros inferiores.'},
+    {t:'Sínfisis púbica', d:'Articulación cartilaginosa (anfiartrosis) que une los dos huesos púbicos. Permite ligero movimiento.'},
+    {t:'Art. esternoclavicular', d:'Articulacion entre el extremo esternal de la clavicula y el manubrio del esternon.'},
+    {t:'Art. acromioclavicular', d:'Articulacion entre el extremo acromial de la clavicula y el acromion de la escapula.'},
+    {t:'Articulacion coxofemoral', d:'Articulacion de la cadera: entre la cabeza del femur y el acetabulo del hueso coxal. Gran movilidad y estabilidad.'},
+    {t:'Sinfisis pubica', d:'Articulacion cartilaginosa (anfiartrosis) que une los dos huesos pubicos. Permite ligero movimiento.'},
+  ],
+  musc: [
+    {t:'Abducción', d:'Movimiento que aleja el segmento del plano sagital medio del cuerpo.'},
+    {t:'Aducción', d:'Movimiento que acerca el segmento al plano sagital medio del cuerpo.'},
+    {t:'Flexión', d:'Movimiento que reduce el ángulo entre dos segmentos corporales.'},
+    {t:'Extensión', d:'Movimiento que aumenta el ángulo entre dos segmentos corporales.'},
+    {t:'Rotación interna', d:'Giro del segmento hacia la línea media del cuerpo.'},
+    {t:'Rotación externa', d:'Giro del segmento hacia fuera, alejándose de la línea media.'},
+    {t:'Supinación', d:'Rotación del antebrazo que coloca la palma hacia arriba/adelante.'},
+    {t:'Pronación', d:'Rotación del antebrazo que coloca la palma hacia abajo/atrás.'},
+    {t:'SITS', d:'Mnemotecnia del manguito rotador: Supraespinoso, Infraespinoso, Teres minor (redondo menor), Subescapular.'},
+    {t:'Pata de ganso', d:'Inserción en la cara medial de la tibia donde convergen el sartorio, el grácil y el semitendinoso.'},
+    {t:'Tracto iliotibial (TFL)', d:'Banda fibrosa lateral del muslo desde la cresta ilíaca hasta el cóndilo lateral de la tibia. Recibe inserción del TFL y glúteo mayor.'},
+    {t:'Línea áspera', d:'Cresta rugosa longitudinal en la cara posterior del fémur. Punto de origen e inserción de múltiples músculos del muslo.'},
+    {t:'EIAS', d:'Espina Ilíaca Antero Superior. Punto de referencia palpable de la pelvis; origen del sartorio y TFL.'},
+    {t:'EIAI', d:'Espina Ilíaca Antero Inferior. Origen del recto femoral.'},
+    {t:'Fascia toracolumbar', d:'Vaina fibrosa de la espalda. Origen del dorsal ancho, oblicuo interno, transverso y longuísimo.'},
+    {t:'Línea alba', d:'Rafe fibroso central que une los músculos abdominales. Inserción de oblicuo externo, oblicuo interno y transverso.'},
+    {t:'Trocánter mayor', d:'Prominencia ósea lateral del fémur. Inserción de glúteo medio, glúteo menor, piriforme y obturadores.'},
+    {t:'Trocánter menor', d:'Prominencia medial/inferior del fémur. Inserción del psoas mayor e ilíaco.'},
+    {t:'Tuberosidad isquiática', d:'Prominencia del isquion sobre la que nos sentamos. Origen de los isquiotibiales y cabeza inferior de los géminos.'},
+    {t:'Cresta iliaca', d:'Borde superior del ilion, palpable. Origen del cuadrado lumbar, oblicuos abdominales y gluteos.'},
+    {t:'Espina de la escapula', d:'Prominencia osea posterior de la escapula que la divide en fosa supra- e infraespinosa.'},
+    {t:'Tubulo isquiatico', d:'Prominencia del isquion sobre la que se soporta el peso al estar sentado. Origen de isquiotibiales.'},
+  ],
+  siglas: [
+    {t:'ABD', d:'Abducción.'},
+    {t:'ADD', d:'Aducción.'},
+    {t:'C1–C7', d:'Vértebras cervicales (7 en total). C1 = Atlas; C2 = Axis.'},
+    {t:'T1–T12', d:'Vértebras torácicas/dorsales (12 en total). También nombradas D1–D12.'},
+    {t:'L1–L5', d:'Vértebras lumbares (5 en total). Las más grandes y robustas.'},
+    {t:'RER', d:'Retículo Endoplásmico Rugoso. Presente en osteoblastos para la síntesis de proteínas del osteoide.'},
+    {t:'TFL', d:'Tensor de la Fascia Lata. Músculo que tensa la banda iliotibial.'},
+    {t:'EIAS', d:'Espina Ilíaca Antero Superior.'},
+    {t:'EIAI', d:'Espina Ilíaca Antero Inferior.'},
+    {t:'LCA', d:'Ligamento Cruzado Anterior. Estabilizador anteroposterior de la rodilla.'},
+    {t:'LCP', d:'Ligamento Cruzado Posterior. Estabilizador anteroposterior de la rodilla.'},
+    {t:'LCL', d:'Ligamento Colateral Lateral (de la rodilla).'},
+    {t:'LCM', d:'Ligamento Colateral Medial (de la rodilla).'},
+    {t:'ACL', d:'Anterior Cruciate Ligament (= LCA en inglés).'},
+    {t:'PCL', d:'Posterior Cruciate Ligament (= LCP en inglés).'},
+    {t:'MMII', d:'Miembros Inferiores (ambas piernas).'},
+    {t:'EEII', d:'Extremidades Inferiores. Equivalente a MMII.'},
+    {t:'MMSS', d:'Miembros Superiores (ambos brazos).'},
+    {t:'ATM', d:'Articulacion Temporomandibular. Articulacion movil entre la mandibula y el hueso temporal.'},
+  ]
+};
+
+function buildTerms() {
+  ['oseo','art','musc','siglas'].forEach(cat => {
+    const container = document.getElementById('tg-'+cat);
+    TERMS[cat].forEach((item, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'term-chip';
+      chip.textContent = item.t;
+      chip.onclick = () => showTerm(item.t, item.d);
+      container.appendChild(chip);
+    });
+  });
+}
+
+function showTerm(title, def) {
+  const box = document.getElementById('term-detail');
+  box.innerHTML = `<strong>${title}:</strong> ${def}`;
+  box.style.display = 'block';
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+/* ══════════════════════ TEST DATA ══════════════════════ */
+const ALL_QUESTIONS = [
+  /* ── SISTEMA ÓSEO ── */
+  {cat:'óseo', q:"¿Cuál es la unidad estructural del hueso compacto?", opts:["Osteoide","Osteona","Osteoclasto","Canal de Volkmann"], correct:1, exp:"La osteona (sistema de Havers) es la unidad estructural básica del hueso compacto. Está formada por láminas concéntricas de osteocitos alrededor de un canal de Havers central."},
+  {cat:'óseo', q:"¿Qué mineral otorga dureza al hueso?", opts:["Carbonato sódico","Colágeno tipo 2","Hidroxiapatita","Fibronectina"], correct:2, exp:"La hidroxiapatita (fosfato cálcico) es el mineral que mineraliza la matriz ósea y le confiere su dureza característica."},
+  {cat:'óseo', q:"Los osteoclastos se originan a partir de células de estirpe:", opts:["Fibroblástica","Monocítica","Osteoprogenitora","Condrogénica"], correct:1, exp:"Los osteoclastos son células multinucleadas derivadas de la fusión de precursores de estirpe monocítica/macrófago."},
+  {cat:'óseo', q:"¿Qué tipo de médula ósea se encuentra en la diáfisis de los huesos largos?", opts:["Médula roja","Médula amarilla","Médula gris","Médula negra"], correct:1, exp:"La diáfisis contiene médula ósea amarilla (tejido adiposo), que actúa como reserva energética."},
+  {cat:'óseo', q:"El periostio cubre la superficie del hueso excepto en:", opts:["La diáfisis","Las superficies articulares y zonas de inserción de tendones","Los canales de Havers","Las epífisis"], correct:1, exp:"El periostio cubre toda la superficie externa del hueso, excepto en las superficies articulares (cubiertas por cartílago hialino) y en los puntos de inserción de tendones y ligamentos."},
+  {cat:'óseo', q:"¿En qué región del hueso largo se produce la hematopoyesis?", opts:["Diáfisis","Metáfisis","Epífisis","Canal de Havers"], correct:2, exp:"La hematopoyesis ocurre en la médula ósea roja, alojada en las epífisis de los huesos largos y en el hueso esponjoso."},
+  {cat:'óseo', q:"La metáfisis se corresponde con:", opts:["El cuerpo central del hueso largo","El extremo distal","El cartílago de crecimiento (placa epifisiaria)","La cavidad medular"], correct:2, exp:"La metáfisis es la zona entre epífisis y diáfisis que contiene el cartílago de crecimiento (placa epifisiaria), que se va osificando durante el crecimiento."},
+  {cat:'óseo', q:"Los canales de Volkmann conectan:", opts:["Osteocitos entre sí","Distintos sistemas de Havers entre sí y con el canal medular","La epífisis con la diáfisis","El periostio con el endostio"], correct:1, exp:"Los canales de Volkmann son canales transversales/oblicuos que conectan los sistemas de Havers entre sí y llevan vasos sanguíneos desde el periostio hasta el canal medular."},
+  {cat:'óseo', q:"¿Cuál de estos NO es un tipo de hueso según su forma?", opts:["Largo","Corto","Irregular","Cilíndrico"], correct:3, exp:"Los 5 tipos de huesos según su forma son: largos, cortos, irregulares, sesamoideos y planos. No existe la categoría 'cilíndrico'."},
+  {cat:'óseo', q:"La rótula (patela) es un ejemplo de hueso:", opts:["Largo","Plano","Sesamoideo","Corto"], correct:2, exp:"La patela es el mayor hueso sesamoideo del cuerpo. Se forma dentro del tendón del cuádriceps."},
+  {cat:'óseo', q:"El osteoide es:", opts:["La matriz ósea mineralizada","La porción orgánica no mineralizada de la matriz ósea","El canal central de la osteona","El mineral principal del hueso"], correct:1, exp:"El osteoide es la porción orgánica (colágeno tipo 1 y 5 + otras proteínas) de la matriz ósea que aún no se ha mineralizado. Los osteoblastos lo sintetizan."},
+  {cat:'óseo', q:"¿Qué célula ósea tiene un citoplasma basófilo por su abundante RER?", opts:["Osteoclasto","Osteocito","Osteoblasto","Célula de revestimiento"], correct:2, exp:"Los osteoblastos tienen un RER (retículo endoplásmico rugoso) muy desarrollado para la síntesis de proteínas del osteoide, lo que les da basofilia citoplasmática."},
+  {cat:'óseo', q:"La columna vertebral adulta consta de:", opts:["29 vértebras","33 vértebras","36 vértebras","26 vértebras"], correct:1, exp:"La columna vertebral está formada por 33 vértebras: 7 cervicales, 12 torácicas, 5 lumbares, 5 sacras (fusionadas) y 4 coccígeas (fusionadas)."},
+  {cat:'óseo', q:"¿Cuántas vértebras lumbares hay?", opts:["4","5","6","7"], correct:1, exp:"Hay 5 vértebras lumbares (L1–L5). Son las más grandes y robustas ya que soportan la mayor parte del peso del cuerpo."},
+  {cat:'óseo', q:"Las costillas falsas corresponden a los pares:", opts:["1–7","8–10","11–12","1–5"], correct:1, exp:"Las costillas falsas son los pares 8–10. Se unen al esternón indirectamente, a través del cartílago costal del par anterior."},
+  {cat:'óseo', q:"¿Cuántos huesos forman el carpo (muñeca)?", opts:["6","7","8","10"], correct:2, exp:"El carpo está formado por 8 huesos: fila proximal (escafoides, semilunar, piramidal, pisiforme) y fila distal (trapecio, trapezoide, grande, ganchoso)."},
+  {cat:'óseo', q:"El fémur se articula proximalmente con:", opts:["La tibia","El isquion","El acetábulo del coxal","El sacro"], correct:2, exp:"Proximalmente, el fémur se articula con el acetábulo del hueso coxal formando la articulación de la cadera (coxofemoral)."},
+  {cat:'óseo', q:"¿Qué tres huesos se fusionan para formar el hueso coxal?", opts:["Ilion, Isquion y Pubis","Sacro, Ilion e Isquion","Fémur, Ilion y Pubis","Isquion, Pubis y Sacro"], correct:0, exp:"El hueso coxal se forma durante la infancia por la fusión del ilion (superior), isquion (posterior-inferior) y pubis (anterior-inferior)."},
+  {cat:'óseo', q:"¿Qué parte del esternón es la más inferior?", opts:["Manubrio","Cuerpo","Apófisis xifoides","Escotadura yugular"], correct:2, exp:"El esternón tiene tres partes: manubrio (superior), cuerpo (central y más larga) y apófisis xifoides (inferior/punta)."},
+  /* ── ARTICULACIONES ── */
+  {cat:'articulaciones', q:"Las articulaciones sinoviales también se denominan:", opts:["Anfiartrosis","Sinartrosis","Diartrosis","Sincondrosis"], correct:2, exp:"Las articulaciones sinoviales (con cavidad sinovial) se denominan diartrosis. Son las de mayor movilidad del cuerpo."},
+  {cat:'articulaciones', q:"¿Qué estructura evita luxaciones articulares?", opts:["Bursa","Ligamento","Tendón","Menisco"], correct:1, exp:"Los ligamentos son tejido conectivo no contráctil que unen huesos entre sí y estabilizan las articulaciones, evitando luxaciones."},
+  {cat:'articulaciones', q:"La sínfisis púbica es un ejemplo de articulación:", opts:["Diartrosis","Sinartrosis","Anfiartrosis","Articulación en bisagra"], correct:2, exp:"La sínfisis púbica es una articulación cartilaginosa (anfiartrosis) que une los dos huesos púbicos. Permite movimiento muy limitado."},
+  {cat:'articulaciones', q:"¿Cuál es la función principal de las bursas sinoviales?", opts:["Nutrir el cartílago","Reducir la fricción entre estructuras","Transmitir fuerza muscular","Estabilizar la pelvis"], correct:1, exp:"Las bursas son bolsas de líquido sinovial que actúan como almohadillas reduciendo la fricción entre estructuras adyacentes (piel-hueso, tendón-hueso, etc.)."},
+  {cat:'articulaciones', q:"Los meniscos de la rodilla tienen como función:", opts:["Conectar la rótula con la tibia","Proteger de impactos, estabilizar presiones y aumentar congruencia","Producir líquido sinovial","Unir fémur con peroné"], correct:1, exp:"Los meniscos son discos fibrocartilaginosos que protegen a los huesos de los impactos, estabilizan el centro de presiones y aumentan la congruencia articular."},
+  {cat:'articulaciones', q:"La articulación entre la clavícula y el acromion se denomina:", opts:["Esternoclavicular","Glenohumeral","Acromioclavicular","Escapulohumeral"], correct:2, exp:"La articulación acromioclavicular une el extremo acromial de la clavícula con el acromion de la escápula."},
+  /* ── MÚSCULOS HOMBRO/BRAZO ── */
+  {cat:'músculos', q:"¿Cuál es la acción del supraespinoso?", opts:["Rotación interna del hombro","Abducción del hombro","Extensión del hombro","Aducción del hombro"], correct:1, exp:"El supraespinoso es el iniciador de la abducción del hombro (primeros 15–30°). Se origina en la fosa supraespinosa de la escápula y se inserta en el tubérculo mayor del húmero."},
+  {cat:'músculos', q:"¿Qué músculo del manguito rotador produce ROTACIÓN INTERNA?", opts:["Supraespinoso","Infraespinoso","Subescapular","Redondo menor"], correct:2, exp:"El subescapular es el único músculo del manguito rotador (SITS) que produce rotación interna. Se origina en la fosa subescapular y se inserta en el tubérculo menor del húmero."},
+  {cat:'músculos', q:"La acción principal de la porción acromial del deltoides es:", opts:["Flexión del hombro","Extensión del hombro","Abducción del hombro","Rotación interna"], correct:2, exp:"La porción acromial (fibras medias) del deltoides es la principal responsable de la abducción del hombro."},
+  {cat:'músculos', q:"¿Dónde se origina el bíceps braquial (cabeza larga)?", opts:["Apófisis coracoides","Tubérculo supraglenoideo de la escápula","Cara anterior del húmero","Epicóndilo medial"], correct:1, exp:"La cabeza larga del bíceps braquial se origina en el tubérculo supraglenoideo de la escápula. La cabeza corta se origina en la apófisis coracoides."},
+  {cat:'músculos', q:"¿Cuál es la inserción del tríceps braquial?", opts:["Tuberosidad del radio","Epicóndilo lateral","Olécranon del cúbito","Tuberosidad del cúbito"], correct:2, exp:"Las tres cabezas del tríceps braquial se insertan en el olécranon del cúbito (la parte posterior del codo)."},
+  {cat:'músculos', q:"El dorsal ancho produce:", opts:["Flexión, abducción y rotación externa del brazo","Extensión, aducción y rotación interna del brazo","Extensión del codo","Abducción del hombro"], correct:1, exp:"El dorsal ancho produce extensión, aducción y rotación interna del brazo. Es el mayor músculo de la espalda."},
+  {cat:'músculos', q:"¿Cuántas cabezas tiene el bíceps braquial?", opts:["1","2","3","4"], correct:1, exp:"El bíceps braquial tiene 2 cabezas: la cabeza larga (tubérculo supraglenoideo) y la cabeza corta (apófisis coracoides)."},
+  {cat:'músculos', q:"¿Cuántas cabezas tiene el tríceps braquial?", opts:["2","3","4","1"], correct:1, exp:"El tríceps braquial tiene 3 cabezas: larga (tubérculo infraglenoideo), medial (cara posterior del húmero) y lateral (húmero posterior)."},
+  {cat:'músculos', q:"El infraespinoso produce:", opts:["Rotación interna","Rotación externa","Abducción","Extensión"], correct:1, exp:"El infraespinoso produce rotación externa del hombro. Se origina en la fosa infraespinosa de la escápula y se inserta en el tubérculo mayor del húmero."},
+  {cat:'músculos', q:"Las fibras superiores del trapecio producen:", opts:["Aducción del omóplato","Elevación y rotación del omóplato","Rotación del omóplato hacia abajo","Depresión del omóplato"], correct:1, exp:"Las fibras superiores del trapecio (descendentes) elevan y rotan el omóplato. Las medias aducen y las inferiores rotan el omóplato."},
+  {cat:'músculos', q:"¿Qué músculo se origina en la apófisis coracoides y se inserta en la cresta del tubérculo menor?", opts:["Pectoral menor","Bíceps braquial (cab. corta)","Coracobraquial","Subescapular"], correct:2, exp:"El coracobraquial se origina en la apófisis coracoides de la escápula y se inserta en la cresta del tubérculo menor del húmero. Produce flexión, aducción y rotación interna."},
+  /* ── MÚSCULOS TRONCO ── */
+  {cat:'músculos', q:"¿Cuál es el músculo principal de la respiración?", opts:["Intercostales externos","Cuadrado lumbar","Diafragma","Escalenos"], correct:2, exp:"El diafragma es el músculo principal de la respiración. Al contraerse desciende, aumenta el volumen torácico e inspira."},
+  {cat:'músculos', q:"¿Qué músculo abdominal es el más profundo y actúa como estabilizador lumbar?", opts:["Recto del abdomen","Oblicuo externo","Oblicuo interno","Transverso del abdomen"], correct:3, exp:"El transverso del abdomen es el músculo abdominal más profundo. Su contracción bilateral comprime el abdomen y estabiliza la columna lumbar (es el principal músculo del 'core')."},
+  {cat:'músculos', q:"El recto del abdomen se origina en:", opts:["Fascia toracolumbar","Cresta del pubis y sínfisis del pubis","Línea alba","Cresta ilíaca"], correct:1, exp:"El recto del abdomen tiene cabeza lateral (cresta del pubis → espina del pubis) y cabeza medial (región anterior de la sínfisis del pubis)."},
+  {cat:'músculos', q:"¿Qué músculo inclina el tronco unilateralmente y estabiliza la 12ª costilla?", opts:["Transverso del abdomen","Oblicuo interno","Cuadrado lumbar","Psoas mayor"], correct:2, exp:"El cuadrado lumbar inclina el tronco hacia el mismo lado de forma unilateral y bilateralmente estabiliza la 12ª costilla durante la espiración."},
+  {cat:'músculos', q:"El psoas mayor se inserta en:", opts:["Trocánter mayor del fémur","Trocánter menor del fémur","Línea áspera del fémur","Tuberosidad tibial"], correct:1, exp:"El psoas mayor (junto con el ilíaco = músculo iliopsoas) se inserta en el trocánter menor del fémur."},
+  {cat:'músculos', q:"Los escalenos tienen como acción:", opts:["Espiración y extensión cervical","Inspiración y flexión/inclinación lateral cervical","Flexión del tronco y rotación","Elevación de costillas y extensión lumbar"], correct:1, exp:"Los escalenos participan en la inspiración (elevan las costillas 1ª y 2ª) y en los movimientos cervicales (flexión bilateral e inclinación lateral unilateral)."},
+  {cat:'músculos', q:"¿En qué se inserta el oblicuo externo del abdomen?", opts:["Fascia toracolumbar","Línea alba, tubérculo del pubis y cresta anterior del ilion","Cresta ilíaca y costillas 10ª–12ª","Bordes inferiores costillas 5ª–7ª"], correct:1, exp:"El oblicuo externo se inserta en la línea alba, tubérculo del pubis y cresta anterior del ilion. Sus fibras corren oblicuamente hacia abajo y medial."},
+  /* ── MÚSCULOS MIEMBRO INFERIOR ── */
+  {cat:'músculos', q:"¿Cuál es la acción principal del cuádriceps femoral?", opts:["Flexión de rodilla","Extensión de rodilla","Abducción de cadera","Rotación interna de rodilla"], correct:1, exp:"El cuádriceps femoral (recto femoral + 3 vastos) es el principal extensor de la rodilla."},
+  {cat:'músculos', q:"El recto femoral se origina en:", opts:["Línea áspera del fémur","Espina ilíaca anteroinferior (EIAI) y techo acetabular","Trocánter mayor","Espina ilíaca anterosuperior (EIAS)"], correct:1, exp:"El recto femoral se origina en la espina ilíaca anteroinferior (EIAI) y en el techo acetabular. Es el único vasto que cruza dos articulaciones (cadera y rodilla)."},
+  {cat:'músculos', q:"¿Cuál es la acción principal del glúteo mayor?", opts:["Flexión y rotación interna de cadera","Extensión y abducción de cadera","Rotación interna y aducción","Flexión de rodilla"], correct:1, exp:"El glúteo mayor es el principal extensor de la cadera. Las fibras superiores también producen abducción y las inferiores extensión más aducción."},
+  {cat:'músculos', q:"El glúteo medio y menor son principalmente:", opts:["Extensores de cadera","Abductores de cadera","Aductores de cadera","Flexores de rodilla"], correct:1, exp:"El glúteo medio y menor son los principales abductores de la cadera. También estabilizan la pelvis durante la marcha."},
+  {cat:'músculos', q:"¿Qué músculo constituye el pes anserinus (pata de ganso) junto con el sartorio y el grácil?", opts:["Semimembranoso","Semitendinoso","Bíceps femoral","Vasto medial"], correct:1, exp:"La pata de ganso la forman los tendones distales del sartorio, del grácil y del semitendinoso, que se insertan juntos en la cara medial de la tibia."},
+  {cat:'músculos', q:"El bíceps femoral se inserta en:", opts:["Cóndilo tibial medial","Cabeza del peroné","Tuberosidad tibial","Fosa poplítea"], correct:1, exp:"Ambas cabezas del bíceps femoral se insertan en la cabeza del peroné (fíbula)."},
+  {cat:'músculos', q:"¿Cuál es la acción del semimembranoso y semitendinoso sobre la rodilla?", opts:["Extensión y rotación externa","Flexión y rotación interna","Extensión y rotación interna","Flexión y rotación externa"], correct:1, exp:"Semimembranoso y semitendinoso flexionan la rodilla y la rotan internamente, además de extender la cadera."},
+  {cat:'músculos', q:"El tensor de la fascia lata (TFL) se inserta en:", opts:["Trocánter mayor","Tracto iliotibial","Cabeza del peroné","Línea áspera"], correct:1, exp:"El TFL se origina en la EIAS y se inserta en el tracto iliotibial (banda iliotibial), que a su vez se inserta en el cóndilo lateral de la tibia."},
+  {cat:'músculos', q:"¿Qué músculo se origina en la cara pélvica del sacro y rota internamente la cadera?", opts:["Obturador interno","Piriforme","Cuadrado femoral","Gémino superior"], correct:1, exp:"El piriforme se origina en la cara pélvica del sacro y produce rotación interna, abducción y extensión de la articulación de la cadera."},
+  {cat:'músculos', q:"El sartorio se origina en la EIAS y produce:", opts:["Extensión y rotación externa de cadera","Flexión de cadera y rodilla; rotación interna de pierna","Abducción de cadera","Extensión de rodilla"], correct:1, exp:"El sartorio es el músculo más largo del cuerpo. Produce flexión y rotación interna de la pierna (en la rodilla), además de flexionar la cadera."},
+  {cat:'músculos', q:"¿Cuál de los siguientes es un aductor de cadera?", opts:["Glúteo medio","Sartorio","Grácil","Cuádriceps"], correct:2, exp:"El grácil es un músculo medial del muslo que produce aducción y flexión de cadera, además de flexión y rotación interna de rodilla."},
+  {cat:'músculos', q:"¿Cuál es la inserción del pectíneo?", opts:["Trocánter mayor","Línea pectínea y línea áspera proximal","Cabeza del peroné","Tuberosidad tibial"], correct:1, exp:"El pectíneo se inserta en la línea pectínea y la línea áspera proximal del fémur. Produce rotación externa y aducción de la cadera."},
+  /* ── HUESOS MIEMBROS ── */
+  {cat:'óseo', q:"¿Cuál es el hueso más largo y fuerte del cuerpo humano?", opts:["Húmero","Tibia","Fémur","Radio"], correct:2, exp:"El fémur es el hueso más largo y fuerte del cuerpo humano. Conecta la cadera con la rodilla."},
+  {cat:'óseo', q:"El calcáneo es:", opts:["El hueso que conecta pierna con pie","El hueso del talón","Un hueso del tarso que articula con el cuboides","Tanto B como C son correctas"], correct:3, exp:"El calcáneo es el hueso del talón Y un hueso del tarso. Articula con el astrágalo superiormente y con el cuboides anteriormente."},
+  {cat:'óseo', q:"¿Qué hueso del antebrazo se localiza en el lado del pulgar?", opts:["Cúbito","Radio","Escafoides","Húmero"], correct:1, exp:"El radio se localiza en la parte lateral del antebrazo (lado del pulgar). El cúbito está en la parte medial (lado del meñique)."},
+  {cat:'óseo', q:"¿Cuántos huesos tiene el metacarpo?", opts:["4","5","6","8"], correct:1, exp:"El metacarpo está formado por 5 huesos largos (metacarpianos I–V), desde el pulgar hacia el meñique."},
+  {cat:'óseo', q:"La cavidad glenoidea pertenece a:", opts:["El húmero","La escápula","La clavícula","El acromion"], correct:1, exp:"La cavidad glenoidea es una depresión en la escápula que se articula con la cabeza del húmero para formar la articulación del hombro (glenohumeral)."},
+  {cat:'óseo', q:"¿Qué vértebra cervical se denomina Atlas?", opts:["C2","C1","C3","C7"], correct:1, exp:"C1 = Atlas. C2 = Axis. El atlas permite los movimientos de asentimiento (sí) y el axis los de rotación de la cabeza (no)."},
+  {cat:'óseo', q:"La apófisis coracoides es una parte de:", opts:["El húmero","La clavícula","La escápula","El esternón"], correct:2, exp:"La apófisis coracoides es un saliente óseo de la escápula que sirve como punto de inserción de músculos (pectoral menor, bíceps cab. corta, coracobraquial) y ligamentos."},
+  {cat:'óseo', q:"¿Cuántas falanges tiene el dedo pulgar?", opts:["3","2","4","1"], correct:1, exp:"El pulgar (y el hallux del pie) solo tienen 2 falanges: proximal y distal. El resto de los dedos tienen 3 (proximal, media y distal)."},
+  {cat:'óseo', q:"El astrágalo (talus) articula la pierna con el pie conectando con:", opts:["Calcáneo y navicular","Peroné únicamente","Tibia y navicular","Cuboides y cuneiformes"], correct:0, exp:"El astrágalo se articula superiormente con la tibia y el peroné (articulación del tobillo), inferiormente con el calcáneo, y anteriormente con el navicular."},
+  {cat:'óseo', q:"¿Cuántos pares de costillas tiene el ser humano?", opts:["10","11","12","14"], correct:2, exp:"El ser humano tiene 12 pares de costillas: 7 verdaderas (1–7), 3 falsas (8–10) y 2 flotantes (11–12)."},
+  /* ── EXTRA / INTEGRACIÓN ── */
+  {cat:'músculos', q:"¿Qué músculo se describe como 'principal estabilizador de la escápula y extensor del cuello'?", opts:["Romboides mayor","Trapecio","Serrato anterior","Angular de la escápula"], correct:1, exp:"El trapecio es un músculo estabilizador del hombro y extensor del cuello. Sus fibras inferiores también rotan el omóplato."},
+  {cat:'músculos', q:"La acción del subclavio es:", opts:["Flexionar el codo","Estabilizar la clavícula en la articulación esternoclavicular","Elevar la primera costilla","Abducir el hombro"], correct:1, exp:"El subclavio se origina en la 1ª costilla y se inserta en la cara inferior de la clavícula. Su función es estabilizar la clavícula en la articulación esternoclavicular."},
+  {cat:'músculos', q:"¿Cuál de estos músculos NO pertenece al manguito rotador?", opts:["Supraespinoso","Infraespinoso","Redondo mayor","Subescapular"], correct:2, exp:"El manguito rotador está formado por: Supraespinoso, Infraespinoso, Redondo MENOR y Subescapular (SITS). El redondo MAYOR NO pertenece al manguito rotador."},
+  {cat:'músculos', q:"¿Cuál es la acción del ancóneo?", opts:["Flexión del codo","Extensión del codo y fijación de su articulación","Rotación del antebrazo","Abducción del codo"], correct:1, exp:"El ancóneo se origina en el epicóndilo lateral del húmero y se inserta en el olécranon del cúbito. Extiende el codo y fija su articulación."},
+  {cat:'articulaciones', q:"¿Cuál es la función del cartílago articular en las articulaciones sinoviales?", opts:["Producir líquido sinovial","Cubrir superficies articulares, nutrir la articulación y aumentar congruencia","Unir los huesos entre sí","Absorber impactos entre vértebras"], correct:1, exp:"El cartílago articular (hialino) cubre las superficies articulares para protegerlas del rozamiento, nutre la articulación y aumenta el factor congruencia (encaje sólido)."},
+  {cat:'óseo', q:"¿Cuál de las siguientes partes NO forma parte del esternón?", opts:["Manubrio","Cuerpo","Apófisis xifoides","Apófisis coracoides"], correct:3, exp:"El esternón tiene 3 partes: manubrio (superior), cuerpo (central) y apófisis xifoides (inferior). La apófisis coracoides pertenece a la escápula."},
+  {cat:'músculos', q:"Los músculos iliocostal, longuísimo y espinoso forman en conjunto:", opts:["El manguito rotador","El erector espinal (masa común)","Los isquiotibiales","El cuádriceps"], correct:1, exp:"Iliocostal, longuísimo y espinoso forman los tres componentes del músculo erector espinal (masa común). Extienden la columna bilateralmente e inclinan lateralmente de forma unilateral."},
+  {cat:'músculos', q:"¿Cuál es la acción BILATERAL de los oblicuos abdominal externo e interno?", opts:["Rotación del tronco","Inclinación lateral","Flexión del tronco","Extensión del tronco"], correct:2, exp:"Bilateralmente, tanto el oblicuo externo como el interno producen flexión del tronco. Unilateralmente producen inclinación lateral y rotación del tronco."},
+  {cat:'músculos', q:"¿Cuál de los cuádriceps es el ÚNICO que cruza la articulación de la cadera además de la rodilla?", opts:["Vasto medial","Vasto lateral","Recto femoral","Vasto intermedio"], correct:2, exp:"El recto femoral se origina en la EIAI (cerca de la cadera) y se inserta en la tuberosidad tibial (rodilla), cruzando ambas articulaciones. Los vastos solo cruzan la rodilla."},
+  {cat:'articulaciones', q:"¿Qué articulación conecta los huesos coxales con el sacro?", opts:["Sínfisis púbica","Articulación sacroilíaca","Articulación coxofemoral","Articulación lumbosacra"], correct:1, exp:"Las articulaciones sacroilíacas conectan los huesos coxales (ilion) con el sacro a ambos lados. Transmiten el peso del tronco a la pelvis y miembros inferiores."},
+  {cat:'óseo', q:"¿Cuántos huesos del tarso forman el tobillo y el pie?", opts:["5","6","7","8"], correct:2, exp:"El tarso está compuesto por 7 huesos: calcáneo, astrágalo (talus), navicular, cuboides y los tres cuneiformes (medial, intermedio y lateral)."},
+
+  /* ══ NUEVAS PREGUNTAS &#8212; SISTEMA OSEO (Cuadernillo) ══ */
+  /* Celulas oseas */
+  {cat:'oseo', q:"Cual es la funcion de las celulas osteoprogenitoras?", opts:["Resorber hueso viejo","Sintetizar osteoide","Dar origen a los osteoblastos","Formar el periostio"], correct:2, exp:"Las celulas osteoprogenitoras son celulas madre del tejido oseo cuya funcion es dar origen a los osteoblastos, que luego sintetizan la matriz osea."},
+  {cat:'oseo', q:"Que tipo de citoplasma tienen los osteoclastos?", opts:["Basofilo","Acidofilo","Neutrofilo","Anfofilo"], correct:1, exp:"Los osteoclastos tienen citoplasma acidofilo. Son celulas multinucleadas derivadas de celulas de origen monocitico, encargadas de la resorcion osea."},
+  {cat:'oseo', q:"Que estructuras utilizan los osteoclastos para degradar el componente mineral del hueso?", opts:["Hidrolasas lisosomicas","Acidos organicos","Fibras de colageno","Hidroxiapatita"], correct:1, exp:"Los osteoclastos utilizan acidos organicos para degradar el componente mineral (hidroxiapatita), y posteriormente las hidrolasas lisosomicas destruyen la matriz organica."},
+  {cat:'oseo', q:"A que se denomina osteoide en histologia?", opts:["La matriz mineralizada del hueso maduro","La porcion organica no mineralizada que secretan los osteoblastos","El canal central de la osteona","El hueso esponjoso en formacion"], correct:1, exp:"El osteoide es la porcion organica sin mineralizar de la matriz osea. Los osteoblastos lo sintetizan secretando colageno tipo 1, tipo 5 y otras proteinas, que se mineralizan posteriormente con hidroxiapatita."},
+  {cat:'oseo', q:"En que se convierte un osteoblasto al alcanzar la madurez?", opts:["Osteoclasto","Celula de revestimiento","Osteocito","Celula osteoprogenitora"], correct:2, exp:"Cuando el osteoblasto queda rodeado por la matriz que el mismo ha secretado y alcanza la madurez, pasa a denominarse osteocito, encargado del mantenimiento del tejido oseo."},
+  /* Hueso compacto/esponjoso */
+  {cat:'oseo', q:"Donde se localizan las celulas hematopoyeticas dentro del hueso esponjoso?", opts:["En los canales de Havers","En los espacios trabeculares (medula roja)","En el periostio","En el endostio"], correct:1, exp:"El hueso esponjoso presenta un entramado de trabeculas donde se alojan las celulas hematopoyeticas que forman la medula osea roja y producen los componentes sanguineos."},
+  {cat:'oseo', q:"Cuales son los tres componentes celulares de la sangre producidos por la hematopoyesis?", opts:["Plaquetas, glucosa y eritrocitos","Plaquetas, globulos rojos y globulos blancos","Eritrocitos, linfocitos y glucagon","Leucocitos, insulina y plaquetas"], correct:1, exp:"La hematopoyesis, que ocurre en la medula osea roja, produce: plaquetas (trombocitos), globulos rojos (eritrocitos) y globulos blancos (leucocitos). La glucosa es un nutriente, no se produce ahi."},
+  {cat:'oseo', q:"El cartilago de crecimiento que se osifica durante la madurez osea recibe el nombre de:", opts:["Cartilago articular","Placa epifisiaria (metafisis)","Osteoide","Cartilago de Havers"], correct:1, exp:"Las placas epifisiarias (localizadas en la metafisis) son el cartilago de crecimiento que se va osificando gradualmente durante el crecimiento y la maduracion osea."},
+  /* Osteona avanzado */
+  {cat:'oseo', q:"Las fibras de Sharpey son:", opts:["Fibras de colageno del periostio que penetran en el hueso cortical","Fibras musculares que se insertan en los tendones","Canales de la osteona que transportan vasos sanguineos","Laminillas concentricas de osteocitos"], correct:0, exp:"Las fibras de Sharpey son fibras de colageno pertenecientes al periostio que penetran en el hueso compacto, anclando el periostio al hueso."},
+  {cat:'oseo', q:"Las lamelas intersticiales en el hueso compacto representan:", opts:["Osteonas en proceso de formacion","Restos de osteonas antiguas entre osteonas nuevas","Hueso esponjoso en la diafisis","Canales de nutricion"], correct:1, exp:"Las lamelas intersticiales son fragmentos de osteonas antiguas que quedan entre las osteonas nuevas durante la remodelacion osea."},
+  /* Huesos de la cabeza */
+  {cat:'oseo', q:"Que hueso forma la parte posterior e inferior del craneo y contiene el foramen magno?", opts:["Hueso parietal","Hueso temporal","Hueso occipital","Hueso esfenoides"], correct:2, exp:"El hueso occipital forma la parte posterior e inferior del craneo. Contiene el foramen magno (agujero occipital), por donde pasa la medula espinal."},
+  {cat:'oseo', q:"Cual de estos huesos forma la sien (parte lateral del craneo)?", opts:["Hueso frontal","Hueso occipital","Hueso temporal","Hueso parietal"], correct:2, exp:"El hueso temporal forma la parte lateral del craneo (la sien). En el se encuentran la apofisis mastoides, la estiloides y el meato acustico externo."},
+  {cat:'oseo', q:"A que hueso pertenece la apofisis mastoides?", opts:["Hueso occipital","Hueso parietal","Hueso temporal","Hueso esfenoides"], correct:2, exp:"La apofisis mastoides es una prominencia del hueso temporal, localizada detras del oido. Es palpable justo detras del pabellon auditivo."},
+  {cat:'oseo', q:"Que hueso del craneo tiene ala mayor y ala menor?", opts:["Hueso etmoides","Hueso esfenoides","Hueso temporal","Hueso occipital"], correct:1, exp:"El hueso esfenoides tiene un ala mayor y un ala menor, ambas visibles en la vista anterior y lateral del craneo. Es el hueso mas central de la base del craneo."},
+  {cat:'oseo', q:"Cual es el unico hueso movil de la cara?", opts:["Maxilar","Hueso cigomatico","Mandibula","Hueso nasal"], correct:2, exp:"La mandibula es el unico hueso movil de la cara. Articula con el hueso temporal en la articulacion temporomandibular (ATM) y permite la masticacion."},
+  /* Cintura escapular */
+  {cat:'oseo', q:"Entre que costillas se localiza la escapula en la cara posterior del torax?", opts:["Entre la 1a y 5a costilla","Entre la 2a y 7a costilla","Entre la 3a y 9a costilla","Entre la 1a y 4a costilla"], correct:1, exp:"La escapula (omoplato) es un hueso plano y triangular ubicado en la parte posterior del torax, entre la 2a y 7a costilla."},
+  {cat:'oseo', q:"Como se describe la forma de la clavicula?", opts:["Plana y triangular","Larga en forma de S","Corta y cuboidea","Irregular con apofisis prominentes"], correct:1, exp:"La clavicula es un hueso largo y delgado con forma de S, que conecta el esternon con la escapula. Actua como soporte que mantiene la escapula en su lugar."},
+  /* Cintura pelvica */
+  {cat:'oseo', q:"Que parte del hueso coxal soporta el peso del cuerpo al estar sentado?", opts:["Cresta iliaca","Tuberculo isquiatico","Sinfisis pubica","Acetabulo"], correct:1, exp:"El tuberculo isquiatico es una prominencia del isquion en la parte inferior posterior del hueso coxal, sobre la que recae el peso del cuerpo cuando estamos sentados."},
+  {cat:'oseo', q:"Cuantas vertebras fusionadas forman el sacro?", opts:["3","4","5","6"], correct:2, exp:"El sacro se forma por la fusion de 5 vertebras sacras. Es un hueso triangular en la parte posterior de la pelvis que articula con los iliones a cada lado."},
+  {cat:'oseo', q:"El coccix esta formado por la fusion de:", opts:["5 vertebras sacras","2-3 vertebras coccigeas","3-5 vertebras coccigeas","4 vertebras lumbares"], correct:2, exp:"El coccix (conocido como hueso de la cola) esta formado por la fusion de entre 3 y 5 vertebras coccigeas. Sirve de anclaje para musculos y ligamentos."},
+  /* Miembro superior */
+  {cat:'oseo', q:"Cual de los siguientes huesos forma la fila proximal del carpo?", opts:["Trapecio, Trapezoide, Grande, Ganchoso","Escafoides, Semilunar, Piramidal, Pisiforme","Escafoides, Trapecio, Grande, Ganchoso","Semilunar, Piramidal, Trapecio, Trapezoide"], correct:1, exp:"La fila proximal del carpo esta formada por: Escafoides, Semilunar, Piramidal y Pisiforme. La fila distal: Trapecio, Trapezoide, Grande y Ganchoso."},
+  {cat:'oseo', q:"Donde se localiza el cubito (ulna) en el antebrazo?", opts:["En el lado del pulgar (lateral)","En el lado del menique (medial)","En la parte central","En la cara posterior"], correct:1, exp:"El cubito (ulna) se localiza en la parte medial del antebrazo, es decir, en el lado del menique. El radio esta en la parte lateral (lado del pulgar)."},
+  /* Miembro inferior */
+  {cat:'oseo', q:"Que hueso del tarso conecta directamente la pierna con el pie?", opts:["Calcaneo","Astragalo (talus)","Navicular","Cuboides"], correct:1, exp:"El astragalo (talus) es el hueso del tarso que conecta la pierna con el pie. Articula superiormente con tibia y perone (articulacion del tobillo) e inferiormente con el calcaneo."},
+  {cat:'oseo', q:"Cual es la funcion principal de la tibia respecto al perone en la carga de peso?", opts:["Ambos soportan el mismo peso","La tibia soporta la mayor parte del peso; el perone participa menos","El perone soporta la mayor parte del peso","Ninguno soporta el peso directamente"], correct:1, exp:"La tibia es el hueso grande y fuerte de la parte interna de la pierna y soporta la mayor parte del peso corporal. El perone (fibula) es mas delgado y lateral, participando menos en el soporte de peso."},
+  /* Articulaciones nuevas */
+  {cat:'articulaciones', q:"Por que se denominan suturas craneales sinartrosis?", opts:["Porque permiten gran movilidad","Porque no tienen movimiento funcional o es minimo","Porque tienen cavidad sinovial","Porque estan formadas por cartilago"], correct:1, exp:"Las suturas craneales son articulaciones fibrosas (sinartrosis) porque practicamente no permiten movimiento. Los huesos del craneo se unen mediante tejido fibroso denso sin cavidad articular."},
+  {cat:'articulaciones', q:"Cual es la diferencia entre ligamento y tendon?", opts:["El ligamento une musculo a hueso; el tendon une hueso a hueso","El ligamento une hueso a hueso; el tendon une musculo a hueso","Ambos unen hueso a hueso pero de diferente forma","No hay diferencia; son el mismo tejido"], correct:1, exp:"El ligamento es tejido conectivo no contractil que une hueso con hueso, estabilizando articulaciones. El tendon une musculo con hueso y transmite la fuerza de contraccion muscular al esqueleto."},
+  {cat:'articulaciones', q:"Que tipo de articulacion son los discos intervertebrales?", opts:["Diartrosis (sinovial)","Anfiartrosis (cartilaginosa)","Sinartrosis (fibrosa)","Sesamoidea"], correct:1, exp:"Los discos intervertebrales son articulaciones cartilaginosas (anfiartrosis) que permiten movilidad limitada y absorben los impactos entre vertebras. Son una variedad de fibrocartilago."},
+  {cat:'oseo', q:"Que vertebra cervical se denomina Axis y cual es su caracteristica principal?", opts:["C1; permite el movimiento de asentimiento","C2; tiene la apofisis odontoides que permite la rotacion de la cabeza","C3; es la mas larga del cuello","C7; es la mas prominente de la columna cervical"], correct:1, exp:"La vertebra C2 se denomina Axis. Su caracteristica principal es la apofisis odontoides (diente del axis), que articula con el atlas (C1) y permite el movimiento de rotacion de la cabeza."},
+  {cat:'oseo', q:"Cual es la funcion del periostio respecto a la nutricion del hueso?", opts:["No tiene funcion nutricional","Contiene vasos sanguineos que nutren el hueso y nervios que le dan sensibilidad","Solo actua como capa protectora","Produce la medula osea amarilla"], correct:1, exp:"El periostio es una membrana vascular que contiene vasos sanguineos que nutren el hueso y nervios que le proporcionan sensibilidad. Tambien es importante para la regeneracion osea tras fracturas."},
+  {cat:'oseo', q:"Que componentes de la matriz extracelular osea aportan elasticidad al hueso?", opts:["Hidroxiapatita y calcio","Fibras de colageno tipo 1 y 5","Solo los osteocitos","El canal de Havers"], correct:1, exp:"Las fibras de colageno (tipo 1 y tipo 5) de la matriz extracelular osea aportan elasticidad y resistencia a la traccion. La hidroxiapatita aporta dureza y rigidez."},
+];
+
+/* ══════════════════════ TEST ENGINE ══════════════════════ */
+let activeQuestions = [];
+let submitted = false;
+let activeFilter = 'todos';
+
+function buildFilterBar() {
+  const cats = ['todos', ...new Set(ALL_QUESTIONS.map(q => q.cat))];
+  const bar = document.getElementById('filter-bar');
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (c === 'todos' ? ' active' : '');
+    btn.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+    btn.onclick = () => { activeFilter = c; applyFilter(btn); };
+    bar.appendChild(btn);
+  });
+}
+
+function applyFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadQuestions();
+}
+
+function loadQuestions() {
+  submitted = false;
+  activeQuestions = activeFilter === 'todos'
+    ? [...ALL_QUESTIONS]
+    : ALL_QUESTIONS.filter(q => q.cat === activeFilter);
+  // shuffle
+  for (let i = activeQuestions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [activeQuestions[i], activeQuestions[j]] = [activeQuestions[j], activeQuestions[i]];
+  }
+  renderQuestions();
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('btn-submit').disabled = false;
+  updateProgress();
+}
+
+function renderQuestions() {
+  const c = document.getElementById('questions-container');
+  c.innerHTML = '';
+  document.getElementById('test-count').textContent = `${activeQuestions.length} preguntas`;
+  activeQuestions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'question-card';
+    div.id = 'qcard-' + i;
+    let opts = q.opts.map((o, j) => `
+      <label class="option-label" id="opt-${i}-${j}">
+        <input type="radio" name="q${i}" value="${j}"> ${o}
+      </label>`).join('');
+    div.innerHTML = `<h3>${i + 1}. ${q.q}</h3>${opts}`;
+    c.appendChild(div);
+  });
+  // track progress on selection
+  activeQuestions.forEach((_, i) => {
+    document.querySelectorAll(`input[name="q${i}"]`).forEach(inp => {
+      inp.addEventListener('change', updateProgress);
+    });
+  });
+}
+
+function updateProgress() {
+  let answered = 0;
+  activeQuestions.forEach((_, i) => {
+    if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+  });
+  const pct = activeQuestions.length ? (answered / activeQuestions.length * 100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  let score = 0;
+  activeQuestions.forEach((q, i) => {
+    const chosen = document.querySelector(`input[name="q${i}"]:checked`);
+    const chosenVal = chosen ? parseInt(chosen.value) : -1;
+    const isCorrect = chosenVal === q.correct;
+    if (isCorrect) score++;
+
+    // style options
+    q.opts.forEach((_, j) => {
+      const lbl = document.getElementById(`opt-${i}-${j}`);
+      if (j === q.correct) lbl.classList.add('correct');
+      else if (j === chosenVal) lbl.classList.add('wrong');
+      const inp = lbl.querySelector('input');
+      if (inp) inp.disabled = true;
+    });
+
+    // feedback
+    const card = document.getElementById('qcard-' + i);
+    const fb = document.createElement('div');
+    fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
+    fb.innerHTML = `<div class="fb-circle"></div><div><strong>${isCorrect ? 'Correcto' : 'Incorrecto'}</strong> — ${q.exp}</div>`;
+    card.appendChild(fb);
+  });
+
+  // result
+  const total = activeQuestions.length;
+  const pct = Math.round(score / total * 100);
+  document.getElementById('score-display').textContent = `${score} / ${total}`;
+  document.getElementById('score-msg').textContent = pct >= 80
+    ? `¡Excelente! Has acertado el ${pct}% de las preguntas.`
+    : pct >= 60
+    ? `Bien, ${pct}% correcto. Repasa los temas fallados.`
+    : `Necesitas reforzar. Solo ${pct}% correcto. ¡Ánimo!`;
+  document.getElementById('result-panel').style.display = 'block';
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
+  document.getElementById('prog-fill').style.width = '100%';
+}
+
+function retryTest() {
+  loadQuestions();
+  window.scrollTo({top: document.getElementById('test').offsetTop - 60, behavior:'smooth'});
+}
+
+/* ══════════════════════ INIT ══════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildTerms();
+  buildFilterBar();
+  loadQuestions();
+});
+</script>
+</body>
+</html>
