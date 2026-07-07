@@ -99,28 +99,26 @@
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
 
-/* ── ELI5 TAB ── */
-.eli5-intro { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; font-size: 0.88rem; color: #3d3d3a; display: flex; gap: 12px; align-items: flex-start; }
-.eli5-intro-icon { font-size: 1.8rem; flex-shrink: 0; }
-.eli5-intro h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
-.eli5-card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; margin-bottom: 0.75rem; overflow: hidden; transition: border-color 0.2s; }
-.eli5-card.open { border-color: #534AB7; }
-.eli5-card-header { display: flex; align-items: center; gap: 10px; padding: 1rem 1.25rem; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
-.eli5-card-header:hover { background: #f5f4f0; }
-.eli5-icon { font-size: 1.2rem; flex-shrink: 0; }
-.eli5-title { flex: 1; font-size: 0.95rem; font-weight: 500; }
-.eli5-chevron { font-size: 0.7rem; color: #9c9a92; transition: transform 0.2s; }
-.eli5-card.open .eli5-chevron { transform: rotate(180deg); }
-.eli5-body { padding: 0 1.25rem 1.25rem; }
-.eli5-btn { background: #534AB7; color: #fff; border: none; border-radius: 8px; padding: 0.65rem 1.2rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 0.2s; margin-top: 0.25rem; }
-.eli5-btn:hover { background: #3C3489; }
-.eli5-btn:disabled { background: #9c9a92; cursor: not-allowed; }
-.eli5-answer { margin-top: 1rem; background: #EEEDFE; border: 0.5px solid #c5c2f5; border-radius: 10px; padding: 1rem 1.1rem; font-size: 0.88rem; line-height: 1.7; color: #1a1a18; white-space: pre-wrap; }
-.eli5-loading { display: flex; align-items: center; gap: 8px; color: #534AB7; font-size: 0.85rem; margin-top: 0.75rem; }
-.eli5-dot { width: 6px; height: 6px; border-radius: 50%; background: #534AB7; animation: eli5pulse 1.2s infinite; }
-.eli5-dot:nth-child(2) { animation-delay: 0.2s; }
-.eli5-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes eli5pulse { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem}
+.eli5-btn{background:#534AB7;color:#fff;border:none;border-radius:8px;padding:0.65rem 1.2rem;font-size:0.875rem;font-weight:500;cursor:pointer;transition:background 0.2s;margin-top:0.25rem}
+.eli5-btn:hover{background:#3C3489}
+.eli5-answer{margin-top:1rem;background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.1rem;font-size:0.88rem;line-height:1.7;color:#1a1a18;white-space:pre-wrap}
+.eli5-loading{display:flex;align-items:center;gap:8px;color:#534AB7;font-size:0.85rem;margin-top:0.75rem}
+.eli5-dot{width:6px;height:6px;border-radius:50%;background:#534AB7;animation:eli5pulse 1.2s infinite}
+.eli5-dot:nth-child(2){animation-delay:0.2s}
+.eli5-dot:nth-child(3){animation-delay:0.4s}
+@keyframes eli5pulse{0%,80%,100%{opacity:0.2;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
 </style>
 </head>
 <body>
@@ -758,8 +756,7 @@
   </div>
 </div>
 
-<!-- ELI5 TAB -->
-<div id="eli5" class="tab-content" style="display:none">
+<div id="eli5" class="tab-content">
   <div class="eli5-intro">
     <span class="eli5-intro-icon">🧒</span>
     <div>
@@ -841,7 +838,6 @@
       </div>
     </div>
 </div>
-
 
 <script>
 /* ══════════════════════ TABS ══════════════════════ */
@@ -1144,59 +1140,57 @@ function loadQuestions() {
   }
   renderQuestions();
   document.getElementById('result-panel').style.display = 'none';
-  document.getElementById('btn-submit').disabled = false;
+  
   updateProgress();
 }
-
 
 function renderQuestions() {
   const c = document.getElementById('questions-container');
   c.innerHTML = '';
-  document.getElementById('test-count').textContent = `${activeQuestions.length} preguntas`;
-  activeQuestions.forEach((q, i) => {
-    const div = document.createElement('div');
-    div.className = 'question-card';
-    div.id = 'qcard-' + i;
-    let opts = q.opts.map((o, j) => `
-      <label class="option-label" id="opt-${i}-${j}" onclick="pickAnswer(${i},${j})">
-        <input type="radio" name="q${i}" value="${j}"> ${o}
-      </label>`).join('');
-    div.innerHTML = `<h3>${i + 1}. ${q.q}</h3>${opts}<div class="feedback-box" id="fb-${i}" style="display:none"></div>`;
-    c.appendChild(div);
-  });
+  document.getElementById('test-count').textContent = activeQuestions.length + ' preguntas';
   answeredCount = 0;
   scoreCount = 0;
   document.getElementById('prog-fill').style.width = '0%';
+  activeQuestions.forEach(function(q, i) {
+    const div = document.createElement('div');
+    div.className = 'question-card';
+    div.id = 'qcard-' + i;
+    let opts = q.opts.map(function(o, j) {
+      return '<label class="option-label" id="opt-' + i + '-' + j + '" onclick="pickAnswer(' + i + ',' + j + ')"><input type="radio" name="q' + i + '" value="' + j + '"> ' + o + '</label>';
+    }).join('');
+    div.innerHTML = '<h3>' + (i+1) + '. ' + q.q + '</h3>' + opts + '<div class="feedback-box" id="fb-' + i + '" style="display:none"></div>';
+    c.appendChild(div);
+  });
 }
 
 function pickAnswer(qIdx, optIdx) {
   const q = activeQuestions[qIdx];
-  const existingFb = document.getElementById('fb-' + qIdx);
-  if (existingFb.style.display !== 'none') return;
+  const fb = document.getElementById('fb-' + qIdx);
+  if (fb.style.display !== 'none') return;
   const isCorrect = optIdx === q.correct;
-  q.opts.forEach((_, j) => {
-    const lbl = document.getElementById(`opt-${qIdx}-${j}`);
+  q.opts.forEach(function(_, j) {
+    const lbl = document.getElementById('opt-' + qIdx + '-' + j);
     const inp = lbl.querySelector('input');
     if (inp) inp.disabled = true;
     lbl.style.cursor = 'default';
     if (j === q.correct) lbl.classList.add('correct');
     else if (j === optIdx && !isCorrect) lbl.classList.add('wrong');
   });
-  existingFb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
-  existingFb.innerHTML = `<div class="fb-circle"></div><div><strong>${isCorrect ? '\u2705 Correcto' : '\u274C Incorrecto'}</strong> — ${q.exp}</div>`;
-  existingFb.style.display = 'flex';
+  fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
+  fb.innerHTML = '<div class="fb-circle"></div><div><strong>' + (isCorrect ? '✅ Correcto' : '❌ Incorrecto') + '</strong> — ' + q.exp + '</div>';
+  fb.style.display = 'flex';
   answeredCount++;
   if (isCorrect) scoreCount++;
   const pct = activeQuestions.length ? (answeredCount / activeQuestions.length * 100) : 0;
   document.getElementById('prog-fill').style.width = pct + '%';
   if (answeredCount === activeQuestions.length) {
     const finalPct = Math.round(scoreCount / activeQuestions.length * 100);
-    document.getElementById('score-display').textContent = `${scoreCount} / ${activeQuestions.length}`;
+    document.getElementById('score-display').textContent = scoreCount + ' / ' + activeQuestions.length;
     document.getElementById('score-msg').textContent = finalPct >= 80
-      ? `\u{1F3C6} \u00A1Excelente! Has acertado el ${finalPct}% de las preguntas.`
+      ? '🏆 ¡Excelente! Has acertado el ' + finalPct + '% de las preguntas.'
       : finalPct >= 60
-      ? `\uD83D\uDC4D Bien, ${finalPct}% correcto. Repasa los temas fallados.`
-      : `\uD83D\uDCDA Necesitas reforzar. Solo ${finalPct}% correcto. \u00A1\u00C1nimo!`;
+      ? '👍 Bien, ' + finalPct + '% correcto. Repasa los temas fallados.'
+      : '📚 Necesitas reforzar. Solo ' + finalPct + '% correcto. ¡Ánimo!';
     document.getElementById('result-panel').style.display = 'block';
     document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
     document.getElementById('prog-fill').style.width = '100%';
@@ -1208,9 +1202,9 @@ function submitTest() {}
 
 function retryTest() {
   loadQuestions();
-  window.scrollTo({top: document.getElementById('test').offsetTop - 60, behavior:'smooth'});
-}
-);
+  const testEl = document.getElementById('test');
+  if (testEl) window.scrollTo({top: testEl.offsetTop - 60, behavior:'smooth'});
+});
 }
 
 /* ══════════════════════ INIT ══════════════════════ */
@@ -1222,12 +1216,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── ELI5 ── */
 const ELI5_PROMPTS = {
-  'm3t1': `Explícame como si fuera un niño de 8 años qué es el tejido óseo, cómo está formado un hueso, cuáles son las células óseas (osteoblastos, osteoclastos, osteocitos, células osteoprogenitoras), qué es la osteona (sistema de Havers) y los canales de Havers y Volkmann. Usa analogías cotidianas y metáforas divertidas. Máximo 200 palabras.`,
-  'm3t2': `Explícame como si fuera un niño de 8 años los tipos de huesos según su forma (largos, cortos, planos, irregulares, sesamoideos) y las regiones de un hueso largo (epífisis, metáfisis, diáfisis, periostio, médula roja y amarilla). Usa ejemplos y metáforas muy simples. Máximo 200 palabras.`,
-  'm3t3': `Explícame como si fuera un niño de 8 años qué son las articulaciones, cómo se clasifican (fibrosas, cartilaginosas, sinoviales), qué partes tiene una articulación sinovial y los distintos tipos de movimientos articulares. Usa metáforas muy simples y ejemplos del cuerpo. Máximo 200 palabras.`,
-  'm3t4': `Explícame como si fuera un niño de 8 años qué significa origen e inserción de un músculo, qué son agonistas y antagonistas, y cómo funcionan los principales músculos del miembro superior y el tronco (bíceps, tríceps, deltoides, pectorales, dorsales). Usa metáforas muy simples. Máximo 200 palabras.`,
-  'm3t5': `Explícame como si fuera un niño de 8 años cómo funcionan los principales músculos de las piernas: cuádriceps, isquiotibiales, glúteos, gemelos y sóleo, tibial anterior. Quién es agonista y antagonista de cada par. Usa metáforas muy simples y ejemplos de movimientos del día a día. Máximo 200 palabras.`,
-  'm3t6': `Explícame como si fuera un niño de 8 años cuáles son las curvas fisiológicas de la columna vertebral (lordosis cervical, cifosis dorsal, lordosis lumbar, cifosis sacra), para qué sirven, y qué son la cintura escapular y la pelvis. Usa metáforas muy simples. Máximo 200 palabras.`,
+  "m3t1": `Explícame como si fuera un niño de 8 años qué es el tejido óseo, cómo está formado, cuáles son las células óseas (osteoblastos, osteoclastos, osteocitos), qué es la osteona y los canales de Havers y Volkmann. Usa metáforas divertidas. Máximo 200 palabras.`,
+  "m3t2": `Explícame como si fuera un niño de 8 años los tipos de huesos (largos, cortos, planos, irregulares, sesamoideos) y las regiones de un hueso largo (epífisis, metáfisis, diáfisis, periostio, médula). Usa ejemplos simples. Máximo 200 palabras.`,
+  "m3t3": `Explícame como si fuera un niño de 8 años qué son las articulaciones, cómo se clasifican (fibrosas, cartilaginosas, sinoviales) y qué partes tiene una articulación sinovial. Usa metáforas muy simples. Máximo 200 palabras.`,
+  "m3t4": `Explícame como si fuera un niño de 8 años qué significa origen e inserción de un músculo, qué son agonistas y antagonistas, y cómo funcionan bíceps, tríceps, deltoides, pectorales y dorsales. Máximo 200 palabras.`,
+  "m3t5": `Explícame como si fuera un niño de 8 años cómo funcionan cuádriceps, isquiotibiales, glúteos, gemelos, sóleo y tibial anterior. Quién es agonista y antagonista de cada par. Usa metáforas simples. Máximo 200 palabras.`,
+  "m3t6": `Explícame como si fuera un niño de 8 años cuáles son las curvas fisiológicas de la columna (lordosis cervical, cifosis dorsal, lordosis lumbar, cifosis sacra), para qué sirven, y qué son la cintura escapular y la pelvis. Máximo 200 palabras.`
 };
 
 function toggleEli5(id) {
@@ -1239,27 +1233,26 @@ function toggleEli5(id) {
 }
 
 async function askEli5(id, e) {
-  e.stopPropagation();
+  if (e) e.stopPropagation();
   const resultEl = document.getElementById('result-' + id);
   const prompt = ELI5_PROMPTS[id];
   if (!prompt) return;
-
   resultEl.innerHTML = '<div class="eli5-loading"><div class="eli5-dot"></div><div class="eli5-dot"></div><div class="eli5-dot"></div><span>Pensando en una explicación fácil…</span></div>';
-
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1000,
-        system: 'Eres un profesor muy simpático que explica conceptos de anatomía y fisiología del ejercicio a niños de 8 años. Usas metáforas del día a día, ejemplos divertidos, comparaciones con juguetes, comida o situaciones cotidianas. Nunca usas términos técnicos sin explicarlos con una metáfora. Respondes siempre en español. Respuesta máxima: 220 palabras.',
-        messages: [{ role: 'user', content: prompt }]
+        system: 'Eres un profesor muy simpático que explica conceptos de anatomía y fisiología del ejercicio a niños de 8 años. Usas metáforas del día a día, ejemplos divertidos, comparaciones con juguetes, comida o situaciones cotidianas. Nunca usas términos técnicos sin explicarlos con una metáfora. Respondes siempre en español. Máximo 220 palabras.',
+        messages: [{role: 'user', content: prompt}]
       })
     });
     const data = await res.json();
-    const text = data.content?.[0]?.text || 'No se pudo obtener la explicación.';
-    resultEl.innerHTML = '<div class="eli5-answer">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><button class="eli5-btn" style="margin-top:0.75rem" onclick="askEli5(\'' + id + '\', event)">🔄 Explicación diferente</button>';
+    const text = data.content && data.content[0] ? data.content[0].text : 'No se pudo obtener la explicación.';
+    const safeId = id.replace(/'/g, "\\'");
+    resultEl.innerHTML = '<div class="eli5-answer">' + text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><button class="eli5-btn" style="margin-top:0.75rem" onclick="askEli5(\'' + safeId + '\', event)">🔄 Explicación diferente</button>';
   } catch(err) {
     resultEl.innerHTML = '<div class="eli5-answer" style="background:#FAECE7;border-color:#f5a58a">❌ Error al conectar. Asegúrate de tener conexión y recarga la página.</div><button class="eli5-btn" onclick="askEli5(\'' + id + '\', event)">Reintentar</button>';
   }

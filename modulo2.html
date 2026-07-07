@@ -79,28 +79,26 @@ nav button:hover:not(.active){background:#f5f4f0}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
 
-/* ── ELI5 TAB ── */
-.eli5-intro { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.25rem; font-size: 0.88rem; color: #3d3d3a; display: flex; gap: 12px; align-items: flex-start; }
-.eli5-intro-icon { font-size: 1.8rem; flex-shrink: 0; }
-.eli5-intro h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
-.eli5-card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; margin-bottom: 0.75rem; overflow: hidden; transition: border-color 0.2s; }
-.eli5-card.open { border-color: #534AB7; }
-.eli5-card-header { display: flex; align-items: center; gap: 10px; padding: 1rem 1.25rem; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
-.eli5-card-header:hover { background: #f5f4f0; }
-.eli5-icon { font-size: 1.2rem; flex-shrink: 0; }
-.eli5-title { flex: 1; font-size: 0.95rem; font-weight: 500; }
-.eli5-chevron { font-size: 0.7rem; color: #9c9a92; transition: transform 0.2s; }
-.eli5-card.open .eli5-chevron { transform: rotate(180deg); }
-.eli5-body { padding: 0 1.25rem 1.25rem; }
-.eli5-btn { background: #534AB7; color: #fff; border: none; border-radius: 8px; padding: 0.65rem 1.2rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 0.2s; margin-top: 0.25rem; }
-.eli5-btn:hover { background: #3C3489; }
-.eli5-btn:disabled { background: #9c9a92; cursor: not-allowed; }
-.eli5-answer { margin-top: 1rem; background: #EEEDFE; border: 0.5px solid #c5c2f5; border-radius: 10px; padding: 1rem 1.1rem; font-size: 0.88rem; line-height: 1.7; color: #1a1a18; white-space: pre-wrap; }
-.eli5-loading { display: flex; align-items: center; gap: 8px; color: #534AB7; font-size: 0.85rem; margin-top: 0.75rem; }
-.eli5-dot { width: 6px; height: 6px; border-radius: 50%; background: #534AB7; animation: eli5pulse 1.2s infinite; }
-.eli5-dot:nth-child(2) { animation-delay: 0.2s; }
-.eli5-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes eli5pulse { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem}
+.eli5-btn{background:#534AB7;color:#fff;border:none;border-radius:8px;padding:0.65rem 1.2rem;font-size:0.875rem;font-weight:500;cursor:pointer;transition:background 0.2s;margin-top:0.25rem}
+.eli5-btn:hover{background:#3C3489}
+.eli5-answer{margin-top:1rem;background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.1rem;font-size:0.88rem;line-height:1.7;color:#1a1a18;white-space:pre-wrap}
+.eli5-loading{display:flex;align-items:center;gap:8px;color:#534AB7;font-size:0.85rem;margin-top:0.75rem}
+.eli5-dot{width:6px;height:6px;border-radius:50%;background:#534AB7;animation:eli5pulse 1.2s infinite}
+.eli5-dot:nth-child(2){animation-delay:0.2s}
+.eli5-dot:nth-child(3){animation-delay:0.4s}
+@keyframes eli5pulse{0%,80%,100%{opacity:0.2;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
 </style>
 </head>
 <body>
@@ -586,8 +584,7 @@ nav button:hover:not(.active){background:#f5f4f0}
   <div id="score-area" style="display:none"></div>
 </div>
 
-<!-- ELI5 TAB -->
-<div id="eli5" class="section" style="display:none">
+<div id="eli5" class="section">
   <div class="eli5-intro">
     <span class="eli5-intro-icon">🧒</span>
     <div>
@@ -681,7 +678,6 @@ nav button:hover:not(.active){background:#f5f4f0}
       </div>
     </div>
 </div>
-
 <script>
 const tabs=['esquema','resumen','siglas','test','eli5'];
 function showTab(id){
@@ -872,13 +868,13 @@ function filterSiglas(val){renderSiglas(val);}
 
 /* ── ELI5 ── */
 const ELI5_PROMPTS = {
-  'm2t1': `Explícame como si fuera un niño de 8 años qué es el sistema muscular, para qué sirven los músculos, cómo están organizados por capas (epimisio, perimisio, endomisio) y qué hay dentro de una fibra muscular (sarcolema, sarcoplasma, mitocondrias, retículo sarcoplásmico, túbulos T). Usa analogías cotidianas, ejemplos del día a día y metáforas divertidas. Máximo 200 palabras.`,
-  'm2t2': `Explícame como si fuera un niño de 8 años qué es una sarcómera, cómo funcionan la actina y la miosina, y cómo se produce la contracción muscular paso a paso (la teoría de los filamentos deslizantes). Qué papel juegan la troponina, la tropomiosina y el calcio. Usa analogías cotidianas y metáforas divertidas. Máximo 200 palabras.`,
-  'm2t3': `Explícame como si fuera un niño de 8 años la diferencia entre contracciones concéntricas, excéntricas e isométricas, y los tipos de fibras musculares (tipo I, IIa, IIx). Usa ejemplos del deporte y metáforas muy simples. Máximo 200 palabras.`,
-  'm2t4': `Explícame como si fuera un niño de 8 años cómo funciona el corazón, sus cuatro cámaras, el sistema eléctrico (nódulo SA, nódulo AV, haz de His, fibras de Purkinje), el ECG (ondas P, QRS, T) y las fórmulas del gasto cardíaco. Usa metáforas muy simples y ejemplos cotidianos. Máximo 200 palabras.`,
-  'm2t5': `Explícame como si fuera un niño de 8 años cómo funcionan los pulmones, los volúmenes pulmonares (VRI, VRE, CV, VR, CPT) y cómo el oxígeno pasa de los pulmones a la sangre. Usa metáforas muy simples y ejemplos del día a día. Máximo 200 palabras.`,
-  'm2t6': `Explícame como si fuera un niño de 8 años qué es el ATP, por qué es la moneda energética del cuerpo, y cómo funcionan los tres sistemas energéticos: fosfágenos, glucólisis y sistema oxidativo aeróbico. Para qué sirve cada uno, cuándo se activa y cuánto ATP produce cada uno. Usa metáforas muy simples. Máximo 200 palabras.`,
-  'm2t7': `Explícame como si fuera un niño de 8 años qué es el VO₂máx, por qué es importante para saber si alguien está en forma, y qué es el umbral del lactato y el RER. Usa metáforas muy simples y ejemplos del deporte cotidiano. Máximo 200 palabras.`,
+  "m2t1": `Explícame como si fuera un niño de 8 años qué es el sistema muscular, para qué sirven los músculos, cómo están organizados por capas (epimisio, perimisio, endomisio) y qué hay dentro de una fibra muscular. Usa analogías cotidianas y metáforas divertidas. Máximo 200 palabras.`,
+  "m2t2": `Explícame como si fuera un niño de 8 años qué es una sarcómera, cómo funcionan la actina y la miosina, y cómo se produce la contracción muscular (teoría de los filamentos deslizantes). Qué papel juegan la troponina, tropomiosina y el calcio. Usa metáforas divertidas. Máximo 200 palabras.`,
+  "m2t3": `Explícame como si fuera un niño de 8 años la diferencia entre contracciones concéntricas, excéntricas e isométricas, y los tipos de fibras musculares (tipo I, IIa, IIx). Usa ejemplos del deporte y metáforas muy simples. Máximo 200 palabras.`,
+  "m2t4": `Explícame como si fuera un niño de 8 años cómo funciona el corazón, sus cuatro cámaras, el sistema eléctrico (nódulo SA, AV, haz de His, Purkinje), el ECG y las fórmulas del gasto cardíaco. Usa metáforas muy simples. Máximo 200 palabras.`,
+  "m2t5": `Explícame como si fuera un niño de 8 años cómo funcionan los pulmones, los volúmenes pulmonares (VRI, VRE, CV, VR, CPT) y cómo el oxígeno pasa de los pulmones a la sangre. Usa metáforas muy simples. Máximo 200 palabras.`,
+  "m2t6": `Explícame como si fuera un niño de 8 años qué es el ATP, por qué es la moneda energética del cuerpo, y cómo funcionan los tres sistemas energéticos: fosfágenos, glucólisis y sistema oxidativo aeróbico. Usa metáforas muy simples. Máximo 200 palabras.`,
+  "m2t7": `Explícame como si fuera un niño de 8 años qué es el VO₂máx, por qué es importante, y qué es el umbral del lactato y el RER. Usa metáforas muy simples y ejemplos del deporte. Máximo 200 palabras.`
 };
 
 function toggleEli5(id) {
@@ -890,27 +886,26 @@ function toggleEli5(id) {
 }
 
 async function askEli5(id, e) {
-  e.stopPropagation();
+  if (e) e.stopPropagation();
   const resultEl = document.getElementById('result-' + id);
   const prompt = ELI5_PROMPTS[id];
   if (!prompt) return;
-
   resultEl.innerHTML = '<div class="eli5-loading"><div class="eli5-dot"></div><div class="eli5-dot"></div><div class="eli5-dot"></div><span>Pensando en una explicación fácil…</span></div>';
-
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1000,
-        system: 'Eres un profesor muy simpático que explica conceptos de anatomía y fisiología del ejercicio a niños de 8 años. Usas metáforas del día a día, ejemplos divertidos, comparaciones con juguetes, comida o situaciones cotidianas. Nunca usas términos técnicos sin explicarlos con una metáfora. Respondes siempre en español. Respuesta máxima: 220 palabras.',
-        messages: [{ role: 'user', content: prompt }]
+        system: 'Eres un profesor muy simpático que explica conceptos de anatomía y fisiología del ejercicio a niños de 8 años. Usas metáforas del día a día, ejemplos divertidos, comparaciones con juguetes, comida o situaciones cotidianas. Nunca usas términos técnicos sin explicarlos con una metáfora. Respondes siempre en español. Máximo 220 palabras.',
+        messages: [{role: 'user', content: prompt}]
       })
     });
     const data = await res.json();
-    const text = data.content?.[0]?.text || 'No se pudo obtener la explicación.';
-    resultEl.innerHTML = '<div class="eli5-answer">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><button class="eli5-btn" style="margin-top:0.75rem" onclick="askEli5(\'' + id + '\', event)">🔄 Explicación diferente</button>';
+    const text = data.content && data.content[0] ? data.content[0].text : 'No se pudo obtener la explicación.';
+    const safeId = id.replace(/'/g, "\\'");
+    resultEl.innerHTML = '<div class="eli5-answer">' + text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><button class="eli5-btn" style="margin-top:0.75rem" onclick="askEli5(\'' + safeId + '\', event)">🔄 Explicación diferente</button>';
   } catch(err) {
     resultEl.innerHTML = '<div class="eli5-answer" style="background:#FAECE7;border-color:#f5a58a">❌ Error al conectar. Asegúrate de tener conexión y recarga la página.</div><button class="eli5-btn" onclick="askEli5(\'' + id + '\', event)">Reintentar</button>';
   }

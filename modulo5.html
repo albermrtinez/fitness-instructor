@@ -654,64 +654,57 @@ function loadQuestions() {
   }
   renderQuestions();
   document.getElementById('result-panel').style.display = 'none';
-  document.getElementById('btn-submit').disabled = false;
+  
   updateProgress();
 }
-
 
 function renderQuestions() {
   const c = document.getElementById('questions-container');
   c.innerHTML = '';
-  document.getElementById('test-count').textContent = `${activeQuestions.length} preguntas`;
-  activeQuestions.forEach((q, i) => {
-    const div = document.createElement('div');
-    div.className = 'question-card';
-    div.id = 'qcard-' + i;
-    let opts = q.opts.map((o, j) => `
-      <label class="option-label" id="opt-${i}-${j}" onclick="pickAnswer(${i},${j})">
-        <input type="radio" name="q${i}" value="${j}"> ${o}
-      </label>`).join('');
-    div.innerHTML = `<h3>${i + 1}. ${q.q}</h3>${opts}<div class="feedback-box" id="fb-${i}" style="display:none"></div>`;
-    c.appendChild(div);
-  });
+  document.getElementById('test-count').textContent = activeQuestions.length + ' preguntas';
   answeredCount = 0;
   scoreCount = 0;
   document.getElementById('prog-fill').style.width = '0%';
+  activeQuestions.forEach(function(q, i) {
+    const div = document.createElement('div');
+    div.className = 'question-card';
+    div.id = 'qcard-' + i;
+    let opts = q.opts.map(function(o, j) {
+      return '<label class="option-label" id="opt-' + i + '-' + j + '" onclick="pickAnswer(' + i + ',' + j + ')"><input type="radio" name="q' + i + '" value="' + j + '"> ' + o + '</label>';
+    }).join('');
+    div.innerHTML = '<h3>' + (i+1) + '. ' + q.q + '</h3>' + opts + '<div class="feedback-box" id="fb-' + i + '" style="display:none"></div>';
+    c.appendChild(div);
+  });
 }
 
 function pickAnswer(qIdx, optIdx) {
   const q = activeQuestions[qIdx];
-  const existingFb = document.getElementById('fb-' + qIdx);
-  if (existingFb.style.display !== 'none') return;
-
+  const fb = document.getElementById('fb-' + qIdx);
+  if (fb.style.display !== 'none') return;
   const isCorrect = optIdx === q.correct;
-
-  q.opts.forEach((_, j) => {
-    const lbl = document.getElementById(`opt-${qIdx}-${j}`);
+  q.opts.forEach(function(_, j) {
+    const lbl = document.getElementById('opt-' + qIdx + '-' + j);
     const inp = lbl.querySelector('input');
     if (inp) inp.disabled = true;
     lbl.style.cursor = 'default';
     if (j === q.correct) lbl.classList.add('correct');
     else if (j === optIdx && !isCorrect) lbl.classList.add('wrong');
   });
-
-  existingFb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
-  existingFb.innerHTML = `<div class="fb-circle"></div><div><strong>${isCorrect ? '\u2705 Correcto' : '\u274C Incorrecto'}</strong> — ${q.exp}</div>`;
-  existingFb.style.display = 'flex';
-
+  fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
+  fb.innerHTML = '<div class="fb-circle"></div><div><strong>' + (isCorrect ? '✅ Correcto' : '❌ Incorrecto') + '</strong> — ' + q.exp + '</div>';
+  fb.style.display = 'flex';
   answeredCount++;
   if (isCorrect) scoreCount++;
   const pct = activeQuestions.length ? (answeredCount / activeQuestions.length * 100) : 0;
   document.getElementById('prog-fill').style.width = pct + '%';
-
   if (answeredCount === activeQuestions.length) {
     const finalPct = Math.round(scoreCount / activeQuestions.length * 100);
-    document.getElementById('score-display').textContent = `${scoreCount} / ${activeQuestions.length}`;
+    document.getElementById('score-display').textContent = scoreCount + ' / ' + activeQuestions.length;
     document.getElementById('score-msg').textContent = finalPct >= 80
-      ? `\u{1F3C6} \u00A1Excelente! Has acertado el ${finalPct}% de las preguntas.`
+      ? '🏆 ¡Excelente! Has acertado el ' + finalPct + '% de las preguntas.'
       : finalPct >= 60
-      ? `\uD83D\uDC4D Bien, ${finalPct}% correcto. Repasa los temas fallados.`
-      : `\uD83D\uDCDA Necesitas reforzar. Solo ${finalPct}% correcto. \u00A1\u00C1nimo!`;
+      ? '👍 Bien, ' + finalPct + '% correcto. Repasa los temas fallados.'
+      : '📚 Necesitas reforzar. Solo ' + finalPct + '% correcto. ¡Ánimo!';
     document.getElementById('result-panel').style.display = 'block';
     document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
     document.getElementById('prog-fill').style.width = '100%';
@@ -719,14 +712,13 @@ function pickAnswer(qIdx, optIdx) {
 }
 
 function updateProgress() {}
-
 function submitTest() {}
 
 function retryTest() {
   loadQuestions();
-  window.scrollTo({top: document.getElementById('test').offsetTop - 60, behavior:'smooth'});
-}
-);
+  const testEl = document.getElementById('test');
+  if (testEl) window.scrollTo({top: testEl.offsetTop - 60, behavior:'smooth'});
+});
 }
 
 /* ══════════════════════ INIT ══════════════════════ */
