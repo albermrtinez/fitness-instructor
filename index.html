@@ -5,313 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Temario Fitness Instructor · Five Stars</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f5f4f0;
-    color: #1a1a18;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  header {
-    background: #1a1a18;
-    color: #fff;
-    padding: 2rem 1.5rem 1.75rem;
-  }
-
-  .header-inner {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  .header-eyebrow {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #9c9a92;
-    margin-bottom: 0.5rem;
-  }
-
-  header h1 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.3rem;
-  }
-
-  header p {
-    font-size: 0.9rem;
-    color: #9c9a92;
-  }
-
-  .stats-bar {
-    background: #252522;
-    padding: 0.75rem 1.5rem;
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-  }
-
-  .stat {
-    text-align: center;
-  }
-
-  .stat-num {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #fff;
-  }
-
-  .stat-label {
-    font-size: 0.7rem;
-    color: #9c9a92;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  main {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
-  }
-
-  .section-title {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #73726c;
-    margin-bottom: 0.75rem;
-    margin-top: 1.5rem;
-  }
-
-  .module-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .module-card {
-    background: #fff;
-    border: 0.5px solid #d3d1c7;
-    border-radius: 14px;
-    padding: 1rem 1.25rem;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    transition: all 0.18s;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .module-card:hover, .module-card:active {
-    border-color: #534AB7;
-    background: #EEEDFE;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(83,74,183,0.1);
-  }
-
-  .module-num {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .module-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .module-label {
-    font-size: 0.7rem;
-    color: #73726c;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .module-title {
-    font-size: 0.95rem;
-    font-weight: 500;
-    line-height: 1.3;
-    margin-top: 0.1rem;
-  }
-
-  .module-arrow {
-    font-size: 1rem;
-    color: #9c9a92;
-    flex-shrink: 0;
-  }
-
-  /* Color palette per module */
-  .m1 { background: #EAF3DE; color: #3B6D11; }
-  .m2 { background: #E1F5EE; color: #085041; }
-  .m3 { background: #EEEDFE; color: #3C3489; }
-  .m4 { background: #FAEEDA; color: #633806; }
-  .m5 { background: #FAECE7; color: #4A1B0C; }
-  .m6 { background: #E8F4FD; color: #0A4A6E; }
-  .m7 { background: #FDE8F5; color: #6E0A4A; }
-  .m8 { background: #FDF3E8; color: #6E3A0A; }
-  .m9 { background: #E8FDE8; color: #0A6E0A; }
-
-  .tip-box {
-    margin-top: 2rem;
-    background: #fff;
-    border: 0.5px solid #d3d1c7;
-    border-radius: 14px;
-    padding: 1.1rem 1.25rem;
-    font-size: 0.85rem;
-    color: #73726c;
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-  }
-
-  .tip-icon {
-    font-size: 1rem;
-    flex-shrink: 0;
-    margin-top: 0.05rem;
-  }
-
-  footer {
-    text-align: center;
-    padding: 1.5rem;
-    font-size: 0.75rem;
-    color: #9c9a92;
-    border-top: 0.5px solid #d3d1c7;
-  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a18;line-height:1.6;min-height:100vh}
+  header{background:#1a1a18;color:#fff;padding:2rem 1.5rem 1.75rem}
+  .header-inner{max-width:720px;margin:0 auto}
+  .header-eyebrow{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#9c9a92;margin-bottom:0.5rem}
+  header h1{font-size:1.6rem;font-weight:600;letter-spacing:-0.02em;margin-bottom:0.3rem}
+  header p{font-size:0.9rem;color:#9c9a92}
+  .stats-bar{background:#252522;padding:0.75rem 1.5rem;display:flex;gap:2rem;justify-content:center}
+  .stat{text-align:center}
+  .stat-num{font-size:1.2rem;font-weight:600;color:#fff}
+  .stat-label{font-size:0.7rem;color:#9c9a92;text-transform:uppercase;letter-spacing:0.05em}
+  main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 3rem}
+  .section-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#73726c;margin-bottom:0.75rem;margin-top:1.5rem}
+  .module-list{display:flex;flex-direction:column;gap:0.6rem}
+  .module-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:14px;padding:1rem 1.25rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:all 0.18s;-webkit-tap-highlight-color:transparent}
+  .module-card:hover,.module-card:active{border-color:#534AB7;background:#EEEDFE;transform:translateY(-1px);box-shadow:0 4px 12px rgba(83,74,183,0.1)}
+  .module-num{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:600;flex-shrink:0}
+  .module-info{flex:1;min-width:0}
+  .module-label{font-size:0.7rem;color:#73726c;text-transform:uppercase;letter-spacing:0.05em}
+  .module-title{font-size:0.95rem;font-weight:500;line-height:1.3;margin-top:0.1rem}
+  .module-badge{font-size:0.65rem;background:#EEEDFE;color:#3C3489;padding:2px 7px;border-radius:10px;margin-top:3px;display:inline-block}
+  .module-arrow{font-size:1rem;color:#9c9a92;flex-shrink:0}
+  .m1{background:#EAF3DE;color:#3B6D11}.m2{background:#E1F5EE;color:#085041}.m3{background:#EEEDFE;color:#3C3489}
+  .m4{background:#FAEEDA;color:#633806}.m5{background:#FAECE7;color:#4A1B0C}.m6{background:#E8F4FD;color:#0A4A6E}
+  .m7{background:#FDE8F5;color:#6E0A4A}.m8{background:#FDF3E8;color:#6E3A0A}.m9{background:#E8FDE8;color:#0A6E0A}
+  .tip-box{margin-top:2rem;background:#fff;border:0.5px solid #d3d1c7;border-radius:14px;padding:1.1rem 1.25rem;font-size:0.85rem;color:#73726c;display:flex;gap:0.75rem;align-items:flex-start}
+  footer{text-align:center;padding:1.5rem;font-size:0.75rem;color:#9c9a92;border-top:0.5px solid #d3d1c7}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="header-inner">
-    <div class="header-eyebrow">Five Stars · Formación Fitness</div>
-    <h1>Temario Fitness Instructor</h1>
-    <p>Estudio interactivo por módulos</p>
-  </div>
-</header>
-
+<header><div class="header-inner"><div class="header-eyebrow">Five Stars · Formación Fitness</div><h1>Temario Fitness Instructor</h1><p>Estudio interactivo por módulos</p></div></header>
 <div class="stats-bar">
-  <div class="stat">
-    <div class="stat-num">9</div>
-    <div class="stat-label">Módulos</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">∞</div>
-    <div class="stat-label">Repasos</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">📱</div>
-    <div class="stat-label">Desde iPhone</div>
-  </div>
+  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Módulos</div></div>
+  <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Repasos</div></div>
+  <div class="stat"><div class="stat-num">📱</div><div class="stat-label">Desde iPhone</div></div>
 </div>
-
 <main>
   <div class="section-title">Todos los módulos</div>
-
   <div class="module-list">
-
-    <a class="module-card" href="modulo1.html">
-      <div class="module-num m1">M1</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 1</div>
-        <div class="module-title">Entrenamiento de Fuerza y ADM</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo2.html">
-      <div class="module-num m2">M2</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 2</div>
-        <div class="module-title">Bases Fisiológicas del Ejercicio</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo3.html">
-      <div class="module-num m3">M3</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 3</div>
-        <div class="module-title">Bases Anatómicas</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo4.html">
-      <div class="module-num m4">M4</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 4</div>
-        <div class="module-title">Resistencia y Velocidad</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo5.html">
-      <div class="module-num m5">M5</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 5</div>
-        <div class="module-title">Entrenamiento Funcional I</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo6.html">
-      <div class="module-num m6">M6</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 6</div>
-        <div class="module-title">Planificación y Programación del Entrenamiento</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo7.html">
-      <div class="module-num m7">M7</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 7</div>
-        <div class="module-title">Poblaciones Especiales I</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo8.html">
-      <div class="module-num m8">M8</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 8</div>
-        <div class="module-title">Anamnesis y Valoración Funcional</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
-    <a class="module-card" href="modulo9.html">
-      <div class="module-num m9">M9</div>
-      <div class="module-info">
-        <div class="module-label">Módulo 9</div>
-        <div class="module-title">Inteligencia Emocional y Marca Personal</div>
-      </div>
-      <div class="module-arrow">›</div>
-    </a>
-
+    <a class="module-card" href="modulo1.html"><div class="module-num m1">M1</div><div class="module-info"><div class="module-label">Módulo 1</div><div class="module-title">Entrenamiento de Fuerza y ADM</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo2.html"><div class="module-num m2">M2</div><div class="module-info"><div class="module-label">Módulo 2</div><div class="module-title">Bases Fisiológicas del Ejercicio</div><div class="module-badge">🧒 Incluye "Explícamelo fácil"</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo3.html"><div class="module-num m3">M3</div><div class="module-info"><div class="module-label">Módulo 3</div><div class="module-title">Bases Anatómicas</div><div class="module-badge">🧒 Incluye "Explícamelo fácil"</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo4.html"><div class="module-num m4">M4</div><div class="module-info"><div class="module-label">Módulo 4</div><div class="module-title">Resistencia y Velocidad</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo5.html"><div class="module-num m5">M5</div><div class="module-info"><div class="module-label">Módulo 5</div><div class="module-title">Entrenamiento Funcional I</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo6.html"><div class="module-num m6">M6</div><div class="module-info"><div class="module-label">Módulo 6</div><div class="module-title">Planificación y Programación del Entrenamiento</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo7.html"><div class="module-num m7">M7</div><div class="module-info"><div class="module-label">Módulo 7</div><div class="module-title">Poblaciones Especiales I</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo8.html"><div class="module-num m8">M8</div><div class="module-info"><div class="module-label">Módulo 8</div><div class="module-title">Anamnesis y Valoración Funcional</div></div><div class="module-arrow">›</div></a>
+    <a class="module-card" href="modulo9.html"><div class="module-num m9">M9</div><div class="module-info"><div class="module-label">Módulo 9</div><div class="module-title">Inteligencia Emocional y Marca Personal</div></div><div class="module-arrow">›</div></a>
   </div>
-
-  <div class="tip-box">
-    <span class="tip-icon">💡</span>
-    <span>Cada módulo incluye fichas interactivas, resúmenes y test de repaso. Toca cualquier módulo para empezar.</span>
-  </div>
-
+  <div class="tip-box"><span>💡</span><span>Los módulos 2 y 3 incluyen la pestaña "🧒 Explícamelo fácil" con explicaciones generadas por IA para cada tema.</span></div>
 </main>
-
-<footer>
-  Temario Fitness Instructor · Five Stars
-</footer>
-
+<footer>Temario Fitness Instructor · Five Stars</footer>
 </body>
 </html>
