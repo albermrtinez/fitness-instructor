@@ -892,7 +892,7 @@ async function askEli5(id, e) {
   if (!prompt) return;
   resultEl.innerHTML = '<div class="eli5-loading"><div class="eli5-dot"></div><div class="eli5-dot"></div><div class="eli5-dot"></div><span>Pensando en una explicación fácil…</span></div>';
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
