@@ -866,9 +866,7 @@ function pickAnswer(qIdx, optIdx) {
   const q = activeQuestions[qIdx];
   const existingFb = document.getElementById('fb-' + qIdx);
   if (existingFb.style.display !== 'none') return;
-
   const isCorrect = optIdx === q.correct;
-
   q.opts.forEach((_, j) => {
     const lbl = document.getElementById(`opt-${qIdx}-${j}`);
     const inp = lbl.querySelector('input');
@@ -877,16 +875,13 @@ function pickAnswer(qIdx, optIdx) {
     if (j === q.correct) lbl.classList.add('correct');
     else if (j === optIdx && !isCorrect) lbl.classList.add('wrong');
   });
-
   existingFb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
   existingFb.innerHTML = `<div class="fb-circle"></div><div><strong>${isCorrect ? '\u2705 Correcto' : '\u274C Incorrecto'}</strong> — ${q.exp}</div>`;
   existingFb.style.display = 'flex';
-
   answeredCount++;
   if (isCorrect) scoreCount++;
   const pct = activeQuestions.length ? (answeredCount / activeQuestions.length * 100) : 0;
   document.getElementById('prog-fill').style.width = pct + '%';
-
   if (answeredCount === activeQuestions.length) {
     const finalPct = Math.round(scoreCount / activeQuestions.length * 100);
     document.getElementById('score-display').textContent = `${scoreCount} / ${activeQuestions.length}`;
@@ -902,7 +897,6 @@ function pickAnswer(qIdx, optIdx) {
 }
 
 function updateProgress() {}
-
 function submitTest() {}
 
 function retryTest() {
