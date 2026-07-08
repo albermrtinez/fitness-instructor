@@ -166,6 +166,22 @@
 .back-bar{background:#252522;padding:0.5rem 1.5rem}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
+
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem;display:none}
+.eli5-card.open .eli5-body{display:block}
+.eli5-answer{background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.25rem;font-size:0.88rem;line-height:1.8;color:#1a1a18}
+.eli5-answer strong{color:#3C3489}
 </style>
 </head>
 <body>
@@ -743,7 +759,7 @@ const ALL_QUESTIONS = [
   {cat:"Cuestionarios", q:"Si una persona responde SÍ a una o más preguntas del PAR-Q, ¿qué se recomienda?", opts:["Iniciar el programa con ejercicio suave","Consultar a un médico antes de iniciar actividad física","Completar el PARmed-X directamente","Realizar solo ejercicio de flexibilidad"], correct:1, exp:"Cuando una persona responde positivamente a 1 o más preguntas del PAR-Q, se le recomienda consultar a un médico para obtener autorización."},
   {cat:"Cuestionarios", q:"¿Para quién está diseñado el PARmed-X?", opts:["Para entrenadores personales","Para médicos, para abordar inquietudes médicas con pacientes PAR-Q positivo","Para todos los clientes antes de iniciar el entrenamiento","Para deportistas de élite"], correct:1, exp:"El PARmed-X fue diseñado para que lo utilicen médicos con pacientes que respondieron SÍ a ≥ 1 pregunta del PAR-Q."},
   {cat:"Cuestionarios", q:"¿Cuál es una crítica al PAR-Q original identificada por diversas partes interesadas?", opts:["Es demasiado corto y no detecta riesgos","Genera muchos resultados falsos positivos y derivaciones médicas innecesarias","No incluye preguntas sobre medicamentos","No puede ser utilizado en gimnasios"], correct:1, exp:"Una crítica principal al PAR-Q es su naturaleza conservadora, que genera muchos resultados falsos positivos y conduce a derivaciones médicas innecesarias."},
-  {cat:"Cuestionarios", q:"¿Qué nuevas herramientas desarrollaron Bredin et al. (2013) para reemplazar el PAR-Q y PARmed-X?", opts:["PAR-Q2 y ePARmed-X","PAR-Q+ y ePAR-med-X+","PAR-Q Pro y MedX+","PAR-Q Advanced y ePARmed-X Pro"], correct:1, exp:"Bredin et al. (2013) desarrollaron el PAR-Q+ y el ePAR-med-X+ como herramientas mejoradas basadas en evidencia."},
+  {cat:'Cuestionarios', q:"¿Cuál es el objetivo principal del cuestionario PAR-Q en el ámbito del ejercicio?", opts:["Identificar contraindicaciones médicas antes de iniciar un programa de ejercicio", "Medir el VO₂máx de forma indirecta", "Evaluar la composición corporal del cliente", "Determinar el nivel de condición física actual"], correct:0, exp:"El PAR-Q (Physical Activity Readiness Questionnaire) es una herramienta de cribado previo al ejercicio que identifica posibles contraindicaciones médicas para remitir al cliente al médico antes de iniciar el programa."},
   {cat:"Cuestionarios", q:"¿Cuál de las siguientes opciones evalúa el PAR-Q?", opts:["La composición corporal del individuo","La aptitud para participar de forma segura en actividad física","El nivel de fuerza máxima del cliente","La capacidad aeróbica en prueba de esfuerzo"], correct:1, exp:"El PAR-Q es un instrumento diseñado para evaluar la aptitud de una persona para participar de manera segura en programas de actividad física."},
   {cat:"Cuestionarios", q:"¿Qué pregunta NO correspondería al PAR-Q?", opts:["¿Le ha dicho alguna vez un médico que tiene una enfermedad del corazón?","¿Nota dolor en el pecho cuando practica actividad física?","¿Cuál es su porcentaje de grasa corporal actual?","¿Ha perdido la conciencia después de un mareo?"], correct:2, exp:"El PAR-Q evalúa riesgos de salud, no la composición corporal. La medición de grasa corporal es parte de la valoración física, no del cuestionario de cribado."},
   {cat:"Cuestionarios", q:"El PARmed-X incluye una sección de 'Riesgos para enfermedad cardiovascular'. ¿Cuál NO es un ítem de esa sección?", opts:["Historia familiar de enfermedad cardíaca","Menos de 30 minutos de actividad física moderada la mayoría de los días","Acumulación excesiva de grasa alrededor de la cintura","Resultado bajo en el test de Bosco"], correct:3, exp:"Los factores de riesgo cardiovascular del PARmed-X incluyen historia familiar, sedentarismo, grasa visceral, tabaquismo, HTA y colesterol alto. El Test de Bosco no es un factor de riesgo."},
@@ -958,6 +974,149 @@ document.getElementById('shuffleBtn').addEventListener('click', () => {
 
 // Initial render
 renderQuestions(shuffle(ALL_QUESTIONS));
+
+function toggleEli5(id){document.getElementById('card-'+id).classList.toggle('open');}
 </script>
+
+<div id="eli5" class="tab-content">
+  <div class="eli5-intro"><span class="eli5-intro-icon">🧒</span><div><h3>Explícamelo fácil</h3><p>Explicaciones con metáforas y ejemplos del día a día. Toca un tema para leerlo.</p></div></div>
+  
+    <div class="eli5-card" id="card-m8t1">
+      <div class="eli5-card-header" onclick="toggleEli5('m8t1')">
+        <span class="eli5-icon">📋</span>
+        <span class="eli5-title">La anamnesis: conocer al cliente antes de entrenar</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">📋 <strong>La anamnesis es la entrevista inicial al cliente. Es el mapa antes de empezar el viaje.</strong>
+
+Antes de diseñar cualquier programa de entrenamiento, necesitas conocer a la persona. Sería un error empezar a entrenar sin saber si tiene problemas de rodilla, hipertensión o está embarazada.
+
+La anamnesis recoge:
+🏥 <strong>Historia médica</strong>: enfermedades actuales o pasadas, cirugías, lesiones, medicación
+🎯 <strong>Objetivos</strong>: ¿qué quiere conseguir? ¿Perder peso? ¿Ganar músculo? ¿Mejorar la salud?
+🏃 <strong>Historial de actividad física</strong>: ¿qué ha hecho antes? ¿Qué le gustó o no?
+🍎 <strong>Hábitos de vida</strong>: dieta, sueño, estrés, trabajo
+🩺 <strong>Síntomas actuales</strong>: dolor, fatiga, mareos, limitaciones
+
+¿Por qué es tan importante?
+<em>Un cliente con hipertensión no controlada, un diabético con hipoglucemias frecuentes o alguien con una lesión no diagnosticada puede tener un incidente grave si el entrenador no lo sabe.</em>
+
+Herramientas formales:
+• <strong>PAR-Q</strong>: cuestionario de aptitud para la actividad física
+• <strong>Cuestionario de salud ACSM</strong>: más detallado
+• Consentimiento informado (imprescindible legalmente)
+
+La anamnesis no es burocracia: es la base de un entrenamiento seguro y efectivo.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m8t2">
+      <div class="eli5-card-header" onclick="toggleEli5('m8t2')">
+        <span class="eli5-icon">❤️</span>
+        <span class="eli5-title">El PAR-Q y la valoración de riesgo cardiovascular</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">❤️ <strong>El PAR-Q es el semáforo antes de empezar a entrenar: ¿verde o necesitas que te vea el médico primero?</strong>
+
+PAR-Q significa "Physical Activity Readiness Questionnaire" (Cuestionario de preparación para la actividad física). Es una herramienta de cribado rápido con 7 preguntas.
+
+Las preguntas detectan señales de alarma:
+• ¿Te ha dicho el médico que tienes un problema cardíaco?
+• ¿Tienes dolor en el pecho cuando haces ejercicio?
+• ¿Has perdido el equilibrio o el conocimiento recientemente?
+• ¿Tienes algún problema óseo o articular que empeore con el ejercicio?
+• ¿Tomas medicación para la presión arterial o el corazón?
+
+Si responde SÍ a cualquier pregunta → derivar al médico antes de iniciar el programa.
+
+Estratificación de riesgo cardiovascular:
+🟢 <strong>Bajo riesgo</strong>: hombre <45 años o mujer <55 sin factores de riesgo → puede empezar
+🟡 <strong>Riesgo moderado</strong>: 2+ factores de riesgo → valoración médica recomendada para ejercicio vigoroso
+🔴 <strong>Alto riesgo</strong>: enfermedad cardiovascular conocida → necesita autorización médica
+
+Factores de riesgo cardiovascular: tabaquismo, hipertensión, colesterol alto, diabetes, obesidad, sedentarismo, historia familiar de enfermedades cardíacas.
+
+<em>Como instructor, no eres médico. Tu responsabilidad es identificar cuándo necesitas derivar al profesional sanitario.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m8t3">
+      <div class="eli5-card-header" onclick="toggleEli5('m8t3')">
+        <span class="eli5-icon">📏</span>
+        <span class="eli5-title">Valoración de la composición corporal</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">📏 <strong>La composición corporal no es el peso. Es cuánto de ese peso es músculo, grasa, hueso y agua.</strong>
+
+Dos personas pueden pesar 75 kg y tener cuerpos completamente distintos: una con 15% de grasa y otra con 35%. El peso en la báscula no lo explica.
+
+Métodos de valoración:
+
+📊 <strong>IMC</strong> (peso kg / altura m²): rápido pero muy limitado. No distingue músculo de grasa.
+
+📐 <strong>Perímetros corporales</strong>: medir con cinta métrica cintura, cadera, muslo...
+• Índice cintura-cadera: >0,85 en mujeres y >1,0 en hombres indica riesgo cardiometabólico
+• Circunferencia de cintura: >80 cm mujer y >94 cm hombre ya indica riesgo
+
+🔬 <strong>Pliegues cutáneos</strong> (plicometría): se pellizca la grasa subcutánea con un calibrador en puntos concretos. Requiere técnica. Permite estimar el % de grasa corporal.
+
+💧 <strong>Bioimpedancia eléctrica (BIA)</strong>: pasa una corriente eléctrica débil por el cuerpo. La grasa conduce menos que el músculo. Rápida y sin dolor, pero sensible a la hidratación.
+
+🏆 <strong>DEXA</strong>: rayos X de baja energía. El estándar de oro. Distingue grasa, músculo y hueso por segmentos. Solo en centros especializados.
+
+<em>Para el seguimiento de un cliente, lo más útil no es el método más preciso, sino el más reproducible y accesible: siempre el mismo método, mismo horario, mismas condiciones.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m8t4">
+      <div class="eli5-card-header" onclick="toggleEli5('m8t4')">
+        <span class="eli5-icon">🏃</span>
+        <span class="eli5-title">Tests de capacidad cardiovascular</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🏃 <strong>Los tests cardiovasculares miden cuánto rinde el "motor" cardiorrespiratorio sin necesidad de equipos caros.</strong>
+
+Test de campo más usados:
+
+🚶 <strong>Test de Rockport (1 milla caminando)</strong>: caminas 1,6 km lo más rápido posible. Se mide el tiempo y la FC al final. Ideal para sedentarios o mayores.
+
+🏃 <strong>Test de Cooper (12 minutos corriendo)</strong>: corres el máximo de distancia en 12 minutos. Clásico para estimar VO₂máx.
+<em>Fórmula: VO₂máx ≈ (metros recorridos – 504,9) / 44,73</em>
+
+🪜 <strong>Test del escalón (Step test)</strong>: subir y bajar un escalón durante 3 minutos. Se mide la FC de recuperación. Cuanto más rápido baja la FC, mejor.
+
+🚴 <strong>Test de Åstrand</strong> (en bicicleta ergométrica): pedalear 6 minutos a carga constante. Estima VO₂máx a partir de la FC estabilizada.
+
+🗺️ <strong>Prueba de esfuerzo médica</strong>: en cinta o bicicleta con ECG. Solo en contexto clínico para pacientes con riesgo.
+
+¿Para qué sirven estos tests?
+• Conocer el nivel de partida del cliente
+• Establecer las zonas de entrenamiento personalizadas
+• Medir la progresión y demostrar resultados
+
+<em>Un test bien hecho motiva al cliente: ver que en 3 meses puedes recorrer 400 m más en el Cooper es prueba tangible de mejora.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m8t5">
+      <div class="eli5-card-header" onclick="toggleEli5('m8t5')">
+        <span class="eli5-icon">💪</span>
+        <span class="eli5-title">Tests de fuerza y capacidad muscular</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">💪 <strong>Los tests de fuerza miden cuánto puede mover el cliente y le ayudan a diseñar cargas de entrenamiento precisas.</strong>
+
+Tests de fuerza más usados:
+
+🏋️ <strong>Test de 1RM directo</strong>: el cliente va subiendo peso hasta encontrar el máximo que puede mover una vez. Muy preciso pero cansado y con algo de riesgo en principiantes.
+
+📐 <strong>Test de 1RM indirecto</strong>: haces X repeticiones con un peso submáximo y calculas el 1RM con fórmulas. Más seguro.
+<em>Ejemplo: si haces 10 repeticiones con 60 kg, tu 1RM estimado ≈ 80 kg (fórmula de Brzycki)</em>
+
+⏱️ <strong>Test de resistencia muscular</strong>:
+• Repeticiones de flexiones en 1 minuto
+• Repeticiones de abdominales en 1 minuto
+• Cuántas repeticiones puedes hacer con el 70% de tu 1RM hasta el fallo
+
+🤸 <strong>Tests funcionales</strong>:
+• <strong>Sentadilla con silla</strong> (30 seg): cuántas veces te levantas de la silla en 30 segundos. Ideal para mayores.
+• <strong>Fuerza de agarre</strong> (dinamómetro): buen predictor de salud general y mortalidad.
+• <strong>Test de salto vertical</strong> (Sargent): mide potencia del tren inferior.
+
+<em>Siempre que sea posible, elige tests que se parezcan a lo que el cliente va a entrenar: si entrenas fuerza del tren inferior, testa la fuerza del tren inferior.</em></div></div>
+    </div>
+</div>
 </body>
 </html>

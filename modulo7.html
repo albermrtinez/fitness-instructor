@@ -279,6 +279,22 @@
 .back-bar{background:#252522;padding:0.5rem 1.5rem}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
+
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem;display:none}
+.eli5-card.open .eli5-body{display:block}
+.eli5-answer{background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.25rem;font-size:0.88rem;line-height:1.8;color:#1a1a18}
+.eli5-answer strong{color:#3C3489}
 </style>
 </head>
 <body>
@@ -817,20 +833,20 @@ const ALL_QUESTIONS = [
   {cat:"Obesidad", q:"¿Cuál es el mecanismo normativo de desarrollo del tejido adiposo en la ganancia de peso adulta?", opts:["Hiperplasia","Hipertrofia","Adipogénesis","Lipólisis"], correct:1, exp:"En la edad adulta el mecanismo normativo de desarrollo del tejido adiposo es la hipertrofia."},
   {cat:"Obesidad", q:"¿Qué reduce significativamente la pérdida de peso en términos de los adipocitos?", opts:["El número de adipocitos","El volumen de los adipocitos","Ambos por igual","Ninguno de los dos"], correct:1, exp:"La pérdida de peso disminuye el volumen y NO el número de adipocitos."},
   {cat:"Obesidad", q:"¿Qué hormona activa el hipotálamo lateral produciendo sensación de hambre?", opts:["Leptina","Insulina","Grelina","Cortisol"], correct:2, exp:"La grelina, producida en las paredes del estómago, activa el hipotálamo lateral."},
-  {cat:"Obesidad", q:"¿Dónde está regulado el control del peso según Fung y cols. (2017)?", opts:["En el hipocampo","En el hipotálamo","En el núcleo caudado","En la amígdala"], correct:1, exp:"Según Fung (2017), el control del peso está regulado en el hipotálamo, que funciona como un termostato."},
-  {cat:"Obesidad", q:"¿Qué hormona determina el 'termostato' del peso corporal según Fung (2017)?", opts:["Leptina","Cortisol","Insulina","Grelina"], correct:2, exp:"La hormona insulina determina el peso de referencia que el hipotálamo indica mantener."},
+  {cat:'Obesidad', q:"¿Qué sistema del cuerpo regula principalmente el peso corporal y el apetito?", opts:["El sistema hormonal y el sistema nervioso central", "Exclusivamente el sistema digestivo", "Solo los músculos esqueléticos", "El sistema inmunitario"], correct:0, exp:"El control del peso corporal es un proceso complejo regulado principalmente por el sistema hormonal (leptina, insulina, ghrelina) y el sistema nervioso central, que integra señales de saciedad y energía."},
+  {cat:'Obesidad', q:"¿Qué hormona está estrechamente relacionada con la regulación del apetito y el almacenamiento de grasa?", opts:["La insulina", "La adrenalina", "El glucagón", "La testosterona"], correct:0, exp:"La insulina es la hormona clave en la regulación del almacenamiento de grasa y la glucosa. Niveles crónicamente elevados favorecen el almacenamiento adiposo y pueden dificultar la pérdida de peso."},
   {cat:"Obesidad", q:"¿Cuál es el porcentaje aproximado del control del peso que depende de la alimentación?", opts:["50%","75%","90%","95%"], correct:3, exp:"El 95% del control del peso depende de lo que comemos; solo el 5% del ejercicio físico."},
   {cat:"Obesidad", q:"¿Qué produce la inflamación del tejido muscular en el tejido adiposo hipertrofiado?", opts:["Más adipogénesis","Aumento de leptina","Resistencia a la insulina","Hipoglucemia"], correct:2, exp:"La inflamación generada por la hipoxia del tejido adiposo hipertrofiado causa resistencia a la insulina en las células musculares."},
   {cat:"Obesidad", q:"¿Qué tipo de ejercicio es el mejor para incrementar la vascularización de los tejidos?", opts:["Yoga","Estiramientos","Ejercicio físico (en general)","Caminata suave"], correct:2, exp:"El ejercicio físico es la mejor herramienta para incrementar la vascularización de un tejido."},
   {cat:"Obesidad", q:"¿Qué tipo específico de ejercicios vascularizan mejor según la ciencia?", opts:["Aeróbico continuo de baja intensidad","Interválicos intensivos","Yoga y pilates","Isométricos"], correct:1, exp:"Los ejercicios interválicos intensivos son los que mejor vascularizan según la evidencia científica."},
   {cat:"Obesidad", q:"¿Qué son los mejores predictores de mortalidad más allá del porcentaje graso?", opts:["IMC y perímetro abdominal","Fuerza y fitness cardiorrespiratorio","Edad y sexo","Niveles de colesterol"], correct:1, exp:"La fuerza y el fitness cardiorrespiratorio son los mejores predictores de mortalidad (Parr, Coffey & Hawley, 2013)."},
-  {cat:"Obesidad", q:"¿En qué porcentaje reduce el EF la pérdida de masa muscular durante restricción calórica según Sardeli (2018)?", opts:["50%","75%","93,5%","Casi 100%"], correct:3, exp:"El EF previno casi en un 100% la pérdida de masa muscular inducida por la restricción calórica."},
+  {cat:'Obesidad', q:"¿Qué papel juega el ejercicio físico durante un proceso de pérdida de peso?", opts:["Preserva la masa muscular que se perdería solo con dieta", "Solo acelera la pérdida de grasa sin efectos en músculo", "Es contraproducente durante la restricción calórica", "No influye en la composición corporal"], correct:0, exp:"El ejercicio físico, especialmente el de fuerza, es clave durante la restricción calórica porque preserva la masa muscular que de otro modo se perdería junto con la grasa, mejorando la composición corporal final."},
   {cat:"Obesidad", q:"¿Qué combinación de entrenamiento es óptima para la pérdida de grasa corporal?", opts:["Solo aeróbico","Solo fuerza","Entrenamiento concurrente aeróbico-fuerza","HIIT exclusivo"], correct:2, exp:"El entrenamiento concurrente aeróbico-fuerza potencia globalmente los efectos beneficiosos del ejercicio cuando el objetivo es perder grasa corporal."},
   {cat:"Obesidad", q:"¿Cuál es la frecuencia recomendada por el ACSM para pacientes con Diabetes I?", opts:["1 día/semana","3 días/semana","5 días/semana","7 días/semana"], correct:1, exp:"Recomendaciones ACSM Diabetes I: 3 días por semana alrededor de 60 minutos."},
   {cat:"Obesidad", q:"¿Cuál es la frecuencia recomendada por el ACSM para pacientes con Diabetes II?", opts:["3 días/semana","5 días/semana","7 días/semana","2 días/semana"], correct:2, exp:"Recomendaciones ACSM Diabetes II: 7 días por semana alrededor de 90 minutos."},
   {cat:"Obesidad", q:"¿Qué tipo de trabajo es adecuado para pacientes con Diabetes I según el ACSM?", opts:["Fuerza explosiva y sprints","Fuerza resistencia + cardiovascular aeróbico sin impactos","Solo estiramientos","Fuerza máxima con altas cargas"], correct:1, exp:"Para Diabetes I: fuerza resistencia con grandes grupos musculares y trabajo cardiovascular aeróbico sin impactos."},
   {cat:"Obesidad", q:"¿Qué produce el HIIT en comparación con el entrenamiento continuo moderado según la evidencia?", opts:["Menores beneficios cardiometabólicos","Mayores efectos sobre marcadores de salud cardiometabólica","Iguales resultados","Mayores pérdidas musculares"], correct:1, exp:"El HIIT muestra mayores efectos sobre marcadores de salud cardiometabólica que los entrenamientos continuos de intensidad moderada."},
-  {cat:"Obesidad", q:"¿Qué conclusión extrae De Strijcker (2018) sobre el ejercicio y la pérdida de grasa?", opts:["El HIIT es suficiente sin dieta","El entrenamiento aeróbico es superior al HIIT","Ningún entrenamiento es eficaz sin medidas nutricionales adecuadas","La fuerza sola es suficiente"], correct:2, exp:"Ningún tipo de entrenamiento ha mostrado eficacia para perder grasa corporal si no se acompaña de medidas nutricionales adecuadas (De Strijcker, 2018)."},
+  {cat:'Obesidad', q:"¿Es suficiente el ejercicio físico por sí solo para producir una pérdida de peso significativa?", opts:["No, generalmente requiere combinarse con control dietético", "Sí, el ejercicio solo es suficiente sin cambios en la dieta", "Solo el ejercicio aeróbico produce pérdida de grasa", "El ejercicio de fuerza engorda por aumento de músculo"], correct:0, exp:"La evidencia muestra que el ejercicio solo no suele ser suficiente para una pérdida de peso significativa sin ajuste dietético. La combinación de ejercicio y dieta es más efectiva que cualquiera de los dos por separado."},
   {cat:"Obesidad", q:"¿Qué es la sarcobesidad?", opts:["Obesidad sin sarcopenia","Coexistencia de obesidad y pérdida de masa muscular","Solo pérdida de fuerza","Hipotiroidismo con obesidad"], correct:1, exp:"La sarcobesidad es la coexistencia de obesidad y sarcopenia (pérdida de masa muscular)."},
   {cat:"Obesidad", q:"¿Cuál es el autor que estudió la fisiopatología de la obesidad desde una perspectiva actual en 2017?", opts:["Carrasco y cols.","De Strijcker","Suárez-Carmona, Sánchez-Oliver y González-Jurado","Sardeli y cols."], correct:2, exp:"Suárez-Carmona, Sánchez-Oliver y González-Jurado (2017) estudiaron la fisiopatología de la obesidad."},
   {cat:"Obesidad", q:"¿Qué función tenía el hipotálamo lateral si se destruyera?", opts:["El animal comería en exceso","El animal dejaría de comer","El animal dormiría más","No habría cambios"], correct:1, exp:"Si el hipotálamo lateral se destruyera, el animal podría no volver a comer nunca más."},
@@ -859,7 +875,7 @@ const ALL_QUESTIONS = [
   {cat:"Adultos Mayores", q:"¿Cuánto tiempo como mínimo debe durar el programa multicomponente para obtener resultados?", opts:["1–2 semanas","1 mes","3–5 meses","6–12 meses"], correct:2, exp:"El programa debe durar al menos 3 a 5 meses para ver beneficios."},
   {cat:"Adultos Mayores", q:"¿Cuál de las siguientes es una actividad recreativa considerada multicomponente?", opts:["Carrera de velocidad","Levantamiento de pesas","Baile y yoga","Remo indoor"], correct:2, exp:"El baile, el yoga y el taichi se consideran multicomponentes (ACSM, 2019)."},
   {cat:"Adultos Mayores", q:"¿Cuál es el principio básico de entrenamiento especialmente relevante en el adulto mayor frágil?", opts:["Especificidad extrema","Mayor cautela en la progresión","Maximizar el volumen rápidamente","Entrenamiento diario"], correct:1, exp:"La clave con el adulto mayor, sobre todo en el caso de fragilidad, será una mayor cautela en la progresión en atención a su vulnerabilidad."},
-  {cat:"Adultos Mayores", q:"¿Qué autores publicaron el trabajo sobre ejercicio en el anciano frágil y prevención de dependencia (2014)?", opts:["Sardeli y cols.","Izquierdo, Cadore y Casas","Leveritt y cols.","De Strijcker y cols."], correct:1, exp:"Izquierdo, Cadore y Casas (2014) publicaron sobre ejercicio en el anciano frágil."},
+  {cat:'Adultos Mayores', q:"¿Qué beneficio aporta el ejercicio físico al adulto mayor frágil?", opts:["Previene la dependencia funcional y mejora la capacidad de realizar actividades diarias", "Solo mejora el estado de ánimo sin efectos físicos", "Está contraindicado por el riesgo de caídas", "Solo es útil antes de los 70 años"], correct:0, exp:"El ejercicio físico en el adulto mayor frágil mejora la fuerza, el equilibrio y la capacidad funcional, previniendo la dependencia y reduciendo el riesgo de caídas y hospitalización."},
   {cat:"Adultos Mayores", q:"¿Qué factores de fragilidad mejoran también con el entrenamiento de fuerza?", opts:["Solo masa muscular","Velocidad de marcha y levantarse de una silla","Mejoras cognitivas exclusivamente","Solo equilibrio estático"], correct:1, exp:"También aumentan factores objetivos de fragilidad como velocidad de la marcha o sentarse y levantarse de una silla (Liu y cols. 2013)."},
   {cat:"Adultos Mayores", q:"¿Cuál es uno de los 4 principios básicos del entrenamiento que se aplican igual en adultos y mayores?", opts:["Adaptación","Sobrecarga","Periodización","Potenciación"], correct:1, exp:"Los principios básicos son: sobrecarga, progresión, especificidad e individualización, y reversibilidad."},
 
@@ -887,20 +903,20 @@ const ALL_QUESTIONS = [
   {cat:"Espalda", q:"¿Qué tipo de trabajo se incluye en la fase de readaptación físico-deportiva?", opts:["Solo reposo activo","Estiramientos pasivos","Fuerza en todos los rangos y gesto deportivo a baja intensidad","Solo natación"], correct:2, exp:"En la fase de readaptación se trabaja la fuerza en todos los rangos sin dolor y el gesto deportivo a baja intensidad."},
 
   // AUTORES
-  {cat:"Autores", q:"¿Qué autores estudiaron el efecto del entrenamiento interválico de alta intensidad (HIIT) comparado con entrenamiento continuo en obesos (2018)?", opts:["Sardeli y cols.","De Strijcker y cols.","Izquierdo y Cadore","Heredia"], correct:1, exp:"De Strijcker y cols. (2018) estudiaron los efectos del HIIT vs. entrenamiento continuo en hombres con obesidad/sobrepeso."},
-  {cat:"Autores", q:"¿Qué metaanálisis concluyó que el EF previene casi el 100% de la pérdida muscular en restricción calórica?", opts:["De Strijcker (2018)","Sardeli y cols. (2018)","Parr, Coffey & Hawley (2013)","Leveritt y cols. (1999)"], correct:1, exp:"Sardeli y cols. (2018) publicaron el metaanálisis que concluyó que el EF previene casi al 100% la pérdida de masa muscular."},
+  {cat:'Autores', q:"¿Qué ventaja tiene el HIIT frente al entrenamiento continuo de moderada intensidad?", opts:["Produce adaptaciones similares o superiores en menos tiempo", "Siempre es superior para todos los objetivos", "Solo es válido para deportistas de élite", "No produce adaptaciones cardiovasculares"], correct:0, exp:"El HIIT produce adaptaciones cardiovasculares y metabólicas similares o superiores al entrenamiento continuo en menor tiempo, siendo especialmente útil para personas con poco tiempo disponible."},
+  {cat:'Autores', q:"¿Qué tipo de ejercicio es más eficaz para preservar la masa muscular durante una dieta hipocalórica?", opts:["El entrenamiento de fuerza", "El ejercicio aeróbico de baja intensidad", "El stretching estático", "La actividad física recreativa ligera"], correct:0, exp:"El entrenamiento de fuerza es el método más eficaz para preservar la masa muscular durante una restricción calórica, ya que el estímulo mecánico contrarresta el catabolismo muscular inducido por el déficit energético."},
   {cat:"Autores", q:"¿Qué autores demostraron que la fuerza y el fitness cardiorrespiratorio son los mejores predictores de mortalidad?", opts:["Fung y cols. (2017)","Izquierdo y Cadore (2014)","Parr, Coffey & Hawley (2013)","Heredia (2008)"], correct:2, exp:"Parr, Coffey & Hawley (2013) demostraron que la fuerza y el fitness cardiorrespiratorio son los mejores predictores de mortalidad."},
   {cat:"Autores", q:"¿Qué autor describió el control del peso como un problema hormonal relacionado con la insulina?", opts:["Heredia","Suárez-Carmona","Fung y cols.","Leveritt"], correct:2, exp:"Fung y cols. (2017) describieron el control del peso como directamente relacionado con los niveles de insulina."},
-  {cat:"Autores", q:"¿Quiénes publicaron el estudio de fisiopatología de la obesidad: Perspectiva actual (2017)?", opts:["Sardeli, Komatsu y Chacon-Mikahil","Parr, Coffey y Hawley","Suárez-Carmona, Sánchez-Oliver y González-Jurado","Izquierdo, Cadore y Casas"], correct:2, exp:"Suárez-Carmona, Sánchez-Oliver y González-Jurado (2017) publicaron 'Fisiopatología de la obesidad: Perspectiva actual'."},
-  {cat:"Autores", q:"¿Qué autores publicaron sobre el tratamiento farmacológico o quirúrgico del paciente con sobrepeso u obesidad (2009)?", opts:["Heredia y cols.","Carrasco y cols.","Fung y cols.","Sardeli y cols."], correct:1, exp:"Carrasco y cols. (2009) publicaron sobre el tratamiento farmacológico o quirúrgico en pacientes con sobrepeso u obesidad."},
+  {cat:'Autores', q:"¿Cuál es la definición clínica más aceptada de obesidad?", opts:["Acumulación excesiva de grasa corporal que supone riesgo para la salud", "Tener un peso superior al ideal según tablas estándar", "IMC mayor de 25 independientemente de la composición corporal", "Cualquier exceso de peso respecto a la media poblacional"], correct:0, exp:"La obesidad se define como la acumulación excesiva o anormal de grasa corporal que representa un riesgo para la salud. El IMC es un indicador útil pero no mide directamente la composición corporal."},
+  {cat:'Autores', q:"¿Cuándo se considera la cirugía bariátrica como opción de tratamiento en la obesidad?", opts:["En obesidad mórbida (IMC ≥40) o IMC ≥35 con comorbilidades graves", "En cualquier persona con sobrepeso", "Siempre antes que otras intervenciones", "Solo en menores de 30 años"], correct:0, exp:"La cirugía bariátrica se reserva para casos de obesidad mórbida (IMC ≥40 kg/m²) o IMC ≥35 con comorbilidades graves como diabetes tipo 2 o apnea del sueño, cuando otras intervenciones han fracasado."},
   {cat:"Autores", q:"¿Quiénes estudiaron el efecto interferencia en el entrenamiento concurrente?", opts:["Hakkinen y cols.","Liu y cols.","Leveritt y cols. (1999)","Izquierdo y Cadore"], correct:2, exp:"Leveritt y cols. (1999) señalaron el efecto interferencia al combinar entrenamiento de fuerza y aeróbico."},
   {cat:"Autores", q:"¿Qué autores demostraron que la potencia se deteriora antes que la fuerza?", opts:["Liu y cols. (2013)","Hakkinen y cols. (2001)","Leveritt y cols. (1999)","Sardeli y cols. (2018)"], correct:1, exp:"Hakkinen y cols. (2001) demostraron que la potencia sufre un deterioro más rápido y precoz que la fuerza."},
   {cat:"Autores", q:"¿Qué autores demostraron que la potencia tiene mayor relación con la capacidad funcional que la fuerza?", opts:["Hakkinen y cols.","Liu y cols.","Knauff y cols. (2001)","Izquierdo y Casas"], correct:2, exp:"Knauff y cols. (2001) demostraron la mayor relación de la potencia con la capacidad funcional."},
   {cat:"Autores", q:"¿Qué autores estudiaron la prevalencia, consecuencias y factores de riesgo de la cervicalgia?", opts:["Bot y cols. (2005)","Meseguer y cols. (2000)","Mirapeix y cols. (2007)","Calvo-Muñoz y cols. (2012)"], correct:1, exp:"Meseguer y cols. (2000) estudiaron la prevalencia, consecuencias y factores de riesgo de la cervicalgia."},
-  {cat:"Autores", q:"¿Qué autores publicaron sobre los predictores de resultado en síntomas de cuello y hombro (2005)?", opts:["Meseguer y cols.","Mirapeix y cols.","Bot y cols.","Calvo-Muñoz y cols."], correct:2, exp:"Bot y cols. (2005) publicaron sobre predictores de resultado en síntomas de cuello y hombro."},
-  {cat:"Autores", q:"¿Quiénes publicaron sobre variabilidad en la valoración del paciente con cervicalgia mecánica (2007)?", opts:["Meseguer y cols.","Mirapeix y cols.","Bot y cols.","Calvo-Muñoz y cols."], correct:1, exp:"Mirapeix y cols. (2007) publicaron sobre variabilidad en la valoración del paciente con cervicalgia mecánica."},
-  {cat:"Autores", q:"¿Quiénes realizaron la revisión sistemática sobre eficacia de fisioterapia para el dolor lumbar (2012)?", opts:["Meseguer y cols.","Bot y cols.","Mirapeix y cols.","Calvo-Muñoz, Gómez-Conesa y Sánchez-Meca"], correct:3, exp:"Calvo-Muñoz, Gómez-Conesa y Sánchez-Meca (2012) publicaron la revisión sistemática sobre eficacia de fisioterapia para dolor lumbar."},
-  {cat:"Autores", q:"¿Qué autores publicaron sobre el ejercicio físico como intervención eficaz en el anciano frágil (2012)?", opts:["Izquierdo y Cadore","Casas Herrero e Izquierdo","Sardeli y cols.","Liu y cols."], correct:1, exp:"Casas Herrero e Izquierdo (2012) publicaron sobre el ejercicio físico como intervención eficaz en el anciano frágil."},
+  {cat:'Autores', q:"¿Qué factor pronóstico tiene mayor relevancia en la recuperación del dolor cervical?", opts:["El nivel de actividad física habitual y la actitud ante la recuperación", "La edad del paciente exclusivamente", "El tipo de medicación analgésica", "La duración exacta de los síntomas al inicio"], correct:0, exp:"El nivel de actividad física habitual y la actitud activa ante la recuperación (catastrofismo bajo, creencias positivas) son factores pronósticos clave en los trastornos músculo-esqueléticos del cuello y hombro."},
+  {cat:'Autores', q:"¿Qué es importante tener en cuenta al valorar a un paciente con cervicalgia mecánica?", opts:["La variabilidad entre evaluadores y la reproductibilidad de las pruebas", "Solo los hallazgos de imagen como la radiografía", "Exclusivamente la intensidad del dolor en reposo", "La medicación que toma el paciente"], correct:0, exp:"En la valoración de la cervicalgia mecánica es fundamental considerar la variabilidad entre evaluadores (fiabilidad interexaminador) y utilizar pruebas con buena reproductibilidad para garantizar una evaluación objetiva y fiable."},
+  {cat:'Autores', q:"¿Qué abordaje tiene mayor evidencia científica para el tratamiento del dolor lumbar inespecífico?", opts:["Ejercicio terapéutico activo combinado con educación del paciente", "Reposo absoluto en cama durante la fase aguda", "Aplicación de calor local exclusivamente", "Tratamiento farmacológico sin ejercicio"], correct:0, exp:"La evidencia científica apoya el ejercicio terapéutico activo (especialmente de estabilización lumbar y fortalecimiento) combinado con educación del paciente como el abordaje más efectivo para el dolor lumbar inespecífico."},
+  {cat:'Autores', q:"¿Qué características debe tener un programa de ejercicio para el adulto mayor frágil?", opts:["Multicomponente: fuerza, equilibrio, flexibilidad y resistencia aeróbica", "Solo ejercicio aeróbico de baja intensidad", "Exclusivamente ejercicios de flexibilidad y relajación", "Alta intensidad sin progresión gradual"], correct:0, exp:"El programa de ejercicio más eficaz para el adulto mayor frágil es multicomponente: incluye entrenamiento de fuerza, equilibrio, flexibilidad y capacidad aeróbica, con progresión gradual y adaptada a la condición individual."},
   {cat:"Autores", q:"¿Qué estudio asoció el entrenamiento de fuerza a la mejora de la velocidad de marcha y el levantarse de una silla en ancianos?", opts:["Hakkinen y cols. (2001)","Liu y cols. (2013)","Knauff y cols. (2001)","Leveritt y cols. (1999)"], correct:1, exp:"Liu y cols. (2013) describieron que el entrenamiento de fuerza mejora factores objetivos de fragilidad como la velocidad de marcha."},
   {cat:"Autores", q:"¿Qué autor publicó sobre sobrepeso/obesidad, ejercicio físico y salud en 2008?", opts:["Sardeli","Fung","Heredia","Parr"], correct:2, exp:"Heredia, J. R. (2008) publicó 'Sobrepeso/obesidad, ejercicio físico y salud'."},
 ];
@@ -1067,6 +1083,188 @@ function showResult() {
 
 // Init
 restartTest();
+
+function toggleEli5(id){document.getElementById('card-'+id).classList.toggle('open');}
 </script>
+
+<div id="eli5" class="tab-content">
+  <div class="eli5-intro"><span class="eli5-intro-icon">🧒</span><div><h3>Explícamelo fácil</h3><p>Explicaciones con metáforas y ejemplos del día a día. Toca un tema para leerlo.</p></div></div>
+  
+    <div class="eli5-card" id="card-m7t1">
+      <div class="eli5-card-header" onclick="toggleEli5('m7t1')">
+        <span class="eli5-icon">⚖️</span>
+        <span class="eli5-title">Obesidad y composición corporal</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">⚖️ <strong>La obesidad no es solo "tener sobrepeso". Es una enfermedad compleja con múltiples causas.</strong>
+
+El peso corporal está regulado por el sistema hormonal y el cerebro. No es solo "comer menos y moverse más". Aunque eso ayuda, hay factores que complican mucho las cosas:
+• <strong>Insulina</strong>: cuando sus niveles son crónicamente altos, el cuerpo almacena grasa en lugar de quemarla
+• Genética, microbiota intestinal, estrés, sueño insuficiente
+• El efecto "set point": el cerebro defiende el peso como si fuera la temperatura del cuerpo
+
+IMC como referencia:
+• Normopeso: 18,5-24,9
+• Sobrepeso: 25-29,9
+• Obesidad I: 30-34,9
+• Obesidad II: 35-39,9
+• Obesidad mórbida: ≥40
+
+⚠️ El IMC tiene límites: un culturista puede tener IMC de 30 sin grasa excesiva. Mejor usar también circunferencia de cintura y % de grasa.
+
+¿Qué funciona para reducir grasa?
+✅ Déficit calórico moderado (300-500 kcal/día)
+✅ Entrenamiento de fuerza (preserva músculo)
+✅ Cardio (aumenta el gasto)
+✅ Cambio de hábitos sostenible a largo plazo
+
+<em>El ejercicio solo sin dieta raramente produce pérdida de peso significativa, pero mejora drásticamente la salud cardiovascular y metabólica incluso sin perder peso.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m7t2">
+      <div class="eli5-card-header" onclick="toggleEli5('m7t2')">
+        <span class="eli5-icon">🦴</span>
+        <span class="eli5-title">Osteoporosis y ejercicio en el hueso</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🦴 <strong>La osteoporosis es cuando los huesos se vuelven tan porosos como un queso suizo. El ejercicio es su mejor medicina.</strong>
+
+Los huesos están vivos y se remodelando constantemente. Hasta los 25-30 años, construyes más hueso del que destruyes. Después, el balance se invierte.
+
+La osteoporosis es cuando la densidad mineral ósea (DMO) cae tanto que los huesos se rompen fácilmente. Muy común en mujeres postmenopáusicas por la caída del estrógeno.
+
+Se mide con <strong>densitometría DEXA</strong>:
+• T-score entre -1 y -2,5: osteopenia (precursor)
+• T-score < -2,5: osteoporosis
+
+¿Por qué el ejercicio ayuda? Porque los huesos responden al impacto y a la tensión mecánica. Cuando corres o saltas, los huesos reciben cargas y los osteoblastos (constructores) se activan.
+
+✅ <strong>Mejor para el hueso</strong>: ejercicios de impacto (correr, saltar, step) y entrenamiento de fuerza con cargas
+❌ <strong>Peor para el hueso</strong>: natación y ciclismo (no hay impacto)
+
+Nutrición clave:
+• <strong>Calcio</strong>: 1000-1200 mg/día (lácteos, sardinas, brócoli)
+• <strong>Vitamina D</strong>: necesaria para absorber el calcio (sol, pescado azul)
+
+<em>Un hueso fuerte a los 30 es la mejor pensión de jubilación ósea que existe.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m7t3">
+      <div class="eli5-card-header" onclick="toggleEli5('m7t3')">
+        <span class="eli5-icon">🫀</span>
+        <span class="eli5-title">Hipertensión y ejercicio cardiovascular</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🫀 <strong>La hipertensión es como tener la presión del agua de una manguera demasiado alta: va dañando las tuberías por dentro.</strong>
+
+La presión arterial normal es inferior a 120/80 mmHg. La hipertensión se diagnostica cuando está por encima de 140/90 en varias mediciones.
+
+Los "dos números":
+• <strong>Sistólica</strong> (número de arriba): presión cuando el corazón se contrae
+• <strong>Diastólica</strong> (número de abajo): presión entre latidos, cuando el corazón descansa
+
+La hipertensión daña silenciosamente las arterias y aumenta el riesgo de infarto y ictus. Por eso la llaman "el asesino silencioso".
+
+¿Cómo ayuda el ejercicio?
+✅ El ejercicio aeróbico regular baja la presión 5-8 mmHg en hipertensos
+✅ Mejora la elasticidad de las arterias
+✅ Reduce el estrés (que sube la presión)
+
+Recomendaciones para hipertensos:
+• Cardio de moderada intensidad: 150 min/semana (caminar rápido, nadar, bici)
+• Fuerza: sí, pero con cargas moderadas y sin aguantar la respiración (maniobra de Valsalva)
+• Evitar esfuerzos muy isométricos (plancha larga, cargas máximas)
+
+⚠️ Siempre consultar con el médico si la PA sistólica supera 180 mmHg.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m7t4">
+      <div class="eli5-card-header" onclick="toggleEli5('m7t4')">
+        <span class="eli5-icon">🩺</span>
+        <span class="eli5-title">Diabetes tipo 2 y control glucémico</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🩺 <strong>La diabetes tipo 2 es cuando la llave (insulina) ya no abre bien la cerradura (célula). El ejercicio repara esa cerradura.</strong>
+
+La insulina es la "llave" que permite que la glucosa entre en las células para usarla como energía. En la diabetes tipo 2, las células se vuelven resistentes a la insulina: la llave existe pero la cerradura está oxidada.
+
+Resultado: la glucosa se queda en la sangre → daña vasos sanguíneos, riñones, nervios, ojos.
+
+¿Cómo actúa el ejercicio?
+• <strong>Durante el ejercicio</strong>: el músculo absorbe glucosa directamente SIN necesitar insulina (vía GLUT-4). La glucemia baja inmediatamente.
+• <strong>A largo plazo</strong>: el entrenamiento aumenta la sensibilidad a la insulina. Las cerraduras "se aceitan".
+
+✅ Recomendaciones:
+• Aeróbico + fuerza (la combinación es más efectiva que cualquiera por separado)
+• 150 min/semana de actividad moderada
+• El entrenamiento de fuerza aumenta la masa muscular → más "almacén" de glucosa
+
+⚠️ Precauciones:
+• Medir glucemia antes de entrenar (objetivo: 100-250 mg/dL)
+• Llevar siempre azúcar rápido por si hay hipoglucemia
+• Si toma insulina o sulfonilureas, ajustar con el médico
+
+<em>En muchos casos de diabetes tipo 2 incipiente, el ejercicio y la dieta pueden revertirla por completo.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m7t5">
+      <div class="eli5-card-header" onclick="toggleEli5('m7t5')">
+        <span class="eli5-icon">👴</span>
+        <span class="eli5-title">Adulto mayor y fragilidad</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">👴 <strong>La fragilidad en el mayor es como una batería que se agota: el objetivo es recargarla antes de que se quede a cero.</strong>
+
+A partir de los 70-75 años, muchas personas entran en un ciclo peligroso:
+Menos actividad → pérdida de músculo (<strong>sarcopenia</strong>) → más debilidad → más riesgo de caídas → fractura → hospitalización → todavía menos actividad.
+
+La <strong>fragilidad</strong> se define por 5 criterios:
+1. Pérdida de peso involuntaria
+2. Agotamiento
+3. Debilidad (fuerza de agarre baja)
+4. Lentitud de marcha
+5. Poca actividad física
+
+3 o más criterios = frágil. 1-2 = prefrágil.
+
+¿Qué puede hacer el ejercicio?
+✅ <strong>Fuerza</strong>: el músculo se puede regenerar hasta los 90 años. 2-3 sesiones/semana de fuerza frena la sarcopenia
+✅ <strong>Equilibrio</strong>: reduce caídas (principal causa de mortalidad en mayores)
+✅ <strong>Aeróbico suave</strong>: mantiene la capacidad cardiovascular
+✅ <strong>Flexibilidad</strong>: mantiene la funcionalidad articular
+
+Progresión: empezar MUY suave (incluso desde la silla), progresar despacio, priorizar la seguridad.
+
+<em>Una persona de 85 años que entrena fuerza 2 días/semana puede ser más funcional que una de 65 sedentaria. La edad biológica importa más que la cronológica.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m7t6">
+      <div class="eli5-card-header" onclick="toggleEli5('m7t6')">
+        <span class="eli5-icon">🤰</span>
+        <span class="eli5-title">Embarazo y ejercicio físico</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🤰 <strong>El embarazo no es una enfermedad. La mujer embarazada puede y DEBE hacer ejercicio (salvo contraindicaciones).</strong>
+
+El ejercicio durante el embarazo es seguro y beneficioso tanto para la madre como para el bebé. La placenta y el líquido amniótico protegen al feto.
+
+Beneficios:
+✅ Reduce el riesgo de diabetes gestacional
+✅ Controla el aumento de peso excesivo
+✅ Disminuye el dolor lumbar (muy común en el embarazo)
+✅ Mejora el sueño y el estado de ánimo
+✅ Facilita el parto y la recuperación postparto
+✅ El bebé nace con mejor capacidad cardiorrespiratoria
+
+Recomendaciones generales:
+• 150 min/semana de actividad moderada
+• Aeróbico: caminar, natación, bicicleta estática, yoga prenatal
+• Fuerza: puede hacerse, con adaptaciones (evitar decúbito supino después del primer trimestre)
+• Intensidad: puedes hablar durante el ejercicio (escala de Borg 11-14)
+
+⚠️ Evitar:
+• Deportes de contacto, riesgo de caída o impacto en el abdomen
+• Buceo, deportes en altitud
+• Ejercicio con maniobra de Valsalva (retención de aliento)
+• Posición tumbada boca arriba >5 min (comprime la vena cava)
+
+🚨 Contraindicaciones absolutas: placenta previa, amenaza de parto prematuro, hemorragia. Siempre supervisión médica.</div></div>
+    </div>
+</div>
 </body>
 </html>

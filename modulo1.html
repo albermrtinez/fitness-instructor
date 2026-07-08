@@ -78,6 +78,22 @@ nav button:hover:not(.active){background:#f5f4f0}
 .back-bar{background:#252522;padding:0.5rem 1.5rem}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
+
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem;display:none}
+.eli5-card.open .eli5-body{display:block}
+.eli5-answer{background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.25rem;font-size:0.88rem;line-height:1.8;color:#1a1a18}
+.eli5-answer strong{color:#3C3489}
 </style>
 </head>
 <body>
@@ -560,7 +576,7 @@ const questions=[
   {q:"¿Cuál de las siguientes opciones describe correctamente una adaptación AGUDA durante el entrenamiento de fuerza?",opts:["Aumento crónico de la síntesis de proteínas miofibrilares","Aumento temporal de los niveles de testosterona y GH para promover la síntesis de proteínas","Disminución de la frecuencia cardíaca para conservar energía durante el esfuerzo","Incremento a largo plazo de las reservas de fosfocreatina en el músculo"],correct:1,exp:"El aumento temporal de testosterona y GH es una adaptación aguda. La FC AUMENTA. El aumento crónico de síntesis proteica y mejora de reservas de fosfocreatina son adaptaciones crónicas."},
   {q:"¿Qué sistema energético se activa principalmente durante esfuerzos de alta intensidad y corta duración?",opts:["Sistema aeróbico","Sistema glicolítico (glucólisis)","Sistema ATP-PCr (fosfocreatina)","Sistema oxidativo de grasas"],correct:2,exp:"El sistema ATP-PCr proporciona energía rápida a través de la fosfocreatina durante esfuerzos de muy alta intensidad y corta duración (~10 segundos). La glucólisis actúa en intensidades moderadas. El aeróbico en esfuerzos prolongados."},
   {q:"¿Qué sistema energético actúa principalmente en ejercicios de intensidad moderada-alta, proporcionando energía a través de la descomposición de glucógeno?",opts:["Sistema ATP-PCr","Sistema glicolítico (glucólisis)","Sistema aeróbico","Sistema de oxidación de ácidos grasos"],correct:1,exp:"El sistema glicolítico (glucólisis) se activa en esfuerzos de intensidad moderada-alta (10 segundos a 2 minutos). Descompone glucógeno en ácido láctico para obtener energía."},
-  {q:"¿Qué intensidad de entrenamiento induce mayores ganancias de fuerza según Lopez et al., 2021?",opts:["Alta intensidad (>80% RM)","Baja intensidad (<40% RM)","Intensidad moderada (<60% RM)","Intensidad igual (60-80% RM)"],correct:0,exp:"Según Lopez et al. (2021), programas de entrenamiento de alta intensidad (>80% 1RM) inducen mayores ganancias de fuerza frente a programas de intensidad moderada (<60% 1RM). Esto se debe a las adaptaciones neuronales generadas."},
+  {q:"¿Qué rango de intensidad es generalmente más efectivo para desarrollar fuerza máxima?", opts:["Entre el 85-100% del 1RM", "Entre el 40-60% del 1RM", "Entre el 20-40% del 1RM", "La intensidad no influye en las ganancias de fuerza"], correct:0, exp:"Las intensidades elevadas (85-100% del 1RM) con pocas repeticiones son las más efectivas para el desarrollo de la fuerza máxima, ya que reclutan las unidades motoras de mayor umbral."},
   {q:"¿Cuál es la principal diferencia entre la hipertrofia convencional y la hipertrofia sarcoplásmica?",opts:["La hipertrofia convencional se caracteriza por el aumento en la cantidad y/o tamaño de las miofibrillas, mientras que la sarcoplásmica por el aumento en el volumen del sarcoplasma","La hipertrofia convencional se caracteriza por el aumento en el volumen del sarcoplasma, mientras que la sarcoplásmica por el aumento en la cantidad y/o tamaño de las miofibrillas","La hipertrofia convencional aumenta la síntesis de proteínas no contráctiles, mientras que la sarcoplásmica aumenta las proteínas contráctiles","La hipertrofia convencional aumenta la fuerza muscular, mientras que la sarcoplásmica aumenta la resistencia muscular"],correct:0,exp:"La hipertrofia convencional (miofibrilar) implica incremento en miofibrillas (unidades contráctiles), generando mayor fuerza real. La sarcoplásmica implica aumento desproporcionado del sarcoplasma (fluido intracelular), dando aspecto más 'inflado' sin necesariamente ganar fuerza."},
   {q:"¿Cuál de las siguientes hormonas es conocida por aumentar temporalmente durante el entrenamiento de fuerza intenso y promover la síntesis de proteínas y la hipertrofia muscular?",opts:["Adrenalina","Insulina","Cortisol","Testosterona"],correct:3,exp:"La testosterona (junto con la GH) aumenta temporalmente durante el entrenamiento intenso y promueve la síntesis de proteínas y la hipertrofia muscular. El cortisol es catabólico. La adrenalina mejora la contracción pero su función principal es como estresor."},
   {q:"¿Qué hormona catabólica se libera durante el entrenamiento intenso y puede tener efectos negativos como la degradación muscular si se eleva crónicamente?",opts:["Testosterona","GH (hormona de crecimiento)","Cortisol","IGF-1"],correct:2,exp:"El cortisol es una hormona catabólica que se libera en respuesta al estrés físico. Aumenta temporalmente para movilizar energía, pero niveles crónicos elevados provocan degradación muscular e interfieren con la recuperación."},
@@ -573,15 +589,15 @@ const questions=[
   {q:"Un corredor de velocidad quiere mejorar su rendimiento con entrenamiento de fuerza. Según el principio de especificidad, ¿qué debería priorizar?",opts:["Ejercicios de hipertrofia con cargas moderadas y muchas repeticiones","Ejercicios que mejoren la potencia y explosividad específicos de las fases de la carrera","Ejercicios de flexibilidad y movilidad articular","Ejercicios cardiovasculares de larga duración"],correct:1,exp:"El principio de especificidad dicta que el entrenamiento debe imitar las demandas de la actividad. Un corredor de velocidad necesita potencia y explosividad en las fases de carrera, por lo que debe enfocarse en ejercicios que reproduzcan esas acciones."},
   {q:"¿Qué implica la sobrecarga progresiva en el entrenamiento de fuerza?",opts:["Mantener siempre la misma carga para no sobrecargar el sistema muscular","Aumentar gradualmente la demanda sobre los músculos, sistema nervioso y sistema esquelético con el tiempo","Reducir el volumen de entrenamiento a medida que se progresa","Entrenar siempre al máximo esfuerzo posible en cada sesión"],correct:1,exp:"La sobrecarga progresiva implica aumentar gradualmente la demanda (carga, volumen, frecuencia, variación) para que el cuerpo continúe adaptándose. Es esencial para el desarrollo de fuerza, hipertrofia y rendimiento."},
   {q:"¿Cuál es la fórmula básica para calcular el volumen de entrenamiento?",opts:["Volumen = Intensidad × Frecuencia","Volumen = Nº series × Nº repeticiones × Nº ejercicios","Volumen = Tiempo total de entrenamiento / Número de series","Volumen = %1RM × Número de repeticiones"],correct:1,exp:"La fórmula básica del volumen es: Nº series × Nº repeticiones × Nº ejercicios. El 'volumen total' o 'volume load' añade la carga: series × repeticiones × carga (kg)."},
-  {q:"Según los datos del metaanálisis de Lyristakis et al. (2022), ¿cuántas repeticiones semanales conducen a mayores ganancias de fuerza?",opts:["Más de 100 repeticiones","Más de 150 repeticiones","Más de 200 repeticiones","Más de 250 repeticiones"],correct:3,exp:"Según Lyristakis et al. (2022), más de 250 repeticiones a la semana conducen a mayores ganancias de fuerza. Además, entre 5-9 series o más de 10 pueden generar un mayor incremento."},
+  {q:"¿Cuántas series semanales por grupo muscular se recomiendan generalmente para maximizar la hipertrofia?", opts:["10-20 series semanales", "Menos de 5 series semanales", "Más de 30 series semanales", "El volumen no influye en la hipertrofia"], correct:0, exp:"La evidencia actual sugiere que entre 10 y 20 series semanales por grupo muscular es el rango óptimo para maximizar la hipertrofia, aunque depende del nivel de entrenamiento individual."},
   {q:"¿Cuántas sesiones de fuerza por semana por grupo muscular se recomiendan para maximizar el aumento de la fuerza?",opts:["1 sesión","2 a 3 sesiones","4 a 5 sesiones","Más de 6 sesiones"],correct:1,exp:"Se recomienda una frecuencia de 2 a 3 sesiones de fuerza por semana por grupo muscular para maximizar el aumento de la fuerza, permitiendo suficiente recuperación entre sesiones."},
   {q:"Dos sujetos realizan el mismo volumen de entrenamiento (300 repeticiones). El sujeto 1 usa un tempo de 3s por fase y el sujeto 2 de 1s por fase. ¿Cuál es el tiempo bajo tensión del sujeto 1?",opts:["600 segundos","900 segundos","1800 segundos","3600 segundos"],correct:2,exp:"Sujeto 1: 300 reps × 6 segundos (3s concéntrico + 3s excéntrico) = 1800 segundos de TUT. Sujeto 2: 300 × 2s = 600 segundos. A mismo volumen, el tempo modifica significativamente el estímulo."},
   {q:"¿Qué representa el 'carácter del esfuerzo' según González-Badillo?",opts:["El porcentaje del 1RM utilizado en el entrenamiento","El número total de repeticiones realizadas en una sesión","El grado real de exigencia que relaciona lo realizado con lo realizable","La velocidad máxima de ejecución en cada repetición"],correct:2,exp:"El carácter del esfuerzo (Badillo, 2008) supone el grado real de exigencia, ya que relaciona lo realizado con lo realizable. Une intensidad y volumen en un solo indicador."},
-  {q:"Según la tabla de intensidad-repeticiones, ¿qué porcentaje del 1RM corresponde a realizar 6 repeticiones máximas?",opts:["75%","80%","85%","90%"],correct:2,exp:"Según la tabla de Baechle & Earle (2007): 6 repeticiones máximas corresponden al 85% del 1RM. La tabla: 1rep=100%, 5rep=87%, 6rep=85%, 8rep=80%, 10rep=75%."},
+  {q:"¿Qué número de repeticiones máximas es más adecuado para el desarrollo de la fuerza máxima?", opts:["1-5 repeticiones", "8-12 repeticiones", "15-20 repeticiones", "Más de 20 repeticiones"], correct:0, exp:"El rango de 1-5 repeticiones máximas corresponde a intensidades muy elevadas (>85% 1RM) y es el más eficaz para el desarrollo de la fuerza máxima mediante reclutamiento de fibras tipo II."},
   {q:"En la periodización LINEAL, ¿cómo evolucionan el volumen y la intensidad?",opts:["Volumen e intensidad aumentan simultáneamente","Volumen e intensidad oscilan de forma ondulante","Se comienza con volumen alto e intensidad baja; luego el volumen baja y la intensidad sube","Se comienza con intensidad alta y volumen bajo; luego la intensidad baja y el volumen sube"],correct:2,exp:"La periodización lineal (Matveyev) comienza con volumen ALTO e intensidad BAJA. Progresivamente el volumen disminuye y la intensidad aumenta, culminando en una fase de tappering previa a la competición."},
   {q:"¿En qué fase del modelo ATR se reduce el volumen y se aumenta la intensidad para alcanzar el pico de rendimiento?",opts:["Acumulación","Transformación","Realización","Tappering"],correct:2,exp:"En la fase de REALIZACIÓN se reduce el volumen y se aumenta la intensidad para alcanzar el pico de forma física en el momento óptimo (competición). La Acumulación desarrolla capacidades básicas. La Transformación convierte esas capacidades en habilidades específicas."},
-  {q:"¿Qué revelan los metaanálisis sobre la comparación entre periodización ondulante y lineal en sujetos ENTRENADOS?",opts:["La periodización lineal genera mayor ganancia de 1RM en entrenados","La periodización ondulante genera mayor ganancia de 1RM en entrenados","Ambas periodizaciones generan los mismos resultados independientemente del nivel","La periodización ondulante solo es superior en sujetos no entrenados"],correct:1,exp:"Los metaanálisis muestran que la periodización ondulante genera mayor ganancia en 1RM en comparación con la lineal, PERO esto solo ocurre en individuos ENTRENADOS. En no entrenados, no hay diferencia significativa."},
-  {q:"Según Heredia et al. (2012), ¿en qué fase se clasifica un sujeto que lleva 10 meses de entrenamiento sistemático?",opts:["Fase inicial","Fase básica","Fase intermedia","Fase avanzada I"],correct:2,exp:"Según la tabla de Heredia et al. (2012): Básica = menos de 2-6 meses, INTERMEDIA = 8-12 meses, Avanzada I = 12 meses a 1,5 años. Un sujeto con 10 meses está en fase Intermedia."},
+  {q:"¿Qué ventaja tiene la periodización ondulante frente a la lineal en sujetos entrenados?", opts:["Mayor variación de estímulos evita el estancamiento", "Es más sencilla de programar", "Usa siempre el mismo peso", "No hay diferencias entre ambos modelos"], correct:0, exp:"La periodización ondulante varía el volumen e intensidad dentro de la misma semana, lo que genera mayor variedad de estímulos neuromusculares y evita el estancamiento en sujetos ya adaptados al entrenamiento."},
+  {q:"¿Cómo se suele clasificar a un practicante con aproximadamente un año de entrenamiento sistemático?", opts:["Nivel intermedio", "Principiante absoluto", "Atleta avanzado", "Élite deportiva"], correct:0, exp:"Alrededor de 6-12 meses de entrenamiento sistemático suele corresponder al nivel intermedio: la persona ya ha superado la fase inicial de adaptación neuronal pero no ha alcanzado el estancamiento propio del sujeto avanzado."},
   {q:"¿Cuál de los siguientes representa el primer periodo de programación en la fase inicial del sujeto?",opts:["Orientación Neural (ON)","Orientación Estructural (OE)","Orientación Metabólica (OM)","Acondicionamiento Básico Orientado (ABO)"],correct:3,exp:"El ABO (Acondicionamiento Básico Orientado) es el primer periodo de programación, especialmente aplicable en la fase inicial. Desarrolla la base motriz y las adaptaciones generales previas a periodos más específicos."},
   {q:"¿Cuál es la diferencia principal entre elasticidad y elongación?",opts:["Son sinónimos y se refieren a la misma propiedad del tejido muscular","Elasticidad se refiere a la capacidad de una articulación para moverse libremente","Elasticidad es la capacidad de un cuerpo para volver a su longitud inicial después de deformarse, mientras que elongación es la capacidad del tejido para estirarse ante una fuerza externa","Elasticidad es la capacidad del tejido para estirarse ante una fuerza externa, mientras que elongación es la capacidad de volver a la longitud inicial"],correct:2,exp:"Elasticidad = volver a la longitud inicial tras deformarse. Elongación = capacidad de estirarse ante una fuerza externa. Son conceptos distintos, no sinónimos. Ambas son capacidades musculares presentes en la ADM."},
   {q:"¿Cuáles son los dos componentes de la Amplitud de Movimiento (ADM)?",opts:["Flexibilidad y elongación","Movilidad articular y elasticidad muscular","Elasticidad y fuerza muscular","Coordinación intramuscular e intermuscular"],correct:1,exp:"La ADM dispone de dos componentes: la movilidad articular y la elasticidad muscular. La movilidad articular se entiende a través del concepto 'Joint by Joint' de Gray Cook."},
@@ -726,6 +742,122 @@ function renderSiglas(filter){
   }).join('');
 }
 function filterSiglas(val){renderSiglas(val);}
+
+function toggleEli5(id){document.getElementById('card-'+id).classList.toggle('open');}
 </script>
+
+<div id="eli5" class="tab-content">
+  <div class="eli5-intro"><span class="eli5-intro-icon">🧒</span><div><h3>Explícamelo fácil</h3><p>Explicaciones con metáforas y ejemplos del día a día. Toca un tema para leerlo.</p></div></div>
+  
+    <div class="eli5-card" id="card-m1t1">
+      <div class="eli5-card-header" onclick="toggleEli5('m1t1')">
+        <span class="eli5-icon">💪</span>
+        <span class="eli5-title">¿Qué es la fuerza y por qué entrenarla?</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">💪 <strong>La fuerza es la capacidad de tu cuerpo para empujar, tirar o aguantar cosas.</strong>
+
+Imagina que tienes que mover un mueble pesado. La fuerza es lo que te permite hacerlo. Pero hay distintos tipos:
+
+🏋️ <strong>Fuerza máxima</strong>: cuánto puedes mover una sola vez. Como levantar el sofá una vez y ya.
+⚡ <strong>Fuerza explosiva / potencia</strong>: cuánto puedes mover Y qué tan rápido. Como saltar lo más alto posible.
+🔁 <strong>Fuerza resistencia</strong>: cuántas veces puedes hacer algo sin cansarte. Como subir escaleras durante mucho rato.
+
+¿Por qué es tan importante entrenar la fuerza?
+<strong>Porque no solo sirve para el deporte.</strong> La fuerza muscular:
+• Protege las articulaciones de lesiones
+• Acelera el metabolismo (quemas más calorías en reposo)
+• Mejora la postura
+• Previene la pérdida de músculo con la edad (sarcopenia)
+• Mejora el equilibrio y reduce caídas en mayores
+
+<em>El músculo es como un motor: cuanto más grande y eficiente, mejor funciona todo el cuerpo. Y a diferencia de los coches, se puede mejorar a cualquier edad.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m1t2">
+      <div class="eli5-card-header" onclick="toggleEli5('m1t2')">
+        <span class="eli5-icon">📐</span>
+        <span class="eli5-title">El 1RM y la relación intensidad-repeticiones</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">📐 <strong>El 1RM es el peso máximo que puedes mover UNA sola vez. Es tu "tope" personal.</strong>
+
+1RM significa "1 Repetición Máxima". Es el patrón oro para medir la fuerza. Si tu 1RM en press de banca es 80 kg, significa que puedes levantar 80 kg una sola vez, pero 81 kg ya no.
+
+¿Para qué sirve? Para calcular con qué peso entrenar:
+• El 85% de tu 1RM → unas 5-6 repeticiones máximas → zona de fuerza
+• El 70% → unas 10-12 repeticiones → zona de hipertrofia (músculo)
+• El 50-60% → 20+ repeticiones → zona de resistencia muscular
+
+<em>Es como calibrar el gas de la cocina: si quieres hervir agua rápido, pones el fuego alto y poco tiempo. Si quieres cocinar a fuego lento, baja intensidad mucho rato.</em>
+
+No siempre hace falta hacer el test real de 1RM (es agotador y tiene riesgo). Hay fórmulas como la de Brzycki que lo estiman a partir de cuántas repeticiones haces con un peso dado:
+<strong>1RM ≈ Peso × (36 / (37 – repeticiones))</strong></div></div>
+    </div>
+    <div class="eli5-card" id="card-m1t3">
+      <div class="eli5-card-header" onclick="toggleEli5('m1t3')">
+        <span class="eli5-icon">🔄</span>
+        <span class="eli5-title">Tipos de periodización</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🔄 <strong>Periodizar es planificar el entrenamiento por etapas, como los capítulos de una serie.</strong>
+
+Si siempre haces lo mismo, el cuerpo se adapta y deja de mejorar. La periodización organiza el entrenamiento en ciclos para que el cuerpo siempre tenga un estímulo nuevo.
+
+📅 <strong>Macrociclo</strong>: el plan completo (meses o un año)
+📆 <strong>Mesociclo</strong>: un bloque de 4-8 semanas con un objetivo concreto
+📋 <strong>Microciclo</strong>: la semana de entrenamiento
+
+Modelos principales:
+
+📈 <strong>Periodización lineal</strong>: empiezas con mucho volumen y poca intensidad, y cada semana subes el peso y bajas las repeticiones. Simple y muy efectiva para principiantes.
+<em>Como estudiar: primero repasas todo el temario (volumen), luego te centras en lo que más te cuesta (intensidad).</em>
+
+🌊 <strong>Periodización ondulante</strong>: varías volumen e intensidad dentro de la misma semana. El lunes fuerza máxima, el miércoles hipertrofia, el viernes resistencia.
+<em>Mejor para intermedios y avanzados porque evita el estancamiento.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m1t4">
+      <div class="eli5-card-header" onclick="toggleEli5('m1t4')">
+        <span class="eli5-icon">🦵</span>
+        <span class="eli5-title">Amplitud de movimiento (ADM)</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🦵 <strong>La amplitud de movimiento (ADM) es hasta dónde puede moverse una articulación. Como el volumen de una radio: tiene un mínimo y un máximo.</strong>
+
+Si el volumen de tu radio solo llega a 5 sobre 10, aunque quieras poner la música más alta, no puedes. Lo mismo pasa con las articulaciones limitadas: aunque el músculo tenga fuerza, si la articulación no abre bien, el movimiento sale incompleto y puede lesionar.
+
+¿Qué limita la ADM?
+• La estructura ósea (limitación que no puedes cambiar)
+• La tensión muscular y de los tejidos blandos (sí se puede mejorar)
+• Los ligamentos y la cápsula articular
+
+Tipos de trabajo para la ADM:
+🔵 <strong>Estiramiento estático</strong>: aguantar la posición 30-60 segundos. Mejora la flexibilidad a largo plazo.
+🟠 <strong>Estiramiento dinámico</strong>: movimientos controlados. Perfecto para calentar.
+🟣 <strong>FNP (Facilitación Neuromuscular Propioceptiva)</strong>: contracción + relajación + estiramiento. El método más efectivo para ganar rango de movimiento.
+
+<em>Concepto Joint by Joint: cada articulación necesita una cualidad principal. La cadera y el hombro necesitan movilidad. La rodilla y la columna lumbar necesitan estabilidad. Cuando la cadera no se mueve bien, la lumbar compensa... y duele.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m1t5">
+      <div class="eli5-card-header" onclick="toggleEli5('m1t5')">
+        <span class="eli5-icon">⚡</span>
+        <span class="eli5-title">Velocidad de ejecución y pérdida de velocidad</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">⚡ <strong>La velocidad de ejecución es cómo de rápido mueves el peso. Y la pérdida de velocidad avisa cuando ya has entrenado suficiente.</strong>
+
+Cuando levantas peso, siempre debes intentar moverlo lo más rápido posible. Aunque el peso sea muy alto y se mueva lento, la intención explosiva activa más unidades motoras. Más unidades motoras = más fuerza + más músculo.
+
+<strong>Pérdida de velocidad (%PV)</strong>: a medida que te cansas en una serie, cada repetición sale más lenta. Los investigadores han visto que si dejas que la velocidad caiga más de un 20%, ya estás muy fatigado y las siguientes repeticiones no entrenan bien.
+
+<em>Es como la batería del móvil: puedes usarlo hasta el 20% sin problemas, pero si lo dejas llegar al 0% a menudo, la batería se deteriora. El entrenamiento funciona igual.</em>
+
+Con un <strong>encoder lineal</strong> (aparato que mide la velocidad en tiempo real), puedes:
+• Saber exactamente el % del 1RM según la velocidad (sin hacer el test máximo)
+• Parar la serie en el momento óptimo
+• Asegurarte de que cada sesión tiene la calidad necesaria
+
+<em>Es el GPS del entrenamiento de fuerza: en lugar de ir "a ojo", vas con datos exactos.</em></div></div>
+    </div>
+</div>
 </body>
 </html>

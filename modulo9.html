@@ -151,6 +151,22 @@
 .back-bar{background:#252522;padding:0.5rem 1.5rem}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
+
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem;display:none}
+.eli5-card.open .eli5-body{display:block}
+.eli5-answer{background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.25rem;font-size:0.88rem;line-height:1.8;color:#1a1a18}
+.eli5-answer strong{color:#3C3489}
 </style>
 </head>
 <body>
@@ -542,13 +558,13 @@ terms.forEach((t, i) => {
 const ALL_QUESTIONS = [
   // INTELIGENCIA EMOCIONAL
   {cat:"Inteligencia Emocional", q:"¿Qué autor define la IE como la 'capacidad de sentir, entender, controlar y modificar estados emocionales de sí mismo y en los demás'?", opts:["Goleman (1998)","Teruel et al. (2019)","Salguero (2011)","García Fernández y Giménez-Mas (2010)"], correct:2, exp:"Salguero (2011) es quien introduce el matiz de modificar estados tanto en uno mismo como en los demás."},
-  {cat:"Inteligencia Emocional", q:"Según Goleman (1998), ¿cuál es la definición de inteligencia emocional?", opts:["Capacidad de sentir y modificar emociones en sí mismo y en los demás","Conocimiento para abordar eficazmente las emociones y regular conductas","Capacidad de reconocer propios sentimientos, los de los demás, motivarnos y manejar relaciones","Forma de interactuar con el mundo que engloba autoconciencia y motivación"], correct:2, exp:"Goleman (1998) define la IE como la capacidad de reconocer sentimientos propios y ajenos, motivarnos y manejar relaciones."},
+  {cat:'Inteligencia Emocional', q:"¿Cómo se define habitualmente la inteligencia emocional?", opts:["Capacidad de reconocer, comprender y gestionar las propias emociones y las de los demás", "El cociente intelectual aplicado a situaciones sociales", "La capacidad de suprimir las emociones negativas", "La habilidad para memorizar información emocional"], correct:0, exp:"La inteligencia emocional se define como la capacidad de reconocer, comprender y gestionar las emociones propias y de los demás, utilizándolas para guiar el pensamiento y la acción de forma adaptativa."},
   {cat:"Inteligencia Emocional", q:"¿Qué autores definen la IE como 'conocimiento y/o competencias para abordar eficazmente las emociones y regular conductas sociales y emocionales'?", opts:["Goleman (1995)","Salguero (2011)","García Fernández y Giménez-Mas (2010)","Teruel et al. (2019)"], correct:3, exp:"Esta definición corresponde a Teruel et al. (2019), que también la describe como la fusión de razón y corazón."},
   {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes definiciones destaca la capacidad de modificar los estados emocionales tanto en uno mismo como en los demás?", opts:["La definición de Salguero (2011)","La definición de García Fernández y Giménez-Mas (2010)","La definición de Teruel et al. (2019)","La definición de Goleman (1998)"], correct:0, exp:"Salguero (2011) es quien añade el matiz diferenciador de modificar estados en uno mismo Y en los demás."},
-  {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes NO es una habilidad que compone la IE según Goleman (1995)?", opts:["Habilidades sociales","Empatía","Automotivarse","Competitividad"], correct:3, exp:"Las 5 habilidades de Goleman son: autoconciencia, autocontrol, motivación, empatía y habilidades sociales. La competitividad no está incluida."},
+  {cat:'Inteligencia Emocional', q:"¿Cuál de las siguientes NO forma parte de las competencias de la inteligencia emocional?", opts:["La memorización de datos numéricos", "La autoconciencia emocional", "La empatía hacia los demás", "La autorregulación emocional"], correct:0, exp:"La memorización de datos numéricos es una habilidad cognitiva-académica, no una competencia emocional. Las habilidades de la IE incluyen autoconciencia, autorregulación, motivación, empatía y habilidades sociales."},
   {cat:"Inteligencia Emocional", q:"¿Qué habilidad de la IE se refiere a valorar y conocer las propias emociones?", opts:["Autocontrol","Empatía","Autoconciencia","Motivación"], correct:2, exp:"La autoconciencia consiste en valorar y conocer las propias emociones."},
   {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes habilidades de la IE permite reconocer las emociones ajenas?", opts:["Autoconciencia","Autocontrol","Habilidades sociales","Empatía"], correct:3, exp:"La empatía es la capacidad para reconocer y entender las emociones de los demás."},
-  {cat:"Inteligencia Emocional", q:"¿Qué definición describe mejor la inteligencia emocional según Goleman (1998)?", opts:["Capacidad de sentir, entender, controlar y modificar estados emocionales de sí mismo y en los demás","El conocimiento y/o las competencias para abordar eficazmente las emociones, con el fin de regular las conductas sociales y emocionales","La capacidad de reconocer nuestros propios sentimientos, los sentimientos de los demás, motivarnos y manejar adecuadamente las relaciones","Una forma de interactuar con el mundo que tiene en cuenta los sentimientos y engloba habilidades como el control de los impulsos"], correct:2, exp:"Goleman (1998) define la IE como la capacidad de reconocer sentimientos propios y ajenos, motivarnos y manejar relaciones."},
+  {cat:'Inteligencia Emocional', q:"¿Por qué es relevante la inteligencia emocional para un instructor de fitness?", opts:["Permite gestionar mejor las relaciones con los clientes y motivarlos de forma efectiva", "Solo es útil en contextos clínicos o terapéuticos", "No tiene relación con el rendimiento deportivo", "Es menos importante que el conocimiento técnico"], correct:0, exp:"Un instructor de fitness con alta inteligencia emocional puede identificar el estado de ánimo de sus clientes, adaptar su comunicación, gestionar conflictos y crear un ambiente motivador que mejora la adherencia al entrenamiento."},
   {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes afirmaciones describe mejor el concepto de marca personal?", opts:["Es la impresión que dejamos en los demás y cómo nos diferenciamos","Es tener un buen producto para vender","Es la estrategia de marketing que utilizamos para vender productos","Es la cantidad de seguidores que tenemos en redes sociales"], correct:0, exp:"La marca personal es la imagen/recuerdo emocional que proyectamos y nos diferencia de los demás."},
   {cat:"Inteligencia Emocional", q:"Según la teoría del cerebro triuno, ¿qué porcentaje de las decisiones se toman de forma racional?", opts:["95%","50%","5%","75%"], correct:2, exp:"Según Garza (2020), el 95% de las decisiones no son racionales; solo un 5% lo son."},
   {cat:"Inteligencia Emocional", q:"¿Cuál es el cerebro responsable de la supervivencia e instinto?", opts:["Neocórtex","Cerebro límbico","Cerebro reptiliano","Cerebro frontal"], correct:2, exp:"El cerebro reptiliano es el área más primitiva, con función principal de supervivencia e instinto."},
@@ -557,10 +573,10 @@ const ALL_QUESTIONS = [
   {cat:"Inteligencia Emocional", q:"En el Modelo del Cerebro Triuno, ¿qué área NO se debe estimular en ventas?", opts:["Cerebro reptiliano","Cerebro límbico","Neocórtex","Los tres por igual"], correct:2, exp:"El neocórtex (razonamiento lógico) es el área que no se debe estimular en el contexto de ventas y toma de decisiones de compra."},
   {cat:"Inteligencia Emocional", q:"¿Qué función tiene el neocórtex?", opts:["Supervivencia e instinto","Emociones y estados de ánimo","Razonamiento lógico y cognitivo superior","Percepción no consciente"], correct:2, exp:"El neocórtex se encarga de las funciones racionales y cognitivas más elevadas: movimientos voluntarios, aprendizaje y lenguaje."},
   {cat:"Inteligencia Emocional", q:"¿Quién fue el primero en hablar del modelo del cerebro triuno?", opts:["Goleman","Garza","McLean","Gambín"], correct:2, exp:"Según Carvajal-Santana (2018), McLean presentó el modelo en 1969 y se publicó en 1973."},
-  {cat:"Inteligencia Emocional", q:"¿Cuántos estímulos son necesarios para activar el cerebro reptiliano según Garza (2020)?", opts:["3","5","6","7"], correct:2, exp:"Se necesitan activar 6 estímulos para lograr que el cerebro reptiliano tome la decisión de compra."},
+  {cat:'Inteligencia Emocional', q:"¿Qué función cumple el sistema nervioso autónomo en la respuesta al estrés?", opts:["Activa la respuesta de lucha o huida ante amenazas percibidas", "Controla exclusivamente los movimientos voluntarios", "Regula solo la digestión y el sueño", "No interviene en las respuestas emocionales"], correct:0, exp:"El sistema nervioso autónomo, a través de su rama simpática, activa la respuesta de lucha o huida ante situaciones de estrés o amenaza, preparando al organismo con aumento de FC, liberación de adrenalina y mayor alerta."},
   {cat:"Inteligencia Emocional", q:"¿Cuál de los siguientes NO es un estímulo que activa el cerebro reptiliano?", opts:["Publicidad visual","Emociones","Contrastes visuales","Razonamiento lógico detallado"], correct:3, exp:"Los 6 estímulos son: anuncios centrados en el consumidor, contrastes visuales, producto tangible, inicio/final llamativo, publicidad visual y emociones. El razonamiento lógico activa el neocórtex, no el reptiliano."},
   {cat:"Inteligencia Emocional", q:"La empatía afectiva se define como:", opts:["Identificarse intelectualmente con lo que el cliente piensa","Responder a las emociones del cliente con una emoción afín o análoga","Escuchar activamente sin responder emocionalmente","Analizar racionalmente el problema del cliente"], correct:1, exp:"La empatía afectiva es la capacidad de responder a las emociones del cliente con una emoción afín o similar."},
-  {cat:"Inteligencia Emocional", q:"¿Cuál de las siguientes es una condición necesaria para desencadenar un cambio según ACSM (2015)?", opts:["Autoridad y liderazgo","Honestidad y respeto mutuo","Conocimiento técnico avanzado","Número elevado de sesiones"], correct:1, exp:"Según ACSM (2015), las condiciones son: honestidad, respeto mutuo, comunicación eficaz y respuesta cercana al cliente."},
+  {cat:'Inteligencia Emocional', q:"¿Qué elemento es fundamental para que una persona adopte un cambio de hábitos hacia un estilo de vida más activo?", opts:["Motivación intrínseca y percepción de autoeficacia", "Disponer de equipamiento deportivo de alta gama", "Tener un IMC dentro del rango normal", "Conocer todos los beneficios del ejercicio de forma teórica"], correct:0, exp:"La motivación intrínseca (querer cambiar por uno mismo) y la autoeficacia (creer que se puede lograr) son los pilares del cambio de comportamiento hacia estilos de vida más activos y saludables."},
   {cat:"Inteligencia Emocional", q:"¿Qué autor clasifica las emociones básicas incluyendo: curiosidad, expectativa, miedo, ira y pánico?", opts:["Ekman","James","Panksepp","Plutchik"], correct:2, exp:"Panksepp clasifica las emociones básicas como: curiosidad, expectativa, miedo, ira y pánico."},
   {cat:"Inteligencia Emocional", q:"¿Qué autor incluye la 'aceptación' y la 'anticipación' entre las emociones básicas?", opts:["Izard","Oatley","James","Plutchik"], correct:3, exp:"Plutchik incluye: aceptación, ira, anticipación, asco, alegría, miedo, tristeza y sorpresa."},
   {cat:"Inteligencia Emocional", q:"¿Qué beneficios aporta desarrollar la IE en el deporte?", opts:["Mayor rendimiento deportivo y menos lesiones","Más medallas pero mayor burnout","Independencia de factores emocionales","Mayor competitividad individual"], correct:0, exp:"Los beneficios son: menos lesiones, mayor rendimiento deportivo y menos abandonos por burnout."},
@@ -589,17 +605,17 @@ const ALL_QUESTIONS = [
   {cat:"Hábitos", q:"¿Qué modelo de interacción busca una solución sinérgica donde ambos ganen o no hay trato?", opts:["Ganar/Ganar","Gano/Pierdes","Gano","Ganar/Ganar o no hay trato"], correct:3, exp:"Ganar/Ganar o no hay trato son personas que buscan beneficio para ambas partes; si no es posible, prefieren no llegar a ningún acuerdo."},
 
   // MARCA PERSONAL
-  {cat:"Marca Personal", q:"¿Cuál afirmación NO es un beneficio de desarrollar tu marca personal según Roca (2015)?", opts:["Te obliga a aceptar trabajos que no te gustan","Te permite ser conocido por quien quieres que te conozca","Te ayuda a conseguir clientes para tu negocio","Te permite tener el control de lo que emites de ti mismo"], correct:0, exp:"La marca personal ayuda a NO tener que aceptar trabajos que no encajan contigo. Te da las nociones para saber si las oportunidades son compatibles."},
-  {cat:"Marca Personal", q:"¿Qué es la marca personal según Roca (2015)?", opts:["La estrategia de marketing para vender un producto","El número de seguidores en redes sociales","El recuerdo e imagen que dejamos en otras personas","El presupuesto destinado a publicidad personal"], correct:2, exp:"La marca personal es el recuerdo que dejamos en otras personas; lo que les evocamos emocionalmente."},
-  {cat:"Marca Personal", q:"¿Cuáles son los 4 pasos para construir una marca personal según Roca (2015)?", opts:["Diseñar un logo, crear una web, publicar en RRSS, medir resultados","Tener objetivos claros, posicionarse y crear estrategia, elemento diferencial y ser auténtico","Definir el precio, el producto, la distribución y la comunicación","Estudiar el mercado, copiar a la competencia, innovar y medir"], correct:1, exp:"Los 4 pasos son: 1) objetivos claros, 2) posicionamiento y estrategia, 3) elemento diferencial, 4) ser auténtico y generar empatía."},
+  {cat:'Marca Personal', q:"¿Cuál de las siguientes afirmaciones NO es un beneficio real de tener una marca personal sólida como profesional del fitness?", opts:["Garantiza ingresos ilimitados sin esfuerzo adicional", "Aumenta la visibilidad profesional", "Genera confianza en los potenciales clientes", "Diferencia al profesional de la competencia"], correct:0, exp:"La marca personal potencia la visibilidad, la confianza y la diferenciación profesional, pero no garantiza ingresos sin esfuerzo. El éxito requiere consistencia, calidad de servicio y trabajo continuo de comunicación."},
+  {cat:'Marca Personal', q:"¿Qué se entiende por marca personal en el contexto profesional del fitness?", opts:["La percepción que tienen los demás sobre tu identidad y propuesta de valor profesional", "El logotipo y colores que usas en tus redes sociales", "El número de seguidores en Instagram", "Los títulos académicos que posees"], correct:0, exp:"La marca personal es la percepción que generamos en los demás sobre quiénes somos, qué hacemos y qué nos diferencia. Va más allá del logo o las redes: engloba valores, estilo de comunicación y propuesta de valor única."},
+  {cat:'Marca Personal', q:"¿Cuál es el primer paso para construir una marca personal efectiva?", opts:["El autoconocimiento: identificar fortalezas, valores y diferenciadores propios", "Crear perfiles en todas las redes sociales disponibles", "Contratar a un diseñador gráfico para el logo", "Publicar contenido diariamente desde el primer día"], correct:0, exp:"El primer y más importante paso de la marca personal es el autoconocimiento: saber quién eres, cuáles son tus fortalezas, valores y qué te diferencia. Sin esta base, cualquier estrategia de comunicación pierde autenticidad."},
   {cat:"Marca Personal", q:"¿En qué se diferencia la marca personal del marketing?", opts:["No hay diferencia, son sinónimos","La marca personal se centra en la percepción emocional que generamos; el marketing en estrategias de comercialización","El marketing es más importante que la marca personal","La marca personal solo funciona en el mundo digital"], correct:1, exp:"La marca personal es la percepción emocional que evocamos. El marketing son las estrategias de comercialización de un producto o servicio."},
-  {cat:"Marca Personal", q:"¿Qué se entiende por marketing según la RAE (2023)?", opts:["La imagen que proyectamos a los demás basada en nuestros valores","El recuerdo emocional que dejamos en las personas","El conjunto de estrategias empleadas para la comercialización de un producto y para estimular su demanda","La gestión de nuestra presencia en redes sociales"], correct:2, exp:"Según la RAE (2023), marketing es el 'conjunto de estrategias empleadas para la comercialización de un producto y para estimular su demanda'."},
+  {cat:'Marca Personal', q:"¿Qué es el marketing aplicado al ámbito de un instructor de fitness?", opts:["El conjunto de estrategias para dar a conocer, posicionar y comercializar los servicios propios", "La venta directa de productos deportivos", "Exclusivamente la publicidad en redes sociales", "La gestión administrativa del negocio"], correct:0, exp:"El marketing para un instructor de fitness engloba todas las estrategias para dar a conocer sus servicios, posicionarse en el mercado, atraer clientes y fidelizarlos, incluyendo comunicación digital, testimonios y propuesta de valor."},
   {cat:"Marca Personal", q:"¿Qué beneficio de la marca personal está relacionado con la visibilidad profesional?", opts:["Reducir los costes del negocio","Que otros te encuentren a ti en lugar de buscar tú","Mejorar las habilidades técnicas","Aumentar el salario automáticamente"], correct:1, exp:"Una marca personal sólida permite que sean los empleadores o clientes quienes te encuentren a ti porque te necesitan."},
   {cat:"Marca Personal", q:"Según el texto, ¿lo que recordamos de las personas es principalmente...?", opts:["Lo racional y lógico","Lo técnico y profesional","Lo emocional por encima de lo racional","Lo físico y visual"], correct:2, exp:"Lo que recordamos es siempre lo emocional por encima de lo racional (Roca, 2015)."},
   {cat:"Marca Personal", q:"¿En qué se basa principalmente la marca personal según Roca?", opts:["En el número de seguidores en redes sociales","En las habilidades técnicas certificadas","En nuestras habilidades, valores, acciones y autenticidad","En los premios y reconocimientos obtenidos"], correct:2, exp:"La marca personal se basa en nuestras habilidades, valores y acciones, siendo auténtico y coherente."},
   {cat:"Marca Personal", q:"¿Por qué es importante diferenciarse en el mercado laboral actual?", opts:["Porque los trabajos son permanentes y competitivos","Porque vivimos en una sociedad inestable donde diferenciarse es una necesidad","Porque las empresas solo contratan a personas con muchos seguidores","Porque el mercado digital ha eliminado la competencia"], correct:1, exp:"Vivimos en un mundo globalizado e hiperconectado donde todo es inestable; diferenciarse se convierte en una necesidad."},
   {cat:"Marca Personal", q:"¿Qué posición ocupa la marca personal en la mente del consumidor?", opts:["La parte racional y analítica","Lo técnico y funcional","El recuerdo emocional que evocamos","La imagen corporativa de la empresa"], correct:2, exp:"La marca personal es el recuerdo emocional que dejamos; solo se puede entrar en la mente de alguien si has hecho algo por ella."},
-  {cat:"Marca Personal", q:"¿Cuál es el objetivo final de la marca personal según Roca (2015)?", opts:["Venderte a ti mismo al mayor precio posible","Conseguir muchos seguidores en redes sociales","Ser la persona de referencia en tu entorno y dejar huella en la mente de quienes te rodean","Crear un logo personal reconocible"], correct:2, exp:"Como indica Roca (2015), el objetivo es 'conseguir ser la persona de referencia en tu entorno y dejar huella en la mente de quienes te rodean'."},
+  {cat:'Marca Personal', q:"¿Cuál es el objetivo final de trabajar la marca personal como profesional?", opts:["Generar confianza y diferenciación que atraigan oportunidades profesionales", "Tener más seguidores que la competencia", "Cobrar más que otros profesionales sin justificación", "Aparecer en todos los medios de comunicación"], correct:0, exp:"El objetivo final de la marca personal es generar confianza en el público objetivo y diferenciarse de otros profesionales, lo que se traduce en mayores oportunidades: clientes, colaboraciones, reconocimiento y crecimiento profesional."},
   {cat:"Marca Personal", q:"¿Cuándo tiene sentido obtener notoriedad en el mundo online?", opts:["Siempre que se tenga dinero para publicidad","Solo si se tienen miles de seguidores","Cuando eres capaz de ofrecer algo interesante para tu público","Solo si trabajas para una gran empresa"], correct:2, exp:"En el mundo online, solo tiene sentido obtener notoriedad si eres capaz de ofrecer algo que sea interesante para tu público."},
   {cat:"Marca Personal", q:"¿Qué ventaja ofrecen las redes sociales para la marca personal?", opts:["Permiten espiar a la competencia sin límites","Están activas 24 horas al día y permiten que te encuentren desde cualquier lugar","Garantizan ingresos automáticos si tienes muchos seguidores","Sustituyen la necesidad de formación profesional"], correct:1, exp:"Los perfiles en RRSS están activos 24 horas al día, nunca descansan, y te pueden encontrar en cualquier momento desde cualquier lugar del mundo."},
 
@@ -610,7 +626,7 @@ const ALL_QUESTIONS = [
   {cat:"Modelo Canvas", q:"¿Qué bloque del Canvas define quiénes son los clientes de la empresa?", opts:["Canales","Fuentes de ingresos","Propuesta de valor","Segmento de mercado"], correct:3, exp:"El bloque 'Segmento de mercado' define quién es el cliente y permite segmentar de manera muy específica para conocer el nicho."},
   {cat:"Modelo Canvas", q:"¿Qué busca el bloque 'Propuesta de valor' en el Canvas?", opts:["Definir los costes fijos del negocio","Resolver el problema del cliente y diferenciarse de la competencia","Establecer alianzas con socios estratégicos","Identificar los canales de distribución"], correct:1, exp:"La propuesta de valor busca resolver el problema del cliente y lo que nos diferencia de la competencia."},
   {cat:"Modelo Canvas", q:"¿Qué son las 'fuentes de ingresos' en el Canvas?", opts:["Los costes necesarios para operar el negocio","Los socios estratégicos del negocio","Lo que genera dinero cuando los clientes compran las propuestas de valor","Los recursos humanos del equipo"], correct:2, exp:"Las fuentes de ingresos surgen cuando los clientes compran las propuestas de valor ofrecidas; son la base que mantiene en pie el negocio."},
-  {cat:"Modelo Canvas", q:"¿Qué tipos de recursos clave existen según Sonderegger (2020)?", opts:["Físicos, digitales, temporales y creativos","Físicos, económicos, humanos y de conocimiento","Materiales, financieros, tecnológicos y de marca","Internos, externos, fijos y variables"], correct:1, exp:"Los recursos clave pueden ser físicos, económicos, humanos y de conocimiento."},
+  {cat:'Modelo Canvas', q:"¿Qué tipo de recursos son más importantes para un instructor de fitness que trabaja por cuenta propia?", opts:["Recursos físicos, humanos, intelectuales y financieros", "Solo los recursos económicos", "Únicamente el equipamiento deportivo", "Los recursos tecnológicos exclusivamente"], correct:0, exp:"Un instructor autónomo necesita gestionar recursos físicos (instalaciones, material), humanos (red de contactos, colaboradores), intelectuales (conocimiento, marca) y financieros (inversión, liquidez) para sostener su negocio."},
   {cat:"Modelo Canvas", q:"¿Qué bloque del Canvas describe las estrategias de networking con socios y proveedores externos?", opts:["Recursos clave","Actividades clave","Asociaciones clave","Relaciones con clientes"], correct:2, exp:"Las 'Asociaciones clave' (bloque 8) definen las estrategias de networking con potenciales socios y/o proveedores."},
   {cat:"Modelo Canvas", q:"¿Cómo puede ser la relación con los clientes según el Canvas?", opts:["Solo digital o presencial","Personal, automatizada o mixta","Formal, informal o neutral","Individual, grupal o masiva"], correct:1, exp:"Según Sonderegger (2020), la relación con el cliente puede ser personal, automatizada o mixta."},
   {cat:"Modelo Canvas", q:"¿Qué representa el 'Mapa de valor' en el Canvas?", opts:["El presupuesto de marketing de la empresa","La manera en la que creamos valor para el cliente (solución a sus problemas y alegrías)","El organigrama del equipo directivo","El plan de negocio a 5 años"], correct:1, exp:"El Mapa de Valor es la manera en la que creamos valor para el cliente: no la calidad del producto en sí, sino la solución de sus problemas o las alegrías que le podemos dar."},
@@ -624,16 +640,16 @@ const ALL_QUESTIONS = [
   // PREGUNTAS ADICIONALES MIXTAS
   {cat:"Inteligencia Emocional", q:"¿Qué autor entiende la emoción como 'un sentimiento que afecta a los propios pensamientos, estados psicológicos, estados biológicos y voluntad de acción'?", opts:["Teruel et al. (2019)","Goleman (1995)","Salguero (2011)","García Fernández (2010)"], correct:1, exp:"Goleman (1995) define la emoción como un sentimiento que afecta a los pensamientos, estados psicológicos, biológicos y la voluntad de acción."},
   {cat:"Hábitos", q:"¿Qué incluye el modelo proactivo según Covey?", opts:["Reactividad, impulsividad y dependencia","Conciencia, imaginación, voluntad e independencia","Disciplina, obediencia y cumplimiento","Urgencia, efectividad y productividad"], correct:1, exp:"El modelo proactivo incluye: conciencia, imaginación, conciencia, voluntad e independencia."},
-  {cat:"Marca Personal", q:"¿Cuántos pasos propone Roca (2015) para construir una marca personal?", opts:["3","4","5","6"], correct:1, exp:"Roca propone 4 pasos: objetivos claros, posicionamiento y estrategia, elemento diferencial, y ser auténtico generando empatía."},
+  {cat:'Marca Personal', q:"¿Qué proceso sigue la construcción de una marca personal efectiva?", opts:["Autoconocimiento → Definición de propuesta de valor → Comunicación → Gestión de reputación", "Crear logo → Abrir redes → Publicar contenido → Esperar resultados", "Solo hace falta definir los precios de los servicios", "Copiar el estilo de los referentes del sector"], correct:0, exp:"La marca personal se construye en fases: primero el autoconocimiento, luego la definición de una propuesta de valor auténtica, después la comunicación coherente en los canales adecuados y finalmente la gestión continua de la reputación."},
   {cat:"Modelo Canvas", q:"¿En qué año fue creado el Modelo Canvas?", opts:["1998","2000","2004","2010"], correct:2, exp:"El Modelo Canvas fue creado por Osterwalder en 2004, publicado como parte de su tesis sobre Business Model Ontology."},
   {cat:"Inteligencia Emocional", q:"¿Cuál fue el primer autor del módulo en presentar la teoría del cerebro triuno?", opts:["Goleman","McLean","Gambín","Garza"], correct:1, exp:"Según Carvajal-Santana (2018), fue McLean quien presentó el modelo en 1969 (publicado en 1973)."},
   {cat:"Hábitos", q:"¿Qué ejemplo usa el texto para ilustrar el hábito 'Comenzar con un fin en mente'?", opts:["Elegir entre estudiar o trabajar","Ver la misma situación desde el punto de vista del dinero vs el placer/amigos","Comparar deportes individuales y de equipo","Decidir entre dos propuestas de trabajo"], correct:1, exp:"El texto usa el ejemplo de quedarse a trabajar horas extra: desde el punto de vista del dinero (positivo) vs del placer con amigos (negativo)."},
-  {cat:"Inteligencia Emocional", q:"¿Qué habilidades nombra García Fernández y Giménez-Mas (2010) en su definición de IE?", opts:["Liderazgo, resiliencia y creatividad","Control de impulsos, autoconciencia, motivación, entusiasmo, perseverancia y agilidad mental","Asertividad, comunicación, empatía y adaptabilidad","Autoestima, confianza, disciplina y enfoque"], correct:1, exp:"García Fernández y Giménez-Mas (2010) mencionan: control de impulsos, autoconciencia, motivación, entusiasmo, perseverancia y agilidad mental."},
+  {cat:'Inteligencia Emocional', q:"¿Cuáles son las habilidades clave de la inteligencia emocional más reconocidas en la literatura?", opts:["Percepción, comprensión, uso y regulación de emociones", "Memoria, atención y velocidad de procesamiento", "Creatividad, liderazgo y pensamiento crítico", "Fuerza de voluntad, disciplina y puntualidad"], correct:0, exp:"Las cuatro habilidades clave de la IE son: percibir las emociones con precisión, usarlas para facilitar el pensamiento, comprenderlas y razonar sobre ellas, y regularlas en uno mismo y en los demás."},
   {cat:"Marca Personal", q:"¿En qué contexto tiene especial relevancia la empatía según el módulo?", opts:["En la gestión de inversiones financieras","En el entrenamiento personal, para entender qué le pasa al cliente","En la publicidad masiva de productos","En la contratación de personal"], correct:1, exp:"En el ámbito del entrenamiento personal es muy importante conocer qué le pasa al cliente para exponer el punto de vista con empatía."},
-  {cat:"Inteligencia Emocional", q:"¿Qué afirman Ros-Martínez et al. (2013) sobre IE y deporte?", opts:["Son conceptos completamente separados","Están estrechamente relacionados y las técnicas psicológicas se usan cada vez más","El deporte no necesita inteligencia emocional","La IE reduce el rendimiento deportivo"], correct:1, exp:"Inteligencia Emocional y Deporte están estrechamente relacionados; clubes, federaciones y entrenadores contratan psicólogos para establecer técnicas que mejoren el rendimiento."},
+  {cat:'Inteligencia Emocional', q:"¿Qué relación existe entre inteligencia emocional y rendimiento deportivo?", opts:["Una mayor IE se asocia con mejor gestión del estrés competitivo y mayor rendimiento", "La IE no tiene ninguna relación con el rendimiento deportivo", "Solo influye en deportes de equipo, no individuales", "La IE perjudica el rendimiento por generar exceso de empatía"], correct:0, exp:"Los deportistas con mayor inteligencia emocional gestionan mejor la presión competitiva, el miedo al fracaso y las relaciones con compañeros y entrenadores, lo que se traduce en mejor rendimiento y bienestar deportivo."},
   {cat:"Hábitos", q:"¿Cómo se puede hacer crecer el círculo de influencia?", opts:["Ignorando los pensamientos negativos","Focalizando los pensamientos en energía positiva","Aumentando las horas de trabajo","Eliminando el círculo de preocupación completamente"], correct:1, exp:"El círculo de influencia crece conforme nuestros pensamientos se focalizan en energía positiva, reduciendo el de preocupación."},
   {cat:"Modelo Canvas", q:"¿Cuál es la diferencia entre Mapa de Valor y Perfil del Cliente en el Canvas?", opts:["Son lo mismo con nombres distintos","El Mapa de Valor describe cómo creamos valor; el Perfil del Cliente describe sus tareas, problemas y alegrías","El Mapa de Valor es para productos físicos y el Perfil para servicios","El Mapa de Valor es externo y el Perfil es interno"], correct:1, exp:"El Mapa de Valor describe cómo creamos valor (soluciones y alegrías). El Perfil del Cliente describe sus tareas, problemas y alegrías."},
-  {cat:"Inteligencia Emocional", q:"¿Qué factores de diversidad pueden influir en la empatía según ACSM (2015)?", opts:["Solo la edad y el género","El género, la edad, capacidades, creencias religiosas, educación, nivel de ingresos y cultura","Solo el nivel educativo y cultural","Únicamente las diferencias de idioma"], correct:1, exp:"El género, la edad, las capacidades, las creencias a nivel religioso, la educación, el nivel de ingresos y la cultura son elementos que afectan a la empatía."},
+  {cat:'Inteligencia Emocional', q:"¿Qué factores pueden influir en la capacidad de empatía de un instructor hacia sus clientes?", opts:["La cultura, edad, género, experiencias previas y contexto socioeconómico", "Exclusivamente el nivel educativo del instructor", "Solo la experiencia profesional en años", "El tipo de instalación donde trabaja"], correct:0, exp:"La empatía puede verse influida por la diversidad cultural, generacional, de género y socioeconómica. Un instructor consciente de estas diferencias adapta su comunicación y comprensión a cada cliente de forma más efectiva."},
 ];
 
 // ============================================================ TEST LOGIC
@@ -773,6 +789,150 @@ function restartTest() {
 
 // Init
 startTest();
+
+function toggleEli5(id){document.getElementById('card-'+id).classList.toggle('open');}
 </script>
+
+<div id="eli5" class="tab-content">
+  <div class="eli5-intro"><span class="eli5-intro-icon">🧒</span><div><h3>Explícamelo fácil</h3><p>Explicaciones con metáforas y ejemplos del día a día. Toca un tema para leerlo.</p></div></div>
+  
+    <div class="eli5-card" id="card-m9t1">
+      <div class="eli5-card-header" onclick="toggleEli5('m9t1')">
+        <span class="eli5-icon">🧠</span>
+        <span class="eli5-title">Inteligencia emocional: las 5 competencias</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🧠 <strong>La inteligencia emocional (IE) es saber gestionar tus emociones y las de los demás. Es tan importante como saber de entrenamiento.</strong>
+
+Daniel Goleman popularizó el concepto con 5 competencias:
+
+1. 🪞 <strong>Autoconciencia</strong>: conocer tus propias emociones. Saber que estás nervioso, frustrado o motivado... y por qué.
+<em>Un instructor que sabe que está de mal humor puede evitar proyectarlo sobre el cliente.</em>
+
+2. 🎮 <strong>Autorregulación</strong>: gestionar tus emociones. No reaccionar impulsivamente. Responder, no reaccionar.
+<em>Cuando un cliente te desafía, en lugar de enfadarte, respondes con calma y profesionalidad.</em>
+
+3. 🔥 <strong>Motivación intrínseca</strong>: hacer las cosas por satisfacción propia, no solo por dinero o reconocimiento. Los profesionales más comprometidos suelen tener alta motivación intrínseca.
+
+4. 👂 <strong>Empatía</strong>: entender lo que siente el otro. No es "lo sé todo", es "entiendo cómo te sientes".
+<em>El cliente que lleva semanas sin progresar necesita empatía, no una conferencia sobre calorías.</em>
+
+5. 🤝 <strong>Habilidades sociales</strong>: gestionar relaciones, comunicar, influir, resolver conflictos.
+
+¿Por qué importa en el fitness?
+Un instructor técnicamente brillante pero sin IE perderá clientes. Uno con IE media pero alta empatía y buenas habilidades de comunicación construirá una clientela fiel.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m9t2">
+      <div class="eli5-card-header" onclick="toggleEli5('m9t2')">
+        <span class="eli5-icon">🦎</span>
+        <span class="eli5-title">Los tres cerebros y la toma de decisiones</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🦎 <strong>Tu cerebro tiene tres "capas" que a veces no se llevan bien entre sí.</strong>
+
+El modelo de los "tres cerebros" (Paul MacLean) explica por qué a veces actuamos de forma irracional:
+
+🦎 <strong>Cerebro reptiliano</strong> (el más antiguo): supervivencia básica. Hambre, miedo, agresividad, reproducción. Actúa por instinto, sin pensar. Es el primero en responder ante el estrés.
+<em>Cuando un cliente te grita o está muy nervioso, su cerebro reptiliano ha "secuestrado" el control.</em>
+
+🐾 <strong>Sistema límbico</strong> (cerebro emocional): emociones, recuerdos, motivación. Aquí viven el miedo al fracaso, la vergüenza, el entusiasmo. Responde a los vínculos sociales.
+<em>La motivación y la adherencia al entrenamiento viven aquí. Si el cliente no se siente bien en el gym, su límbico dirá "no vuelvo".</em>
+
+🧠 <strong>Neocórtex</strong> (cerebro racional): pensamiento lógico, planificación, lenguaje. Es el "adulto responsable" pero es lento y se cansa.
+
+¿Qué implica esto para el instructor?
+• Si un cliente está muy nervioso, no le des datos ni explicaciones técnicas (el neocórtex está "offline")
+• Primero crea seguridad emocional (límbico), luego educa (neocórtex)
+• Las decisiones de compra y de adhesión se toman en el sistema límbico, no en el neocórtex
+
+<em>"La gente olvidará lo que dijiste y lo que hiciste, pero nunca olvidará cómo les hiciste sentir." — Maya Angelou</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m9t3">
+      <div class="eli5-card-header" onclick="toggleEli5('m9t3')">
+        <span class="eli5-icon">🤝</span>
+        <span class="eli5-title">Empatía y comunicación con el cliente</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🤝 <strong>La empatía no es "ponerse en los zapatos del otro". Es entender sus zapatos sin quitarte los tuyos.</strong>
+
+Un instructor de fitness tiene conversaciones difíciles constantemente:
+• El cliente que no progresa y está desanimado
+• El que no hace los deberes (dieta, descanso) y culpa al programa
+• El que tiene miedo de lesionarse otra vez
+• El que quiere resultados en 2 semanas
+
+La empatía te permite conectar antes de corregir.
+
+Técnicas de comunicación empática:
+
+👂 <strong>Escucha activa</strong>: mirar a los ojos, asentir, no interrumpir, no preparar tu respuesta mientras el otro habla.
+
+🔄 <strong>Reflejo</strong>: repetir con tus palabras lo que el cliente ha dicho. "Entiendo que te sientes frustrado porque llevas 3 semanas y no ves cambios en el espejo..."
+
+❓ <strong>Preguntas abiertas</strong>: "¿Cómo te sientes con el programa?" en lugar de "¿Está bien el programa?". La primera invita a hablar; la segunda se responde con sí/no.
+
+⚠️ <strong>Cuidado con la diversidad</strong>: la empatía puede verse influida por diferencias culturales, de género, de edad, de nivel socioeconómico. Lo que para ti es un esfuerzo "pequeño", para otro puede ser enorme. Adapta tu perspectiva.
+
+<em>Un cliente que se siente escuchado y comprendido es un cliente que vuelve. La técnica vende la primera sesión; la empatía vende todas las demás.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m9t4">
+      <div class="eli5-card-header" onclick="toggleEli5('m9t4')">
+        <span class="eli5-icon">🌟</span>
+        <span class="eli5-title">Marca personal: quién eres profesionalmente</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🌟 <strong>La marca personal es lo que la gente piensa de ti cuando no estás en la habitación.</strong>
+
+No es tu logo ni tus redes sociales. Es la percepción que generas en los demás: qué te diferencia, qué valores transmites, en qué eres referente.
+
+¿Por qué necesita marca personal un instructor de fitness?
+• El mercado está saturado de instructores
+• Los clientes no solo compran entrenamiento, compran confianza en ti
+• Una marca sólida atrae a los clientes adecuados (los que valoran lo que tú ofreces)
+
+Los 4 pasos para construirla:
+
+1. 🪞 <strong>Autoconocimiento</strong>: ¿Quién eres? ¿Cuáles son tus fortalezas? ¿Qué te apasiona del fitness? ¿A quién quieres ayudar?
+
+2. 💡 <strong>Propuesta de valor única</strong>: ¿Qué ofreces tú que no ofrecen otros? (Especialización, estilo, método, personalidad)
+
+3. 📢 <strong>Comunicación</strong>: elegir los canales adecuados (Instagram, YouTube, TikTok, boca a boca) y comunicar de forma auténtica y consistente.
+
+4. 🔄 <strong>Gestión de reputación</strong>: cuidar las reseñas, los testimonios, el boca a boca. La reputación se construye con tiempo y se destruye en minutos.
+
+<em>La autenticidad es el corazón de la marca personal. No intentes ser otro. La versión más auténtica de ti mismo es la más sostenible y atractiva.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m9t5">
+      <div class="eli5-card-header" onclick="toggleEli5('m9t5')">
+        <span class="eli5-icon">📱</span>
+        <span class="eli5-title">Marketing digital para el instructor de fitness</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">📱 <strong>El marketing digital no es vender. Es mostrar quién eres y lo que sabes para que la gente confíe en ti.</strong>
+
+El instructor de fitness moderno tiene una presencia online. No hace falta ser famoso en Internet, pero sí ser encontrable y transmitir credibilidad.
+
+Plataformas clave:
+
+📸 <strong>Instagram</strong>: visual, ideal para mostrar ejercicios, transformaciones, el día a día en el gym. Stories para conectar, Reels para alcance.
+
+▶️ <strong>YouTube</strong>: para contenido educativo largo. Un vídeo explicando bien cómo hacer una sentadilla puede traerte clientes durante años.
+
+🎵 <strong>TikTok</strong>: audiencia joven, contenido corto y entretenido. Buena plataforma para crecer rápido.
+
+💼 <strong>LinkedIn</strong>: para posicionarte como profesional serio. Convenios con empresas, formaciones, B2B.
+
+Tipos de contenido que funcionan:
+✅ Tutoriales de ejercicios
+✅ Mitos del fitness desmontados
+✅ Testimonios de clientes (con permiso)
+✅ Tu propia historia y proceso
+✅ Tips de nutrición, sueño, recuperación
+
+⚠️ <strong>El error más común</strong>: publicar mucho sin estrategia. Mejor 2 posts buenos a la semana que 7 mediocres.
+
+<em>Regla de oro del marketing para instructores: da tanto valor gratuito que la gente piense "si esto es lo que regala, imagina lo que cobra".</em></div></div>
+    </div>
+</div>
 </body>
 </html>

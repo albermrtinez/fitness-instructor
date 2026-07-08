@@ -97,6 +97,22 @@
 .back-bar{background:#252522;padding:0.5rem 1.5rem}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
+
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem;display:none}
+.eli5-card.open .eli5-body{display:block}
+.eli5-answer{background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.25rem;font-size:0.88rem;line-height:1.8;color:#1a1a18}
+.eli5-answer strong{color:#3C3489}
 </style>
 </head>
 <body>
@@ -112,6 +128,7 @@
   <button class="tab-btn" onclick="openTab(this,'resumen')">💡 Resumen clave</button>
   <button class="tab-btn" onclick="openTab(this,'siglas')">🔤 Siglas y términos</button>
   <button class="tab-btn" onclick="openTab(this,'test')">✏️ Test</button>
+  <button class="tab-btn" onclick="openTab(this,'eli5')">🧒 Fácil</button>
 </nav>
 
 <!-- ══════════════════════════════════════════════
@@ -568,23 +585,23 @@ const ALL_QUESTIONS = [
 
   /* ── ENTRENAMIENTO FUNCIONAL ── */
   {cat:'funcional', q:"¿Qué aspecto fundamental del entrenamiento funcional se centra en la musculatura central del cuerpo?", opts:["Reducción del estrés","Aumento de la flexibilidad","Mejora de la capacidad cardiovascular","Fortalecimiento del core"], correct:3, exp:"El entrenamiento funcional abarca el fortalecimiento del core (la musculatura central del cuerpo), que es esencial para realizar una amplia gama de actividades cotidianas."},
-  {cat:'funcional', q:"¿Cuál es una característica clave del entrenamiento funcional según Xiao et al. (2021)?", opts:["Uso de máquinas de gimnasio","Enfoque en la aceleración, desaceleración y estabilidad","Dependencia de pesas y kettlebells","Uso de movimientos y técnicas poco convencionales"], correct:1, exp:"El entrenamiento funcional se caracteriza por su enfoque en la aceleración, desaceleración y estabilidad de varias articulaciones y planos, lo que determina su efectividad (Xiao et al., 2021)."},
+  {cat:'funcional', q:"¿Cuál es una característica esencial del entrenamiento funcional?", opts:["Reproduce patrones de movimiento de la vida cotidiana y el deporte", "Se realiza exclusivamente con máquinas guiadas", "Trabaja siempre un solo músculo de forma aislada", "Requiere equipamiento especializado de alta tecnología"], correct:0, exp:"El entrenamiento funcional se basa en reproducir patrones motores similares a los movimientos de la vida diaria o del deporte específico, mejorando la coordinación intermuscular y la transferencia al rendimiento real."},
   {cat:'funcional', q:"¿Cuál de los siguientes elementos NO es una característica del entrenamiento no convencional?", opts:["Uso de neumáticos","Ejercicios con el propio uso de la masa corporal","Uso exclusivo de máquinas de gimnasio","Movimientos funcionales"], correct:2, exp:"El entrenamiento no convencional NO se basa en el uso exclusivo de máquinas de gimnasio. Al contrario, usa herramientas como neumáticos, cuerdas, kettlebells y ejercicios con masa corporal."},
   {cat:'funcional', q:"¿Cuál es el objetivo central del entrenamiento funcional?", opts:["Ganar masa muscular máxima","Optimizar la función y transferir mejoras a la vida diaria","Entrenar únicamente para competiciones","Reducir el peso corporal"], correct:1, exp:"El objetivo central del entrenamiento funcional es optimizar la función, transfiriendo los beneficios a la vida diaria o, en el caso de atletas, a la competición."},
   {cat:'funcional', q:"¿Qué autores proponen los objetivos del entrenamiento funcional en centros de fitness?", opts:["Liu et al. (2014)","Sha et al. (2010)","Heredia et al. (2012)","Guler et al. (2021)"], correct:2, exp:"Heredia et al. (2012) establecen los objetivos del entrenamiento funcional: compensar debilidades, mejorar el rendimiento cotidiano, mantener la salud osteomuscular y mitigar el envejecimiento."},
   {cat:'funcional', q:"¿Qué estudio destaca la efectividad del entrenamiento funcional en adultos de mediana edad?", opts:["Sha et al. (2010)","Liu et al. (2014)","Guler et al. (2021)","Lopes et al. (2019)"], correct:2, exp:"Guler et al. (2021) destaca la efectividad del entrenamiento funcional en adultos de mediana edad, donde se observaron mejoras del control del equilibrio y la composición corporal."},
-  {cat:'funcional', q:"¿Qué evidencia mostró Liu et al. (2014) sobre el entrenamiento funcional multicomponente?", opts:["Evidencia fuerte de mejora cardiovascular","Evidencia moderada de mejora del funcionamiento físico","Sin evidencia de beneficios","Evidencia de aumento de masa muscular únicamente"], correct:1, exp:"La revisión de Liu et al. (2014) mostró evidencia moderada de que el entrenamiento funcional con múltiples componentes mejora el funcionamiento físico en adultos mayores."},
+  {cat:'funcional', q:"¿Qué beneficios aporta el entrenamiento funcional multicomponente en adultos mayores?", opts:["Mejora el equilibrio, la fuerza y la capacidad funcional reduciendo el riesgo de caídas", "Solo mejora la flexibilidad sin efectos en la fuerza", "Está contraindicado en mayores de 65 años", "No tiene efectos sobre el equilibrio dinámico"], correct:0, exp:"El entrenamiento funcional multicomponente en adultos mayores mejora simultáneamente el equilibrio, la fuerza funcional y la capacidad aeróbica, reduciendo significativamente el riesgo de caídas y dependencia."},
   {cat:'funcional', q:"¿Cuál es la diferencia principal entre entrenamiento funcional y entrenamiento de fuerza convencional?", opts:["El funcional solo usa máquinas","El funcional usa pesos más bajos","El funcional abarca cualquier ejercicio diseñado para potenciar un movimiento específico","El convencional mejora más el equilibrio"], correct:2, exp:"El entrenamiento funcional se distingue del convencional ya que abarca cualquier ejercicio diseñado para potenciar un movimiento o actividad particular. Cuanto más se alinee con el resultado deseado, mejores resultados."},
   {cat:'funcional', q:"¿Qué significa que el entrenamiento funcional es individualizado?", opts:["Todos hacen los mismos ejercicios","Se adapta a las necesidades y desafíos únicos de cada persona","Solo es válido para deportistas de élite","Requiere equipos especializados"], correct:1, exp:"Un aspecto clave del entrenamiento funcional es su enfoque individualizado. Se adapta a las necesidades únicas de cada persona, reconociendo que lo que funciona para una puede no ser adecuado para otra."},
-  {cat:'funcional', q:"¿Cuál es uno de los objetivos del entrenamiento funcional según Heredia et al. (2012)?", opts:["Aumentar al máximo la hipertrofia muscular","Mitigar los efectos de los procesos neurodegenerativos del envejecimiento","Entrenar únicamente para competiciones de alto nivel","Reducir la frecuencia de entrenamiento"], correct:1, exp:"Según Heredia et al. (2012), uno de los objetivos es mitigar los efectos de los procesos neurodegenerativos naturales asociados al envejecimiento, permitiendo un envejecimiento más activo y saludable."},
+  {cat:'funcional', q:"¿Cuál es uno de los principales objetivos del entrenamiento funcional?", opts:["Mejorar la estabilidad del core y la transferencia al movimiento real", "Maximizar el tamaño muscular por encima de la funcionalidad", "Trabajar exclusivamente en rangos de movimiento parciales", "Evitar el uso del peso corporal como resistencia"], correct:0, exp:"El entrenamiento funcional busca mejorar la estabilidad central (core), la coordinación intersegmentaria y la capacidad de transferir la fuerza generada al movimiento real, ya sea deportivo o de la vida cotidiana."},
 
   /* ── BANDAS DE RESISTENCIA ── */
   {cat:'bandas', q:"¿Qué tipo de resistencia ofrecen las bandas de resistencia?", opts:["Resistencia fija","Resistencia variable","Resistencia isométrica","Resistencia gravitacional"], correct:1, exp:"Las bandas de resistencia son tiras elásticas que ofrecen resistencia variable, permitiendo a los usuarios adaptar la intensidad del entrenamiento a sus necesidades y objetivos."},
   {cat:'bandas', q:"¿Cuál de los siguientes es un beneficio observado del uso de bandas elásticas en el entrenamiento?", opts:["Mejora en la fuerza muscular y resistencia","Aumento en la tasa de abandono del ejercicio","Aumento notable de la flexibilidad únicamente","Disminución de la calidad de vida"], correct:0, exp:"El entrenamiento con bandas elásticas proporciona ganancias de fuerza comparables al entrenamiento convencional, además de mejoras en resistencia, potencia, equilibrio, calidad de vida y composición corporal (Lopes et al., 2019)."},
   {cat:'bandas', q:"¿Cuál de las siguientes NO es una ventaja de usar bandas de resistencia para el entrenamiento?", opts:["Ofrecen una opción de bajo impacto","Son ligeras y compactas, ideales para viajar","Son más caras que otros equipos de entrenamiento","Permiten una amplia variedad de ejercicios"], correct:2, exp:"Las bandas de resistencia son más asequibles (más baratas) que otros equipos de entrenamiento, no más caras. Esta accesibilidad es una de sus principales ventajas."},
   {cat:'bandas', q:"¿Qué deben hacer los usuarios con las bandas de resistencia para aumentar progresivamente la dificultad?", opts:["Aumentar el número de articulaciones implicadas","Usar bandas más fuertes o ajustar la posición","Reducir el número de series","Disminuir el tiempo de descanso"], correct:1, exp:"A medida que se gana experiencia y fuerza, es posible aumentar la resistencia utilizando bandas más fuertes o ajustando la forma en que se utilizan, garantizando que el entrenamiento siga siendo desafiante."},
-  {cat:'bandas', q:"Según Lopes et al. (2019), ¿qué característica tienen las bandas elásticas respecto a la tasa de abandono?", opts:["Tienen mayor tasa de abandono que el entrenamiento convencional","Tienen menor tasa de abandono en adolescentes","No hay diferencias en tasas de abandono","Solo aplica en adultos mayores"], correct:1, exp:"Lopes et al. (2019) demostraron que las bandas elásticas tienen una menor tasa de abandono en ejercicios realizados con resistencia elástica en adolescentes, sugiriendo un posible favoritismo hacia este tipo de entrenamiento."},
-  {cat:'bandas', q:"¿Qué adaptaciones genera el uso de bandas elásticas según Joy et al. (2016)?", opts:["Solo adaptaciones cardiovasculares","Adaptaciones neuromusculares beneficiosas en diferentes puntos del rango de movimiento","Únicamente aumento de la flexibilidad","Adaptaciones exclusivamente hormonales"], correct:1, exp:"Joy et al. (2016) señalan que la aplicación de bandas elásticas puede generar adaptaciones neuromusculares beneficiosas al abordar desafíos mecánicos específicos en diferentes puntos del rango de movimiento."},
+  {cat:'bandas', q:"¿Qué ventaja destacan los estudios sobre el uso de bandas elásticas en el entrenamiento?", opts:["Alta adherencia y bajo índice de abandono por su practicidad", "Son más efectivas que el peso libre para la hipertrofia", "Solo son útiles en rehabilitación", "Generan más lesiones que otros materiales"], correct:0, exp:"Las bandas elásticas presentan alta adherencia en los programas de entrenamiento gracias a su versatilidad, bajo coste y facilidad de uso en cualquier entorno, lo que reduce el abandono frente a otros materiales."},
+  {cat:'bandas', q:"¿Qué tipo de adaptaciones neuromusculares produce el entrenamiento con bandas elásticas?", opts:["Ganancias de fuerza y potencia similares a las del entrenamiento con peso libre", "Solo mejora la flexibilidad sin efectos en la fuerza", "Exclusivamente útil para rehabilitación post-quirúrgica", "No produce adaptaciones en sujetos entrenados"], correct:0, exp:"El entrenamiento con bandas elásticas produce ganancias de fuerza, potencia e hipertrofia comparables a las del peso libre, especialmente en la fase final del movimiento donde la resistencia es mayor."},
   {cat:'bandas', q:"¿En qué tipo de poblaciones se han observado efectos positivos del entrenamiento con bandas elásticas?", opts:["Solo en deportistas de élite","Solo en adultos jóvenes sanos","Ancianos, individuos con osteoartritis y fibromialgia","Exclusivamente en población femenina"], correct:2, exp:"Investigaciones previas mostraron efectos positivos en la ganancia de fuerza muscular al utilizar bandas elásticas en diferentes poblaciones, incluyendo ancianos, individuos con osteoartritis y fibromialgia."},
   {cat:'bandas', q:"¿Qué estudio destaca la eficacia de la resistencia elástica en el desarrollo de la fuerza del hombro?", opts:["Lopes et al. (2019)","Joy et al. (2016)","Seguin et al. (2022)","Guler et al. (2021)"], correct:2, exp:"Seguin et al. (2022) destaca la eficacia del entrenamiento con resistencia elástica en el desarrollo de la fuerza y el rendimiento del hombro, con implicaciones para la práctica clínica y científica."},
   {cat:'bandas', q:"¿Qué debes hacer antes de usar las bandas de resistencia?", opts:["Exponerlas al sol para mejorar su elasticidad","Aplicar talco en las áreas de contacto de la banda y la piel","Revisar su estado en busca de agujeros, grietas o signos de desgaste","Seleccionar ejercicios que sean seguros y cómodos"], correct:2, exp:"Antes de usar las bandas, es fundamental revisar su estado. Buscar agujeros, grietas o signos de desgaste que puedan provocar roturas inesperadas (Inspección Previa)."},
@@ -654,9 +671,10 @@ function loadQuestions() {
   }
   renderQuestions();
   document.getElementById('result-panel').style.display = 'none';
-  
+  document.getElementById('btn-submit').disabled = false;
   updateProgress();
 }
+
 
 function renderQuestions() {
   const c = document.getElementById('questions-container');
@@ -676,7 +694,6 @@ function renderQuestions() {
     c.appendChild(div);
   });
 }
-
 function pickAnswer(qIdx, optIdx) {
   const q = activeQuestions[qIdx];
   const fb = document.getElementById('fb-' + qIdx);
@@ -691,7 +708,7 @@ function pickAnswer(qIdx, optIdx) {
     else if (j === optIdx && !isCorrect) lbl.classList.add('wrong');
   });
   fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
-  fb.innerHTML = '<div class="fb-circle"></div><div><strong>' + (isCorrect ? '✅ Correcto' : '❌ Incorrecto') + '</strong> — ' + q.exp + '</div>';
+  fb.innerHTML = '<div class="fb-circle"></div><div><strong>' + (isCorrect ? '\u2705 Correcto' : '\u274C Incorrecto') + '</strong> \u2014 ' + q.exp + '</div>';
   fb.style.display = 'flex';
   answeredCount++;
   if (isCorrect) scoreCount++;
@@ -700,20 +717,14 @@ function pickAnswer(qIdx, optIdx) {
   if (answeredCount === activeQuestions.length) {
     const finalPct = Math.round(scoreCount / activeQuestions.length * 100);
     document.getElementById('score-display').textContent = scoreCount + ' / ' + activeQuestions.length;
-    document.getElementById('score-msg').textContent = finalPct >= 80
-      ? '🏆 ¡Excelente! Has acertado el ' + finalPct + '% de las preguntas.'
-      : finalPct >= 60
-      ? '👍 Bien, ' + finalPct + '% correcto. Repasa los temas fallados.'
-      : '📚 Necesitas reforzar. Solo ' + finalPct + '% correcto. ¡Ánimo!';
+    document.getElementById('score-msg').textContent = finalPct >= 80 ? '\uD83C\uDFC6 \u00A1Excelente! Has acertado el ' + finalPct + '% de las preguntas.' : finalPct >= 60 ? '\uD83D\uDC4D Bien, ' + finalPct + '% correcto. Repasa los temas fallados.' : '\uD83D\uDCDA Necesitas reforzar. Solo ' + finalPct + '% correcto. \u00A1\u00C1nimo!';
     document.getElementById('result-panel').style.display = 'block';
     document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
     document.getElementById('prog-fill').style.width = '100%';
   }
 }
-
 function updateProgress() {}
 function submitTest() {}
-
 function retryTest() {
   loadQuestions();
   const testEl = document.getElementById('test');
@@ -726,6 +737,152 @@ document.addEventListener('DOMContentLoaded', () => {
   buildFilterBar();
   loadQuestions();
 });
+
+function toggleEli5(id){document.getElementById('card-'+id).classList.toggle('open');}
 </script>
+
+<div id="eli5" class="tab-content">
+  <div class="eli5-intro"><span class="eli5-intro-icon">🧒</span><div><h3>Explícamelo fácil</h3><p>Explicaciones con metáforas y ejemplos del día a día. Toca un tema para leerlo.</p></div></div>
+  
+    <div class="eli5-card" id="card-m5t1">
+      <div class="eli5-card-header" onclick="toggleEli5('m5t1')">
+        <span class="eli5-icon">🤸</span>
+        <span class="eli5-title">¿Qué es el entrenamiento funcional?</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🤸 <strong>El entrenamiento funcional no entrena músculos. Entrena MOVIMIENTOS.</strong>
+
+El entrenamiento tradicional aísla músculos (curl de bíceps, extensión de cuádriceps en máquina). Eso está bien para fisiculturismo, pero en la vida real nunca usamos un músculo solo.
+
+<em>Cuando coges una caja del suelo, usas las piernas, la espalda, el core, los brazos y el equilibrio AL MISMO TIEMPO.</em>
+
+El entrenamiento funcional replica esos patrones reales:
+• Empujar (press de banca → empujar una puerta)
+• Tirar (dominadas → subirse a algo)
+• Sentadilla (levantarse de una silla)
+• Bisagra de cadera (peso muerto → coger algo del suelo)
+• Llevar carga (farmer carry → llevar bolsas de la compra)
+• Rotación (lanzar, girar)
+
+Características del entrenamiento funcional:
+✅ Movimientos multiarticulares y multiplanares
+✅ Integra fuerza, equilibrio, coordinación y propiocepción
+✅ Transfiere mejor al deporte y a la vida diaria
+✅ Mayor gasto calórico por unidad de tiempo
+
+<em>El objetivo no es que el bíceps esté más grande. El objetivo es que levantes más cajas del suelo sin lesionarte ni cansarte.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m5t2">
+      <div class="eli5-card-header" onclick="toggleEli5('m5t2')">
+        <span class="eli5-icon">🎯</span>
+        <span class="eli5-title">El core: mucho más que los abdominales</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🎯 <strong>El core no es solo la barriga. Es el centro de mando de todo tu cuerpo.</strong>
+
+Cuando la gente dice "core" piensa en los abdominales (six-pack). Pero el core es todo el cilindro central del cuerpo:
+
+Arriba: <strong>diafragma</strong> (músculo de la respiración)
+Abajo: <strong>suelo pélvico</strong>
+Delante: <strong>transverso del abdomen</strong> (el más profundo, como un corsé)
+Detrás: <strong>multífidos y erectores</strong> (la musculatura de la columna)
+Lados: <strong>oblicuos interno y externo</strong>
+
+<em>Imagina que el core es el tronco del árbol. Las ramas (brazos y piernas) pueden hacer fuerza solo si el tronco es sólido. Si el tronco es débil, la fuerza se pierde o peor: se lesiona.</em>
+
+¿Por qué es tan importante?
+• Transfiere la fuerza entre piernas y brazos
+• Protege la columna lumbar de lesiones
+• Mejora el equilibrio y la postura
+• Todos los ejercicios compuestos requieren un core estable
+
+Ejercicios básicos de core:
+• Plancha frontal y lateral (estabilidad)
+• Dead bug (activación profunda)
+• Pallof press (resistir la rotación)
+• Hollow body
+No hace falta hacer 200 abdominales: 10 minutos de core bien hecho es suficiente.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m5t3">
+      <div class="eli5-card-header" onclick="toggleEli5('m5t3')">
+        <span class="eli5-icon">🏋️</span>
+        <span class="eli5-title">Patrones de movimiento fundamentales</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🏋️ <strong>El cuerpo humano solo tiene 6 patrones de movimiento. Domínalos y podrás hacer cualquier cosa.</strong>
+
+1. <strong>Sentadilla</strong> (Squat): doblar rodillas y caderas hacia abajo. Levantarse de una silla, agacharse.
+   Ejercicios: sentadilla goblet, sentadilla con barra, sentadilla búlgara.
+
+2. <strong>Bisagra de cadera</strong> (Hinge): doblar hacia delante desde la cadera con la espalda recta. Coger algo del suelo.
+   Ejercicios: peso muerto, hip thrust, kettelbell swing.
+
+3. <strong>Empuje horizontal</strong>: empujar algo hacia delante. Press de banca, flexiones.
+
+4. <strong>Empuje vertical</strong>: empujar algo hacia arriba. Press militar, handstand.
+
+5. <strong>Tracción horizontal</strong>: tirar de algo hacia ti. Remo con mancuerna.
+
+6. <strong>Tracción vertical</strong>: tirar de algo hacia abajo o subir tu cuerpo. Dominadas, jalón al pecho.
+
+<em>Un programa funcional completo incluye los 6 patrones. Si solo haces press de banca y nunca entrenas tracciones, creas desequilibrios musculares que acaban en lesión.</em>
+
+La progresión es: peso corporal → añadir carga → añadir inestabilidad → velocidad → fatiga.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m5t4">
+      <div class="eli5-card-header" onclick="toggleEli5('m5t4')">
+        <span class="eli5-icon">🔵</span>
+        <span class="eli5-title">Entrenamiento con inestabilidad (TRX, Bosu...)</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🔵 <strong>Entrenar con superficies inestables obliga al sistema nervioso a trabajar más duro.</strong>
+
+Cuando te subes a un Bosu o usas el TRX, el cuerpo no puede "desconectarse". Tiene que estar constantemente ajustando miles de pequeños músculos para mantenerte en equilibrio.
+
+Esto activa:
+• Los músculos <strong>estabilizadores profundos</strong> (core, rotadores del hombro, gemelos...)
+• El sistema <strong>propioceptivo</strong>: los sensores del cuerpo que detectan la posición en el espacio
+• La <strong>coordinación intermuscular</strong>: músculos trabajando juntos
+
+Materiales de inestabilidad:
+🔵 <strong>Bosu</strong>: mitad de pelota. Para sentadillas, equilibrio, coordinación.
+🟡 <strong>TRX / Suspensión</strong>: correas colgantes. Excelente para core, empuje y tracción con inestabilidad.
+🔴 <strong>Fitball</strong>: pelota grande. Para ejercicios de core y movilidad.
+🟠 <strong>Balance board / Indo board</strong>: tablones inestables. Para propiocepción del tobillo.
+
+⚠️ <strong>Trampa común</strong>: no es mejor hacer todo en inestabilidad. Para desarrollar fuerza máxima, el suelo firme es superior. La inestabilidad se usa como complemento, no como base del programa.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m5t5">
+      <div class="eli5-card-header" onclick="toggleEli5('m5t5')">
+        <span class="eli5-icon">🦺</span>
+        <span class="eli5-title">Bandas elásticas y su resistencia variable</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🦺 <strong>Las bandas elásticas tienen una característica única: la resistencia aumenta cuanto más las estiras.</strong>
+
+Con pesas, la resistencia es constante todo el recorrido. Con bandas, al principio del movimiento cuesta poco y al final cuesta mucho. Esto tiene ventajas e inconvenientes:
+
+✅ <strong>Ventajas</strong>:
+• Imitan el perfil de fuerza natural (cuando extiendes el brazo, tienes más palanca al final)
+• Son seguras: si fallas el movimiento, simplemente sueltas
+• Portátiles, económicas, versátiles
+• Alta adherencia: son fáciles de usar en casa o de viaje
+• Carga progresiva sin mucho peso (ideal para mayores y rehabilitación)
+
+❌ <strong>Inconvenientes</strong>:
+• La resistencia exacta es difícil de cuantificar
+• No desarrollan fuerza máxima tan bien como el peso libre
+• Se deterioran con el tiempo
+
+Colores habituales (varía según marca):
+• Amarilla = muy ligera
+• Roja = ligera
+• Verde = media
+• Azul = fuerte
+• Negra = muy fuerte
+
+<em>Son perfectas para calentamiento, ejercicios de activación glútea, complemento de sentadilla y dominadas, y trabajo de hombro y manguito rotador.</em></div></div>
+    </div>
+</div>
 </body>
 </html>

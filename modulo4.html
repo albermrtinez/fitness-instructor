@@ -97,6 +97,22 @@
 .back-bar{background:#252522;padding:0.5rem 1.5rem}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
+
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem;display:none}
+.eli5-card.open .eli5-body{display:block}
+.eli5-answer{background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.25rem;font-size:0.88rem;line-height:1.8;color:#1a1a18}
+.eli5-answer strong{color:#3C3489}
 </style>
 </head>
 <body>
@@ -112,6 +128,7 @@
   <button class="tab-btn" onclick="openTab(this,'resumen')">💡 Resumen clave</button>
   <button class="tab-btn" onclick="openTab(this,'siglas')">🔤 Siglas y términos</button>
   <button class="tab-btn" onclick="openTab(this,'test')">✏️ Test</button>
+  <button class="tab-btn" onclick="openTab(this,'eli5')">🧒 Fácil</button>
 </nav>
 
 <!-- ══════════════════════════════════════════════
@@ -720,8 +737,8 @@ const ALL_QUESTIONS = [
   {cat:'resistencia', q:"En natación, al calcular la FC objetivo con Karvonen, ¿qué ajuste se aplica al resultado?", opts:["Se suman 10 pulsaciones","Se restan 10 pulsaciones","Se multiplica por 0,9","No se aplica ningún ajuste"], correct:1, exp:"Para actividades en posición horizontal como la natación, se debe restar 10 pulsaciones al resultado final de la fórmula de Karvonen, porque la posición horizontal facilita el retorno venoso y la FC es menor."},
   {cat:'resistencia', q:"¿Cuál es la base fundamental para la optimización del rendimiento deportivo y el desarrollo de una condición física integral?", opts:["El entrenamiento de la flexibilidad y la coordinación","El entrenamiento de la fuerza y la potencia","El entrenamiento de la resistencia y la velocidad","El entrenamiento de la técnica y la táctica"], correct:2, exp:"El entrenamiento de la resistencia y la velocidad constituye la base fundamental para la optimización del rendimiento deportivo y el desarrollo de una condición física integral."},
   {cat:'resistencia', q:"¿Cuál es el principio fundamental del entrenamiento de resistencia que implica aumentar gradualmente la carga de trabajo?", opts:["Entrenamiento de resistencia estática","Entrenamiento de alta intensidad","Sobrecarga progresiva","Entrenamiento en circuito"], correct:2, exp:"La sobrecarga progresiva es el principio que establece que para seguir obteniendo mejoras, hay que aumentar gradualmente la intensidad, la duración o la frecuencia del ejercicio a medida que el cuerpo se adapta."},
-  {cat:'resistencia', q:"¿Cuál es uno de los factores limitantes para la absorción máxima de oxígeno según Bassett y Howley (2000)?", opts:["El nivel de hidratación","La capacidad de transporte de oxígeno de la sangre","El índice de masa corporal","La frecuencia cardíaca en reposo"], correct:1, exp:"Según Bassett y Howley (2000), la capacidad de transporte de oxígeno de la sangre (volumen sistólico, gasto cardíaco, concentración de hemoglobina) es uno de los principales factores limitantes del VO2máx."},
-  {cat:'resistencia', q:"¿Cuál fue el principal hallazgo del estudio de Karvonen, Kentala y Mustala (1957) sobre los efectos del entrenamiento en la frecuencia cardíaca?", opts:["El entrenamiento reduce la frecuencia cardíaca en reposo","El entrenamiento aumenta la frecuencia cardíaca en reposo","El entrenamiento no tiene efecto en la FC en reposo","El entrenamiento solo afecta la FC durante el ejercicio"], correct:0, exp:"El estudio longitudinal de Karvonen et al. (1957) demostró que el entrenamiento aeróbico produce una reducción de la frecuencia cardíaca en reposo, uno de los indicadores de mejora de la condición cardiovascular."},
+  {cat:'resistencia', q:"¿Cuál de los siguientes es un factor limitante principal del VO₂máx?", opts:["La capacidad del corazón para bombear sangre (gasto cardíaco)", "El tamaño de los pulmones", "La longitud de los huesos de las piernas", "La temperatura ambiente"], correct:0, exp:"El gasto cardíaco máximo es el principal limitante del VO₂máx porque determina cuánta sangre oxigenada puede llegar a los músculos por unidad de tiempo. La capacidad de extracción de O₂ por el músculo también influye."},
+  {cat:'resistencia', q:"¿Qué relación existe entre la intensidad del ejercicio y las adaptaciones cardiovasculares?", opts:["A mayor intensidad relativa, mayores adaptaciones cardiovasculares", "La intensidad no influye en las adaptaciones cardíacas", "Solo el volumen total importa, no la intensidad", "Las adaptaciones son iguales a cualquier intensidad"], correct:0, exp:"Entrenar a intensidades más elevadas (mayor % de FCmáx o VO₂máx) genera mayores adaptaciones cardiovasculares como aumento del volumen sistólico y mejora del gasto cardíaco máximo."},
   {cat:'resistencia', q:"¿Qué es la resistencia aeróbica?", opts:["Capacidad de mantener esfuerzos máximos sin oxígeno","Capacidad de realizar esfuerzos prolongados de intensidad moderada sin fatiga extrema","Capacidad de sprints repetidos con recuperación corta","Capacidad de fuerza máxima durante tiempo prolongado"], correct:1, exp:"La resistencia aeróbica se describe como la habilidad del cuerpo para realizar esfuerzos prolongados a intensidad moderada–baja, sin experimentar fatiga extrema. Se apoya principalmente en el sistema oxidativo."},
   {cat:'resistencia', q:"¿Qué sistema energético predomina en la resistencia anaeróbica?", opts:["Sistema oxidativo aeróbico","Sistema de ácidos grasos","Sistema glucolítico no oxidativo","Sistema de fosfocreatina aláctica"], correct:2, exp:"La resistencia anaeróbica se apoya en el sistema glucolítico no oxidativo, que proporciona energía de forma rápida pero limitada en el tiempo, utilizando los depósitos de glucógeno muscular."},
 
@@ -739,7 +756,7 @@ const ALL_QUESTIONS = [
   {cat:'metodología', q:"¿A qué porcentaje de la velocidad de competición trabaja el método de repeticiones intensivo corto?", opts:["80–90%","90–95%","90–100%","100–105%"], correct:2, exp:"El método de repeticiones intensivo corto se ejecuta a intensidad próxima a la velocidad de competición (90–100%), con intervalos de 20–30 segundos. Aumenta la capacidad anaeróbica láctica y la producción de lactato."},
   {cat:'metodología', q:"¿Qué efecto produce el método interválico en el corazón durante la fase de TRABAJO?", opts:["Dilatación del miocardio","Hipertrofia del miocardio por mayor resistencia periférica","Reducción de la FC basal","Aumento del volumen sistólico en reposo"], correct:1, exp:"Durante la fase de trabajo del método interválico, la mayor resistencia periférica provoca hipertrofia del miocardio. Durante el descanso, la reducción de la resistencia periférica estimula el aumento de la capacidad cardíaca."},
   {cat:'metodología', q:"¿Qué herramienta permite controlar la intensidad del ejercicio sin necesidad de medir la FC?", opts:["VO2máx","Escala de Borg (percepción subjetiva del esfuerzo)","Fórmula de Tanaka","Fórmula de Nes"], correct:1, exp:"La escala de Borg (Percepción Subjetiva del Esfuerzo / RPE) permite controlar y ajustar la intensidad del ejercicio basándose en la sensación subjetiva del esfuerzo, sin necesidad de medir la frecuencia cardíaca."},
-  {cat:'metodología', q:"¿Cuántas zonas de entrenamiento cardiorrespiratorio se utilizan en la tabla de metodología de Viedma Morales?", opts:["4 zonas","5 zonas","6 zonas","7 zonas"], correct:2, exp:"La tabla de Viedma Morales utiliza 6 zonas de entrenamiento: Z1 (regenerativa), Z2, Z3 (MLEE/potencia aeróbica), Z4 (por encima VO2máx), Z5 (láctico 2) y Z6 (sprint máximo/capacidad anaeróbica)."},
+  {cat:'metodología', q:"¿Cuántas zonas de intensidad se utilizan habitualmente para clasificar el entrenamiento cardiovascular?", opts:["5 zonas", "2 zonas", "10 zonas", "1 zona única"], correct:0, exp:"El sistema de 5 zonas de intensidad es el más extendido en el entrenamiento cardiovascular. Se basan en porcentajes de FCmáx o VO₂máx y permiten planificar estímulos específicos para cada objetivo fisiológico."},
   {cat:'metodología', q:"¿Qué significa MLEE en metodología del entrenamiento?", opts:["Método Largo de Esfuerzo Extenso","Máximo Lactato en Estado Estable","Mínima Longitud de Esfuerzo Eficaz","Método Láctico de Ejercicio Extensivo"], correct:1, exp:"MLEE significa Máximo Lactato en Estado Estable. Es la máxima intensidad de ejercicio en la que la producción de lactato se equilibra con su eliminación. Corresponde aproximadamente a la zona 3 de entrenamiento."},
 
   /* ── RECURSOS ── */
@@ -767,7 +784,7 @@ const ALL_QUESTIONS = [
   {cat:'velocidad', q:"¿Cuál de las 5 fases del tiempo de reacción es la MÁS mejorable con entrenamiento?", opts:["Excitación del receptor sensorial","Vía aferente hacia el SNC","Elaboración de la respuesta en el SNC","Vía eferente desde el SNC al músculo"], correct:2, exp:"La fase de elaboración de la respuesta (fase 3), donde el SNC selecciona la respuesta correcta entre las opciones almacenadas en la memoria, es la más susceptible de mejorar con entrenamiento."},
   {cat:'velocidad', q:"¿Cuál es la clave para desarrollar las distintas manifestaciones de la velocidad?", opts:["La dieta balanceada","El descanso adecuado","La intensidad del entrenamiento","La planificación de ejercicios específicos"], correct:3, exp:"La planificación de ejercicios específicos es clave para desarrollar las distintas manifestaciones de la velocidad. Los métodos deben contemplar las exigencias de la competición y centrarse lo máximo posible en ellas."},
   {cat:'velocidad', q:"¿Cuáles son las pruebas que se consideran puramente de velocidad en atletismo?", opts:["300m, 200m, 100m, 80m y 60m lisos","400m, 300m, 200m, 100m y 50m lisos","500m, 400m, 300m, 200m y 100m lisos","600m, 500m, 400m, 300m y 200m lisos"], correct:0, exp:"Dentro del atletismo, las pruebas puramente de velocidad son las de 300m, 200m, 100m, 80m y 60m lisos."},
-  {cat:'velocidad', q:"¿Cuál de los siguientes NO es un factor que determina la velocidad según Ortiz (2004)?", opts:["Componente genético y tipo de fibras musculares","Fuerza explosiva y coordinación intramuscular","Nivel de hidratación y alimentación","Técnica motora y concentración"], correct:2, exp:"Ortiz (2004) señala que los factores que condicionan la velocidad son: componente genético, tipo de fibras, fuerza explosiva, coordinación intramuscular, flexibilidad dinámica, metabolismo anaeróbico, técnica y aspectos psicológicos. La hidratación no figura como factor condicionante directo."},
+  {cat:'velocidad', q:"¿Cuál de los siguientes factores NO determina directamente la velocidad de carrera?", opts:["El color de la ropa deportiva", "La frecuencia de zancada", "La amplitud de zancada", "La fuerza aplicada en el suelo"], correct:0, exp:"La velocidad de carrera depende principalmente de la frecuencia de zancada, la amplitud de zancada y la fuerza aplicada contra el suelo. El color de la ropa no es un factor fisiológico determinante."},
   {cat:'velocidad', q:"¿Qué herramienta se usa para mejorar la velocidad de aceleración mediante trabajo horizontal con grandes cargas?", opts:["Carreras asistidas con bandas elásticas","Arrastres pesados con trineo","Saltos verticales asistidos","Ejercicios de estimulación nerviosa"], correct:1, exp:"Los arrastres pesados con trineo son uno de los ejercicios orientados a mejorar la fuerza horizontal máxima en el inicio del sprint (bajas velocidades), promoviendo la aplicación de fuerza en la misma dirección de la aceleración."},
   {cat:'velocidad', q:"¿Cuál de las siguientes herramientas se utiliza para mejorar la fuerza explosiva en el entrenamiento de la velocidad?", opts:["Trabajo con cargas ligeras y ejecución rápida (pliometría)","Carreras cortas con salida lanzada","Ejercicios de estimulación nerviosa","Método de contrastes"], correct:0, exp:"Para mejorar la fuerza explosiva y por tanto la aceleración, se utiliza el trabajo con cargas ligeras y ejecución rápida (pliometría), trabajo con multisaltos horizontales y multisaltos cortos a máxima intensidad."},
 
@@ -784,7 +801,7 @@ const ALL_QUESTIONS = [
   {cat:'pliometría', q:"Para mejorar la velocidad en sprint horizontal, ¿qué tipo de pliometría es más adecuada según la evidencia?", opts:["Bilateral y vertical","Unilateral y horizontal","Saltos con contramovimiento bilateral","Drop jumps verticales"], correct:1, exp:"Según Gonzalo-Skok et al. (2019), el entrenamiento pliométrico unilateral-horizontal mostró mejoras significativas en todos los tiempos de sprint (5, 10 y 25 metros), mientras que el bilateral-vertical no obtuvo el mismo efecto."},
   {cat:'pliometría', q:"Para mejorar la altura del salto vertical, ¿qué tipo de pliometría es más recomendada?", opts:["Unilateral y horizontal","Bilateral y vertical","Sprint asistido con banda","Arrastres con trineo"], correct:1, exp:"Para mejorar la altura del salto vertical, el entrenamiento pliométrico bilateral-vertical (saltos en el lugar, drop jumps, saltos con contramovimiento) es más adecuado que el unilateral-horizontal."},
   {cat:'pliometría', q:"¿Con qué frecuencia semanal se recomienda realizar entrenamiento pliométrico?", opts:["1 vez/semana","2–3 veces/semana","4–5 veces/semana","Todos los días"], correct:1, exp:"Se recomienda realizar sesiones de pliometría de 2 a 3 veces por semana para permitir una recuperación adecuada entre sesiones y evitar el agotamiento excesivo."},
-  {cat:'pliometría', q:"¿En qué población muestra el entrenamiento pliométrico los mayores efectos según Kons et al. (2023)?", opts:["Atletas de alto rendimiento adultos","Deportistas individuales de élite","Niños, adolescentes y deportes colectivos","Corredores de fondo"], correct:2, exp:"Según Kons et al. (2023), el efecto del entrenamiento pliométrico es mayor en niños y adolescentes (por su proceso de adaptación y desarrollo) y en deportes colectivos frente a individuales, especialmente en el género femenino."},
+  {cat:'pliometría', q:"¿En qué perfil de deportista suele producir mayores mejoras el entrenamiento pliométrico?", opts:["Deportistas con menor nivel de rendimiento inicial", "Atletas de élite con años de experiencia pliométrica", "Personas sedentarias mayores de 60 años", "El pliométrico produce iguales efectos en todos los niveles"], correct:0, exp:"El entrenamiento pliométrico genera mayores ganancias en deportistas con menor nivel de base, ya que tienen más margen de mejora en el ciclo estiramiento-acortamiento (CEA) y en la coordinación neuromuscular."},
   {cat:'pliometría', q:"¿Cuál es la base del ciclo de estiramiento-acortamiento (CEA)?", opts:["Fase concéntrica seguida de fase excéntrica","Fase excéntrica (alargamiento) seguida rápidamente de fase concéntrica (acortamiento)","Contracción isométrica mantenida y liberación brusca","Activación de fibras tipo I seguida de fibras tipo II"], correct:1, exp:"El CEA consiste en un movimiento de alargamiento (excéntrico) seguido rápidamente por un movimiento de acortamiento (concéntrico). La energía elástica almacenada en la fase excéntrica potencia la fase concéntrica posterior."},
   {cat:'pliometría', q:"¿Cuántas series se recomiendan por ejercicio en un programa de pliometría?", opts:["1–2 series","3–4 series","5–6 series","7–8 series"], correct:1, exp:"Se recomiendan realizar entre 3 y 4 series de cada ejercicio pliométrico, tomando descansos de 1 a 2 minutos entre series, priorizando siempre la calidad del movimiento y la técnica adecuada."},
 
@@ -837,9 +854,10 @@ function loadQuestions() {
   }
   renderQuestions();
   document.getElementById('result-panel').style.display = 'none';
-  
+  document.getElementById('btn-submit').disabled = false;
   updateProgress();
 }
+
 
 function renderQuestions() {
   const c = document.getElementById('questions-container');
@@ -859,7 +877,6 @@ function renderQuestions() {
     c.appendChild(div);
   });
 }
-
 function pickAnswer(qIdx, optIdx) {
   const q = activeQuestions[qIdx];
   const fb = document.getElementById('fb-' + qIdx);
@@ -874,7 +891,7 @@ function pickAnswer(qIdx, optIdx) {
     else if (j === optIdx && !isCorrect) lbl.classList.add('wrong');
   });
   fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
-  fb.innerHTML = '<div class="fb-circle"></div><div><strong>' + (isCorrect ? '✅ Correcto' : '❌ Incorrecto') + '</strong> — ' + q.exp + '</div>';
+  fb.innerHTML = '<div class="fb-circle"></div><div><strong>' + (isCorrect ? '\u2705 Correcto' : '\u274C Incorrecto') + '</strong> \u2014 ' + q.exp + '</div>';
   fb.style.display = 'flex';
   answeredCount++;
   if (isCorrect) scoreCount++;
@@ -883,20 +900,14 @@ function pickAnswer(qIdx, optIdx) {
   if (answeredCount === activeQuestions.length) {
     const finalPct = Math.round(scoreCount / activeQuestions.length * 100);
     document.getElementById('score-display').textContent = scoreCount + ' / ' + activeQuestions.length;
-    document.getElementById('score-msg').textContent = finalPct >= 80
-      ? '🏆 ¡Excelente! Has acertado el ' + finalPct + '% de las preguntas.'
-      : finalPct >= 60
-      ? '👍 Bien, ' + finalPct + '% correcto. Repasa los temas fallados.'
-      : '📚 Necesitas reforzar. Solo ' + finalPct + '% correcto. ¡Ánimo!';
+    document.getElementById('score-msg').textContent = finalPct >= 80 ? '\uD83C\uDFC6 \u00A1Excelente! Has acertado el ' + finalPct + '% de las preguntas.' : finalPct >= 60 ? '\uD83D\uDC4D Bien, ' + finalPct + '% correcto. Repasa los temas fallados.' : '\uD83D\uDCDA Necesitas reforzar. Solo ' + finalPct + '% correcto. \u00A1\u00C1nimo!';
     document.getElementById('result-panel').style.display = 'block';
     document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
     document.getElementById('prog-fill').style.width = '100%';
   }
 }
-
 function updateProgress() {}
 function submitTest() {}
-
 function retryTest() {
   loadQuestions();
   const testEl = document.getElementById('test');
@@ -909,6 +920,140 @@ document.addEventListener('DOMContentLoaded', () => {
   buildFilterBar();
   loadQuestions();
 });
+
+function toggleEli5(id){document.getElementById('card-'+id).classList.toggle('open');}
 </script>
+
+<div id="eli5" class="tab-content">
+  <div class="eli5-intro"><span class="eli5-intro-icon">🧒</span><div><h3>Explícamelo fácil</h3><p>Explicaciones con metáforas y ejemplos del día a día. Toca un tema para leerlo.</p></div></div>
+  
+    <div class="eli5-card" id="card-m4t1">
+      <div class="eli5-card-header" onclick="toggleEli5('m4t1')">
+        <span class="eli5-icon">🫀</span>
+        <span class="eli5-title">VO₂máx: el motor cardiovascular</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🫀 <strong>El VO₂máx es como el tamaño del motor de tu coche: determina cuánta energía puedes generar usando oxígeno.</strong>
+
+VO₂máx significa "volumen máximo de oxígeno que puedes consumir por minuto". Se mide en ml de O₂ por kg de peso por minuto.
+
+• Persona sedentaria: ~35 ml/kg/min
+• Persona activa: ~45-55 ml/kg/min
+• Atleta de élite: ~70-94 ml/kg/min
+
+¿Por qué importa? Porque cuanto mayor es tu VO₂máx, más rápido puedes correr, nadar o pedalear durante mucho tiempo sin cansarte. Es el mejor indicador de salud cardiovascular.
+
+¿Cómo se mejora?
+• Entrenamiento aeróbico regular (salir a correr, bicicleta, nadar)
+• Especialmente con intervalos de alta intensidad (HIIT)
+• Con 3-6 meses de entrenamiento se puede mejorar entre un 15-20%
+
+<em>El VO₂máx tiene un componente genético (el techo del motor es hereditario), pero el entrenamiento determina si funcionas al 60% o al 95% de ese techo.</em>
+
+Factores que lo limitan: gasto cardíaco máximo (el más importante), la capacidad de los pulmones, la hemoglobina en la sangre y la capacidad de los músculos de extraer el oxígeno.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m4t2">
+      <div class="eli5-card-header" onclick="toggleEli5('m4t2')">
+        <span class="eli5-icon">🏃</span>
+        <span class="eli5-title">Zonas de entrenamiento cardiovascular</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🏃 <strong>Las zonas de entrenamiento son como los carriles de una autopista: cada uno tiene su velocidad y su función.</strong>
+
+Se dividen en 5 zonas basadas en la frecuencia cardíaca máxima (FCmáx):
+
+🟢 <strong>Zona 1 (50-60% FCmáx)</strong>: Recuperación activa. Un paseo tranquilo. El cuerpo descansa y se recupera.
+
+🟡 <strong>Zona 2 (60-70% FCmáx)</strong>: Aeróbico base. Puedes hablar frases completas. Quema principalmente grasa. La zona del maratoniano.
+
+🟠 <strong>Zona 3 (70-80% FCmáx)</strong>: Aeróbico moderado. Algo de esfuerzo, quemas carbohidratos y grasa.
+
+🔴 <strong>Zona 4 (80-90% FCmáx)</strong>: Umbral anaeróbico. Ya cuesta hablar. Mejoras la capacidad de aguantar ritmos altos.
+
+🟣 <strong>Zona 5 (90-100% FCmáx)</strong>: Máximo esfuerzo. Sprints, solo puedes aguantar minutos. Aumenta el VO₂máx.
+
+<em>Para calcular la FCmáx estimada: 220 – edad. Si tienes 30 años, FCmáx ≈ 190 lpm. El 70% sería 133 lpm.</em>
+
+Un buen plan cardiovascular combina mucho trabajo en zonas 2 y 3, con algo de zona 4-5 para mejorar la capacidad máxima.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m4t3">
+      <div class="eli5-card-header" onclick="toggleEli5('m4t3')">
+        <span class="eli5-icon">🔋</span>
+        <span class="eli5-title">Umbral anaeróbico y producción de lactato</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🔋 <strong>El umbral anaeróbico es el límite de velocidad antes de que el motor "se ahogue".</strong>
+
+Cuando haces ejercicio suave, el cuerpo usa oxígeno para producir energía (sistema aeróbico). El "residuo" se elimina fácilmente.
+
+Pero cuando aumentas la intensidad, llega un punto donde el cuerpo necesita energía más rápido de lo que el oxígeno puede suministrar. Entonces activa la glucólisis anaeróbica, que produce <strong>lactato</strong> como subproducto.
+
+<em>El lactato no es el malo de la película (no es lo que quema los músculos). El problema es el H⁺ que lo acompaña, que baja el pH y dificulta la contracción muscular.</em>
+
+Dos umbrales importantes:
+• <strong>VT1 (umbral ventilatorio 1)</strong>: ~60-70% FCmáx. Empiezas a producir más lactato del que produces en reposo. Puedes aguantar mucho tiempo.
+• <strong>VT2 (umbral anaeróbico)</strong>: ~80-90% FCmáx. El lactato se acumula tan rápido que no puedes aguantar más de 30-60 min. Es el "techo" del deportista de resistencia.
+
+Entrenar el umbral anaeróbico = poder correr más rápido "sin ahogarte". Eso es lo que diferencia a los buenos corredores de los normales.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m4t4">
+      <div class="eli5-card-header" onclick="toggleEli5('m4t4')">
+        <span class="eli5-icon">⚡</span>
+        <span class="eli5-title">Velocidad: tipos y factores</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">⚡ <strong>La velocidad no es solo "ir rápido". Es una cualidad física compleja con varios tipos.</strong>
+
+Tipos de velocidad:
+🚀 <strong>Velocidad de reacción</strong>: tiempo desde el estímulo (pistola) hasta el primer movimiento. El sprinter que sale más rápido tras "¡ya!".
+🏃 <strong>Velocidad gestual / acíclica</strong>: rapidez de un movimiento único. El boxeador que lanza un puñetazo.
+🔁 <strong>Velocidad cíclica</strong>: repetir el mismo gesto lo más rápido posible. El corredor que mueve las piernas a máxima frecuencia.
+🔄 <strong>Velocidad resistencia</strong>: mantener la velocidad durante un tiempo. El 400 metros.
+
+¿Qué determina la velocidad de carrera?
+• <strong>Frecuencia de zancada</strong>: cuántos pasos por segundo
+• <strong>Amplitud de zancada</strong>: cuán largo es cada paso
+• Velocidad = Frecuencia × Amplitud
+
+Para mejorarla necesitas:
+• Fuerza explosiva (más potencia en cada zancada)
+• Técnica de carrera correcta
+• Entrenamiento pliométrico y sprints
+• Sistema nervioso rápido (fibras tipo II bien entrenadas)
+
+<em>La velocidad tiene un gran componente genético (tipos de fibra), pero con entrenamiento se puede mejorar significativamente.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m4t5">
+      <div class="eli5-card-header" onclick="toggleEli5('m4t5')">
+        <span class="eli5-icon">🦘</span>
+        <span class="eli5-title">Entrenamiento pliométrico</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🦘 <strong>El entrenamiento pliométrico enseña al músculo a actuar como un muelle.</strong>
+
+Imagina un trampolín: se hunde (cede) y luego te propulsa hacia arriba con más fuerza. Eso es exactamente lo que hace el ciclo estiramiento-acortamiento (CEA) en tus músculos.
+
+En el pliométrico:
+1. <strong>Fase excéntrica</strong>: el músculo se estira (carga el muelle)
+2. <strong>Fase amortiguación</strong>: brevísima pausa (el muelle está en tensión)
+3. <strong>Fase concéntrica</strong>: el músculo explota (el muelle se libera)
+
+<em>La clave es que la fase de amortiguación sea lo más corta posible. Si tardas mucho, pierdes la energía elástica almacenada.</em>
+
+Ejemplos:
+• Saltos al cajón (box jumps)
+• Saltos en profundidad (drop jumps)
+• Multisaltos, skipping, bounding
+• Lanzamientos de balón medicinal
+
+Beneficios:
+• Mejora la potencia explosiva
+• Aumenta la altura de salto
+• Mejora la velocidad de carrera
+• Reduce el riesgo de lesión en el tren inferior
+
+⚠️ Precaución: requiere una base de fuerza previa (sentadilla al 1,5x peso corporal como referencia). No es para principiantes sin preparación.</div></div>
+    </div>
+</div>
 </body>
 </html>

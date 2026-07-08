@@ -171,6 +171,22 @@
 .back-bar{background:#252522;padding:0.5rem 1.5rem}
 .back-link{display:inline-flex;align-items:center;gap:0.4rem;color:#9c9a92;font-size:0.8rem;text-decoration:none;transition:color 0.2s}
 .back-link:hover{color:#fff}
+
+.eli5-intro{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.88rem;color:#3d3d3a;display:flex;gap:12px;align-items:flex-start}
+.eli5-intro-icon{font-size:1.8rem;flex-shrink:0}
+.eli5-intro h3{font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.eli5-card{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;margin-bottom:0.75rem;overflow:hidden;transition:border-color 0.2s}
+.eli5-card.open{border-color:#534AB7}
+.eli5-card-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.eli5-card-header:hover{background:#f5f4f0}
+.eli5-icon{font-size:1.2rem;flex-shrink:0}
+.eli5-title{flex:1;font-size:0.95rem;font-weight:500}
+.eli5-chevron{font-size:0.7rem;color:#9c9a92;transition:transform 0.2s}
+.eli5-card.open .eli5-chevron{transform:rotate(180deg)}
+.eli5-body{padding:0 1.25rem 1.25rem;display:none}
+.eli5-card.open .eli5-body{display:block}
+.eli5-answer{background:#EEEDFE;border:0.5px solid #c5c2f5;border-radius:10px;padding:1rem 1.25rem;font-size:0.88rem;line-height:1.8;color:#1a1a18}
+.eli5-answer strong{color:#3C3489}
 </style>
 </head>
 <body>
@@ -654,7 +670,7 @@ const allQuestions = [
   {cat:"T2 Periodización",q:"¿Qué organización apoya la periodización también en adultos sanos (no solo deportistas)?",opts:["OMS (2009)","ACSM (2009)","IOC (2009)","NSCA (2009)"],correct:1,exp:"El ACSM (2009) en su posicionamiento apoya la necesidad de periodizar el entrenamiento en adultos sanos."},
   {cat:"T2 Periodización",q:"¿Qué tipo de periodización incrementa las cargas de forma progresiva y continua?",opts:["Ondulatoria","Flexible","Lineal","ATR"],correct:2,exp:"La periodización lineal ajusta las cargas de forma progresiva y continua."},
   {cat:"T2 Periodización",q:"¿Qué tipo de periodización permite cambiar la zona de entrenamiento según el estado físico del sujeto en cada sesión?",opts:["Lineal","Ondulatoria diaria","Flexible no lineal","Bloques ATR"],correct:2,exp:"La periodización flexible (Fleck, 2011) permite cambios basados en el estado físico, disponibilidad y actitud del sujeto."},
-  {cat:"T2 Periodización",q:"¿Cuál es la conclusión de Harries et al. (2015) sobre la periodización lineal vs ondulatoria?",opts:["La lineal es claramente superior","La ondulatoria es claramente superior","No existen diferencias relevantes entre ambas","La flexible es superior a ambas"],correct:2,exp:"Harries et al. (2015) concluyen que no existen diferencias relevantes en la efectividad de los programas lineal vs ondulatoria."},
+  {cat:'T2 Periodización', q:"¿Qué dice la evidencia sobre la comparación entre periodización lineal y ondulatoria?", opts:["Ambas producen mejoras, siendo la ondulatoria ligeramente superior en sujetos entrenados", "La lineal es siempre superior en todos los perfiles", "La ondulatoria solo funciona en principiantes", "No hay diferencias entre ningún tipo de periodización"], correct:0, exp:"La evidencia muestra que ambos modelos de periodización producen mejoras significativas. La periodización ondulatoria puede ser ligeramente superior en sujetos entrenados por la mayor variedad de estímulos en menos tiempo."},
   {cat:"T2 Periodización",q:"¿Qué autor propone la periodización no lineal flexible?",opts:["Matveiev","Verjoshanski","Rhea","Fleck"],correct:3,exp:"Fleck (2011) propone y describe la periodización no lineal flexible."},
   {cat:"T2 Periodización",q:"¿Qué dos elementos fundamentales deben variar para lograr progresiones a largo plazo según el ACSM?",opts:["Ejercicios y descanso","Volumen e intensidad","Duración y frecuencia","Técnica y táctica"],correct:1,exp:"La variación del volumen y la intensidad son los dos elementos fundamentales para lograr progresiones a largo plazo."},
   {cat:"T2 Periodización",q:"¿Cómo se llama la periodización del modelo progresivo-individualizador en salud?",opts:["Periodización lineal","Periodización ondulatoria","Periodización selectiva","Periodización ATR"],correct:2,exp:"La periodización del modelo en salud se denomina 'periodización selectiva' y combina los tres tipos según la fase."},
@@ -711,7 +727,7 @@ const allQuestions = [
   {cat:"T5 Concurrente",q:"¿En qué sujetos el orden de los ejercicios (fuerza o resistencia primero) no influye en la interferencia?",opts:["En deportistas de élite","En sujetos entrenados","En sujetos no entrenados con volumen moderado","En todos los sujetos por igual"],correct:2,exp:"En sujetos no entrenados, el orden de ambas modalidades durante la sesión no influye en el fenómeno de interferencia si la frecuencia y el volumen son moderados."},
   {cat:"T5 Concurrente",q:"¿Qué adaptaciones celulares se producen en el entrenamiento concurrente?",opts:["Iguales en fuerza y resistencia","Opuestas en fuerza y resistencia (excepto fibras tipo I)","Complementarias en ambas modalidades","Solo en fibras tipo II"],correct:1,exp:"Las adaptaciones a nivel celular son opuestas en ambas modalidades de entrenamiento, a excepción de las fibras musculares tipo I."},
   {cat:"T5 Concurrente",q:"¿Qué deporte requiere entrenamiento concurrente de fuerza y resistencia según el módulo?",opts:["Atletismo de pista","Rugby y CrossFit","Natación de velocidad","Ciclismo de ruta"],correct:1,exp:"El módulo menciona el rugby y el CrossFit como deportes donde las exigencias requieren buen acondicionamiento aeróbico y de fuerza."},
-  {cat:"T5 Concurrente",q:"Según Rhea et al. (2004), ¿qué es más efectivo para mejorar la fuerza y la potencia?",opts:["Ninguno de los dos es efectivo","Ambos son igualmente efectivos","El entrenamiento periodizado","El entrenamiento no periodizado"],correct:2,exp:"Rhea et al. (2004) concluyeron que el entrenamiento periodizado es más efectivo que el no periodizado para mejorar fuerza y potencia."},
+  {cat:'T5 Concurrente', q:"¿Qué característica del entrenamiento favorece especialmente el desarrollo de la potencia?", opts:["Combinar cargas altas con velocidad de ejecución elevada", "Usar siempre cargas muy bajas y muchas repeticiones", "Entrenar solo con el peso corporal", "Realizar movimientos lentos y controlados exclusivamente"], correct:0, exp:"El desarrollo de la potencia (fuerza × velocidad) requiere combinar cargas moderadas-altas con la intención de mover el peso a la máxima velocidad posible, estimulando las unidades motoras rápidas y el sistema nervioso."},
   {cat:"T5 Concurrente",q:"¿Cuál es la primera variable a considerar para evitar la interferencia en el entrenamiento concurrente?",opts:["El tipo de ejercicio","El volumen total de entrenamiento","La hora del día","El nivel de hidratación"],correct:1,exp:"El volumen total de entrenamiento, junto con la frecuencia, intensidad, orden y grupos musculares, es la primera variable a controlar."},
   {cat:"T5 Concurrente",q:"¿En qué tipo de adaptaciones debe centrarse el entrenamiento para minimizar la interferencia?",opts:["Adaptaciones periféricas","Adaptaciones metabólicas","Adaptaciones centrales","Adaptaciones locales"],correct:2,exp:"El entrenamiento debe centrarse en adaptaciones centrales en lugar de periféricas para minimizar la interferencia."},
 
@@ -903,6 +919,134 @@ function retryTest() {
   shuffleAndRender();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+function toggleEli5(id){document.getElementById('card-'+id).classList.toggle('open');}
 </script>
+
+<div id="eli5" class="tab-content">
+  <div class="eli5-intro"><span class="eli5-intro-icon">🧒</span><div><h3>Explícamelo fácil</h3><p>Explicaciones con metáforas y ejemplos del día a día. Toca un tema para leerlo.</p></div></div>
+  
+    <div class="eli5-card" id="card-m6t1">
+      <div class="eli5-card-header" onclick="toggleEli5('m6t1')">
+        <span class="eli5-icon">📅</span>
+        <span class="eli5-title">Principios del entrenamiento: la base de todo</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">📅 <strong>Los principios del entrenamiento son las "leyes" que todo programa debe respetar.</strong>
+
+Sin estos principios, el entrenamiento no funciona o, peor, puede causar lesiones.
+
+🎯 <strong>Principio de especificidad (SAID)</strong>: el cuerpo se adapta exactamente a lo que entrenas. Si quieres correr más, corre. Si entrenas bicicleta, mejorarás en bici pero no en carrera. <em>El cuerpo aprende lo que practicas.</em>
+
+📈 <strong>Principio de sobrecarga progresiva</strong>: para mejorar, el estímulo tiene que ser mayor que al que el cuerpo está adaptado. Si siempre haces lo mismo, te estancas. Hay que progresar: más peso, más repeticiones, menos descanso, más velocidad.
+
+🔄 <strong>Principio de reversibilidad (desentrenamiento)</strong>: si paras de entrenar, pierdes las adaptaciones. La fuerza tarda más en perderse que la resistencia. <em>"Use it or lose it."</em>
+
+🧩 <strong>Principio de variedad</strong>: variar el entrenamiento evita el estancamiento y el aburrimiento.
+
+⚖️ <strong>Principio de individualización</strong>: no hay dos personas iguales. Un programa debe adaptarse al nivel, objetivos, historial y capacidad de recuperación de cada persona.
+
+<em>Si un cliente no progresa, lo primero es revisar si se está aplicando la sobrecarga progresiva. Si se fatiga, revisar el descanso y el volumen.</em></div></div>
+    </div>
+    <div class="eli5-card" id="card-m6t2">
+      <div class="eli5-card-header" onclick="toggleEli5('m6t2')">
+        <span class="eli5-icon">📊</span>
+        <span class="eli5-title">Volumen, intensidad y frecuencia</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">📊 <strong>Volumen, intensidad y frecuencia son las tres perillas con las que controlas el entrenamiento.</strong>
+
+🔊 <strong>Volumen</strong>: la cantidad total de trabajo. Se mide en series × repeticiones × peso (tonelaje) o simplemente en número de series por grupo muscular.
+<em>Más volumen = más estímulo hipertrófico, pero más fatiga también. Hay que encontrar el punto óptimo.</em>
+
+⚡ <strong>Intensidad</strong>: qué tan duro. En fuerza = % del 1RM. En cardio = % de FCmáx o VO₂máx.
+• Alta intensidad (>85% 1RM): fuerza máxima
+• Intensidad media (65-85% 1RM): hipertrofia
+• Baja intensidad (<65% 1RM): resistencia muscular
+
+🗓️ <strong>Frecuencia</strong>: cuántas veces entrenas un grupo muscular por semana.
+• 1 vez/semana: suficiente para mantener
+• 2 veces/semana: óptimo para la mayoría de objetivos
+• 3+ veces/semana: para avanzados con buena recuperación
+
+La relación entre los tres es como un triángulo:
+<em>Si subes el volumen, la intensidad debe bajar. Si subes la intensidad, el volumen debe bajar. Si subes la frecuencia, volumen e intensidad deben ajustarse.</em>
+
+No puedes tener todo al máximo al mismo tiempo: eso es sobreentrenamiento.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m6t3">
+      <div class="eli5-card-header" onclick="toggleEli5('m6t3')">
+        <span class="eli5-icon">🗓️</span>
+        <span class="eli5-title">Cómo estructurar una semana de entrenamiento</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🗓️ <strong>Estructurar la semana de entrenamiento es como hacer el horario escolar: hay que equilibrar las asignaturas y los descansos.</strong>
+
+Tipos de distribución semanal:
+
+💪 <strong>Full Body (cuerpo completo)</strong>: cada sesión trabajas todo el cuerpo. Ideal para 2-3 días/semana. Perfecta para principiantes.
+<em>Lunes: todo el cuerpo. Miércoles: todo el cuerpo. Viernes: todo el cuerpo.</em>
+
+✂️ <strong>Tren superior / Tren inferior</strong>: divides el cuerpo en mitad de arriba y mitad de abajo. Para 4 días/semana.
+<em>Lunes: piernas. Martes: parte superior. Jueves: piernas. Viernes: parte superior.</em>
+
+📋 <strong>Split por grupos musculares</strong>: cada día uno o dos grupos musculares. Para 5-6 días/semana. Típico del culturismo.
+<em>Lunes: pecho. Martes: espalda. Miércoles: piernas. Jueves: hombro. Viernes: brazos.</em>
+
+¿Cuál es mejor? Depende de la disponibilidad:
+• 2-3 días → Full Body
+• 4 días → Tren superior/inferior
+• 5+ días → Split
+
+⚠️ El descanso es parte del programa. El músculo crece mientras duermes, no mientras entrenas. Si siempre estás cansado, añade un día de descanso.</div></div>
+    </div>
+    <div class="eli5-card" id="card-m6t4">
+      <div class="eli5-card-header" onclick="toggleEli5('m6t4')">
+        <span class="eli5-icon">📈</span>
+        <span class="eli5-title">La curva de adaptación y la supercompensación</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">📈 <strong>La supercompensación es el motivo por el que el entrenamiento funciona.</strong>
+
+Imagina un elástico que estiras:
+1. <strong>Estímulo</strong>: entrenas → el cuerpo se "daña" un poco → fatiga
+2. <strong>Recuperación</strong>: descansas → el cuerpo repara el daño
+3. <strong>Supercompensación</strong>: el cuerpo no solo vuelve al nivel anterior, ¡se pasa y queda un poco más fuerte!
+
+<em>Es la estrategia del cuerpo para estar preparado si el mismo estrés vuelve. Como si después de correr bajo la lluvia te comprases un chubasquero.</em>
+
+4. Si vuelves a entrenar en ese momento de supercompensación: ¡progresas!
+5. Si entrenas demasiado pronto: no te recuperas bien → sobreentrenamiento
+6. Si entrenas demasiado tarde: ya volviste al nivel base y no acumulas mejoras
+
+Por eso el descanso entre sesiones importa:
+• Fuerza máxima: 48-72h de recuperación
+• Cardio suave: 24h es suficiente
+
+La curva de adaptación explica también por qué los principiantes mejoran rápido (su nivel base está muy bajo) y los avanzados mejoran despacio (ya están cerca de su techo genético).</div></div>
+    </div>
+    <div class="eli5-card" id="card-m6t5">
+      <div class="eli5-card-header" onclick="toggleEli5('m6t5')">
+        <span class="eli5-icon">🔁</span>
+        <span class="eli5-title">Periodización: planificar a largo plazo</span>
+        <span class="eli5-chevron">▼</span>
+      </div>
+      <div class="eli5-body"><div class="eli5-answer">🔁 <strong>Periodizar es como planificar las vacaciones: no improvises, organiza el año por etapas con objetivos distintos.</strong>
+
+Nadie puede estar en su mejor forma durante los 365 días del año. El cuerpo necesita ciclos: acumular, intensificar, descansar.
+
+Las tres fases clásicas:
+
+🏗️ <strong>Fase de acumulación (hipertrofia / base)</strong>: mucho volumen, intensidad media. Estás construyendo los cimientos. Muchas repeticiones, mucho trabajo aeróbico.
+
+💥 <strong>Fase de intensificación (fuerza / potencia)</strong>: menos volumen, más intensidad. Conviertes lo construido en fuerza y potencia. Pocas repeticiones pero mucho peso.
+
+🏆 <strong>Fase de realización (pico / competición)</strong>: mínimo volumen, máxima intensidad. Llegas en tu mejor estado al momento clave.
+
+😴 <strong>Descarga (deload)</strong>: semana cada 4-8 semanas con volumen e intensidad reducidos. El cuerpo asimila el trabajo acumulado.
+
+<em>Un buen plan de entrenamiento tiene las tres fases. Si siempre estás en "modo intensivo", el cuerpo se quema. Si siempre estás en "modo acumulación", nunca llegas a tu máximo rendimiento.</em></div></div>
+    </div>
+</div>
 </body>
 </html>

@@ -744,7 +744,6 @@
   </div>
   <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0"></div></div>
   <div id="questions-container"></div>
-  <button class="btn-submit" id="btn-submit" onclick="submitTest()">ENVIAR RESPUESTAS</button>
   <div class="result-panel" id="result-panel">
     <h2 id="score-display"></h2>
     <p id="score-msg"></p>
@@ -1018,6 +1017,8 @@ const ALL_QUESTIONS = [
 /* ══════════════════════ TEST ENGINE ══════════════════════ */
 let activeQuestions = [];
 let submitted = false;
+let answeredCount = 0;
+let scoreCount = 0;
 let activeFilter = 'todos';
 
 function buildFilterBar() {
@@ -1040,6 +1041,8 @@ function applyFilter(btn) {
 
 function loadQuestions() {
   submitted = false;
+  answeredCount = 0;
+  scoreCount = 0;
   activeQuestions = activeFilter === 'todos'
     ? [...ALL_QUESTIONS]
     : ALL_QUESTIONS.filter(q => q.cat === activeFilter);
@@ -1054,83 +1057,60 @@ function loadQuestions() {
   updateProgress();
 }
 
+
 function renderQuestions() {
   const c = document.getElementById('questions-container');
   c.innerHTML = '';
-  document.getElementById('test-count').textContent = `${activeQuestions.length} preguntas`;
-  activeQuestions.forEach((q, i) => {
+  document.getElementById('test-count').textContent = activeQuestions.length + ' preguntas';
+  answeredCount = 0;
+  scoreCount = 0;
+  document.getElementById('prog-fill').style.width = '0%';
+  activeQuestions.forEach(function(q, i) {
     const div = document.createElement('div');
     div.className = 'question-card';
     div.id = 'qcard-' + i;
-    let opts = q.opts.map((o, j) => `
-      <label class="option-label" id="opt-${i}-${j}">
-        <input type="radio" name="q${i}" value="${j}"> ${o}
-      </label>`).join('');
-    div.innerHTML = `<h3>${i + 1}. ${q.q}</h3>${opts}`;
+    let opts = q.opts.map(function(o, j) {
+      return '<label class="option-label" id="opt-' + i + '-' + j + '" onclick="pickAnswer(' + i + ',' + j + ')"><input type="radio" name="q' + i + '" value="' + j + '"> ' + o + '</label>';
+    }).join('');
+    div.innerHTML = '<h3>' + (i+1) + '. ' + q.q + '</h3>' + opts + '<div class="feedback-box" id="fb-' + i + '" style="display:none"></div>';
     c.appendChild(div);
   });
-  // track progress on selection
-  activeQuestions.forEach((_, i) => {
-    document.querySelectorAll(`input[name="q${i}"]`).forEach(inp => {
-      inp.addEventListener('change', updateProgress);
-    });
-  });
 }
-
-function updateProgress() {
-  let answered = 0;
-  activeQuestions.forEach((_, i) => {
-    if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+function pickAnswer(qIdx, optIdx) {
+  const q = activeQuestions[qIdx];
+  const fb = document.getElementById('fb-' + qIdx);
+  if (fb.style.display !== 'none') return;
+  const isCorrect = optIdx === q.correct;
+  q.opts.forEach(function(_, j) {
+    const lbl = document.getElementById('opt-' + qIdx + '-' + j);
+    const inp = lbl.querySelector('input');
+    if (inp) inp.disabled = true;
+    lbl.style.cursor = 'default';
+    if (j === q.correct) lbl.classList.add('correct');
+    else if (j === optIdx && !isCorrect) lbl.classList.add('wrong');
   });
-  const pct = activeQuestions.length ? (answered / activeQuestions.length * 100) : 0;
+  fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
+  fb.innerHTML = '<div class="fb-circle"></div><div><strong>' + (isCorrect ? '\u2705 Correcto' : '\u274C Incorrecto') + '</strong> \u2014 ' + q.exp + '</div>';
+  fb.style.display = 'flex';
+  answeredCount++;
+  if (isCorrect) scoreCount++;
+  const pct = activeQuestions.length ? (answeredCount / activeQuestions.length * 100) : 0;
   document.getElementById('prog-fill').style.width = pct + '%';
+  if (answeredCount === activeQuestions.length) {
+    const finalPct = Math.round(scoreCount / activeQuestions.length * 100);
+    document.getElementById('score-display').textContent = scoreCount + ' / ' + activeQuestions.length;
+    document.getElementById('score-msg').textContent = finalPct >= 80 ? '\uD83C\uDFC6 \u00A1Excelente! Has acertado el ' + finalPct + '% de las preguntas.' : finalPct >= 60 ? '\uD83D\uDC4D Bien, ' + finalPct + '% correcto. Repasa los temas fallados.' : '\uD83D\uDCDA Necesitas reforzar. Solo ' + finalPct + '% correcto. \u00A1\u00C1nimo!';
+    document.getElementById('result-panel').style.display = 'block';
+    document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
+    document.getElementById('prog-fill').style.width = '100%';
+  }
 }
-
-function submitTest() {
-  if (submitted) return;
-  submitted = true;
-  let score = 0;
-  activeQuestions.forEach((q, i) => {
-    const chosen = document.querySelector(`input[name="q${i}"]:checked`);
-    const chosenVal = chosen ? parseInt(chosen.value) : -1;
-    const isCorrect = chosenVal === q.correct;
-    if (isCorrect) score++;
-
-    // style options
-    q.opts.forEach((_, j) => {
-      const lbl = document.getElementById(`opt-${i}-${j}`);
-      if (j === q.correct) lbl.classList.add('correct');
-      else if (j === chosenVal) lbl.classList.add('wrong');
-      const inp = lbl.querySelector('input');
-      if (inp) inp.disabled = true;
-    });
-
-    // feedback
-    const card = document.getElementById('qcard-' + i);
-    const fb = document.createElement('div');
-    fb.className = 'feedback-box ' + (isCorrect ? 'fb-ok' : 'fb-err');
-    fb.innerHTML = `<div class="fb-circle"></div><div><strong>${isCorrect ? 'Correcto' : 'Incorrecto'}</strong> — ${q.exp}</div>`;
-    card.appendChild(fb);
-  });
-
-  // result
-  const total = activeQuestions.length;
-  const pct = Math.round(score / total * 100);
-  document.getElementById('score-display').textContent = `${score} / ${total}`;
-  document.getElementById('score-msg').textContent = pct >= 80
-    ? `¡Excelente! Has acertado el ${pct}% de las preguntas.`
-    : pct >= 60
-    ? `Bien, ${pct}% correcto. Repasa los temas fallados.`
-    : `Necesitas reforzar. Solo ${pct}% correcto. ¡Ánimo!`;
-  document.getElementById('result-panel').style.display = 'block';
-  document.getElementById('btn-submit').disabled = true;
-  document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
-  document.getElementById('prog-fill').style.width = '100%';
-}
-
+function updateProgress() {}
+function submitTest() {}
 function retryTest() {
   loadQuestions();
-  window.scrollTo({top: document.getElementById('test').offsetTop - 60, behavior:'smooth'});
+  const testEl = document.getElementById('test');
+  if (testEl) window.scrollTo({top: testEl.offsetTop - 60, behavior:'smooth'});
 }
 
 /* ══════════════════════ INIT ══════════════════════ */
